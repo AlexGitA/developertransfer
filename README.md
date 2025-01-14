@@ -1,4 +1,4 @@
-# Projektname
+# Mentoring App
 
 Ein Cross-Platform-Projekt mit Django (Backend) und Expo (Frontend).
 
