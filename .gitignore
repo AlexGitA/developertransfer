@@ -1,9 +1,0 @@
-# IntelliJ IDEA specific
-.idea/
-*.iml
-*.ipr
-*.iws
-
-# OS-specific files
-.DS_Store
-Thumbs.db
