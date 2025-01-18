@@ -5,6 +5,8 @@
 ### Backend (Django)
 # Create & activate virtual environment
 python -m venv env
+
+# Activate Script
 env\Scripts\activate (env will show in terminal)
 
 # Install dependencies
@@ -22,7 +24,9 @@ python manage.py runserver
 python manage.py runserver
 
 # Terminal 2 - Run Vite
+go to frontend
 cd frontend
+## npm run
 npm run dev
 
 
