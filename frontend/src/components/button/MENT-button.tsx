@@ -1,5 +1,5 @@
 import React, { useState, forwardRef, memo, ReactNode } from 'react';
-import { bemWrapper, bemCta } from './bem';
+import { bemWrapper, bemCta } from './bem'
 import join from 'bero';
 
 // Constants
