@@ -1,21 +1,31 @@
 import './App.css'
-import LoginPage from './pages/auth/LoginPage'
-import Layout from "@/layout/Layout.tsx";
-import {BrowserRouter, Routes, Route} from 'react-router-dom'
-import Header from '@/layout/Header/header.tsx'
+import {MENTButton} from "@/components/button/MENT-button.tsx";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route path="login" element={<LoginPage />} />
-          {/* Add more routes as needed */}
-
-          <Route path="home" element={<Header />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+      <>
+          <div>
+              <MENTButton
+                  className="bg-white shadow"
+                  href="https://example.com"
+                  target="_blank"
+                  variant="secondary"
+                  theme="dark"
+              >
+                  Link
+              </MENTButton>
+          </div>
+          <div>
+              <MENTButton href="" target="_blank" variant="Primary" theme="dark">
+                  Button
+              </MENTButton>
+          </div>
+          <div>
+              <MENTButton href="" target="_blank" variant="special" theme="light">
+                  Button is really
+              </MENTButton>
+          </div>
+      </>
   )
 }
 
