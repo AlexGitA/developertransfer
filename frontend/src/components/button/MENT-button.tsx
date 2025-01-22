@@ -1,6 +1,6 @@
 import { useState, forwardRef, memo, ReactNode } from 'react';
 import { bemWrapper, bemCta } from './bem';
-import { join } from 'bero';
+import { join } from "bero";
 
 // Constants
 export const MENT_BUTTON_VARIANT = {
