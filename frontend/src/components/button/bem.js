@@ -3,7 +3,7 @@
  */
 
 // Import dependencies
-const createBemHelper = require("bero").default;
+import createBemHelper from "bero";
 
 // Exported BEM helpers for styling
 /**
@@ -11,11 +11,13 @@ const createBemHelper = require("bero").default;
  * Prepends the namespace 'MENT-links-wrapper' to class names.
  */
 const bemWrapper = createBemHelper('MENT-links-wrapper');
-exports.bemWrapper = bemWrapper;
+const _bemWrapper = bemWrapper;
+export {_bemWrapper as bemWrapper};
 
 /**
  * BEM helper for the Call-To-Action component.
  * Prepends the namespace 'MENT-links' to class names.
  */
 const bemCta = createBemHelper('MENT-links');
-exports.bemCta = bemCta;
+const _bemCta = bemCta;
+export {_bemCta as bemCta};

@@ -1,14 +1,18 @@
-import React, { useState, forwardRef, memo, ReactNode } from 'react';
-import { bemWrapper, bemCta } from './bem'
-import join from 'bero';
+import { useState, forwardRef, memo, ReactNode } from 'react';
+import { bemWrapper, bemCta } from './bem';
+import { join } from 'bero';
 
 // Constants
-export const MENT_BUTTON = {
+export const MENT_BUTTON_VARIANT = {
     SECONDARY: 'secondary',
     TERTIARY: 'tertiary',
+    SPECIAL: 'special'
 };
 
-type buttonVariant = 'secondary' | 'tertiary';
+export const MENT_BUTTON_THEME = {
+    LIGHT: 'light',
+    DARK: 'dark',
+}
 
 // Types for component props
 interface MENTButtonProps {
@@ -19,12 +23,13 @@ interface MENTButtonProps {
     href?: string;
     icon?: string;
     isSmall?: boolean;
-    theme?: string;
+    theme?: keyof typeof MENT_BUTTON_THEME;
     loading?: boolean;
     target?: string;
     rel?: string;
-    variant?: buttonVariant;
+    variant?: keyof typeof MENT_BUTTON_VARIANT;
     type?: 'button' | 'submit' | 'reset';
+    [key: string]: any; // for additional props (e.g., onClick)
 }
 
 /**
@@ -35,7 +40,7 @@ interface MENTButtonProps {
 const getRel = (target?: string): string => {
     if (!target) return '';
     const baseRel = 'noreferrer';
-    return target === '_empty' ? `${baseRel} noopener` : baseRel;
+    return target === '_blank' ? `${baseRel} noopener` : baseRel;
 };
 
 // Components
@@ -58,9 +63,10 @@ const MENTButtonCore = forwardRef<HTMLAnchorElement | HTMLButtonElement, MENTBut
     } = props;
 
     // Determine button styles based on variant
-    const isPrimary = !variant || (variant !== MENT_BUTTON.SECONDARY && variant !== MENT_BUTTON.TERTIARY);
-    const isSecondary = variant === MENT_BUTTON.SECONDARY;
-    const isTertiary = variant === MENT_BUTTON.TERTIARY;
+    const isPrimary = !variant || (variant !== MENT_BUTTON_VARIANT.SECONDARY && variant !== MENT_BUTTON_VARIANT.TERTIARY && variant !== MENT_BUTTON_VARIANT.SPECIAL);
+    const isSecondary = variant === MENT_BUTTON_VARIANT.SECONDARY;
+    const isTertiary = variant === MENT_BUTTON_VARIANT.TERTIARY;
+    const isSpecial = variant === MENT_BUTTON_VARIANT.SPECIAL;
 
     // Handle focus state for styling
     const [isOnFocus, setFocus] = useState(false);
@@ -74,6 +80,8 @@ const MENTButtonCore = forwardRef<HTMLAnchorElement | HTMLButtonElement, MENTBut
         [`secondary-${theme}`]: isSecondary && theme,
         tertiary: isTertiary && children,
         [`tertiary-${theme}`]: isTertiary && theme,
+        special: isSpecial && theme,
+        [`special-${theme}`]: isSpecial && theme,
         'on-focus': isOnFocus,
     });
 
@@ -87,6 +95,7 @@ const MENTButtonCore = forwardRef<HTMLAnchorElement | HTMLButtonElement, MENTBut
             tertiary: isTertiary && children,
             'secondary-small': isSecondary && isSmall,
             [`tertiary-${theme}`]: isTertiary && theme,
+            [`special-${theme}`]: isSpecial && theme,
             fullWidth,
             loading,
             disabled,
@@ -112,8 +121,8 @@ const MENTButtonCore = forwardRef<HTMLAnchorElement | HTMLButtonElement, MENTBut
                     href={href}
                     target={target}
                     rel={rel}
-                    className={String(buttonClassNames)}
-                    //ref={ref}
+                    className={buttonClassNames}
+                    ref={ref as React.Ref<HTMLAnchorElement>}
                     {...restProps}
                 >
                     {renderContent()}
@@ -122,8 +131,8 @@ const MENTButtonCore = forwardRef<HTMLAnchorElement | HTMLButtonElement, MENTBut
                 <button
                     type={type}
                     disabled={disabled}
-                    className={String(buttonClassNames)}
-                    //ref={ref}
+                    className={buttonClassNames}
+                    ref={ref as React.Ref<HTMLButtonElement>}
                     onFocus={() => setFocus(true)}
                     onBlur={() => setFocus(false)}
                     {...restProps}
