@@ -2,7 +2,7 @@ import './App.css'
 import LoginPage from './pages/auth/LoginPage'
 import Layout from "@/layout/Layout.tsx";
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
-import DerPlayground from "./app/playground/DerPlayground.tsx";
+import DerPlayground from "@/playground/DerPlayground.tsx";
 
 function App() {
   return (
