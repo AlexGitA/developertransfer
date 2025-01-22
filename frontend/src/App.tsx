@@ -1,4 +1,5 @@
 import './App.css'
+
 import LoginPage from './pages/auth/LoginPage'
 import Layout from "@/layout/Layout.tsx";
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
