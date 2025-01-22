@@ -58,6 +58,16 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: #282c34;
+  color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
 main-header__left {
   display: flex;
   align-items: center;
@@ -80,16 +90,6 @@ profile-button {
 
 profile-button:hover {
   background-color: #ddd;
-}
-
-main-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  background-color: #282c34;
-  color: white;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 main-header__left-logo {

@@ -1,5 +1,6 @@
 import './App.css'
 import {MENTButton} from "@/components/button/MENT-button.tsx";
+import Header from "@/layout/Header/header.tsx";
 
 function App() {
   return (
@@ -24,6 +25,11 @@ function App() {
               <MENTButton href="" target="_blank" variant="special" theme="light">
                   Button is really
               </MENTButton>
+          </div>
+          <div>
+              <Header>
+
+              </Header>
           </div>
       </>
   )
