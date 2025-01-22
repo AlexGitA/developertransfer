@@ -175,3 +175,8 @@ main-header__left-logo {
     @apply bg-background text-foreground;
   }
 }
+
+.generalButton {
+  display: flex;
+  flex-direction: column;
+}
