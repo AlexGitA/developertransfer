@@ -3,7 +3,19 @@
 import React, { memo, SVGProps } from "react";
 import bem from "bero";
 
-interface GlIconProps extends SVGProps<SVGSVGElement> {
+interface MENTIconProps extends SVGProps<SVGSVGElement> {
+  /**
+   * Core functional component for displaying an icon.
+   *
+   * @param {MENTIconProps} props - The props for the component.
+   * @param {string} [props.className] - Optional class for the root wrapper element.
+   * @param {string} [props.iconClassName] - Optional class for the icon element.
+   * @param {string} props.name - The name of the icon to be displayed, used to reference the SVG symbol.
+   * @param {string} [props.theme] - Optional theme to style the icon (e.g., "light").
+   * @param {string} [props.title=""] - Optional title for the SVG, used for accessibility.
+   * @param {SVGProps<SVGSVGElement>} [props] - Other props to be passed to the SVG element.
+   * @returns {JSX.Element} A JSX element representing the icon with optional classes and title.
+   */
   className?: string;
   iconClassName?: string;
   name: string;
@@ -11,12 +23,12 @@ interface GlIconProps extends SVGProps<SVGSVGElement> {
   title?: string;
 }
 
-const bemIcon = bem("gl-icon");
-const GL_ICON_THEME = {
+const bemIcon = bem("MENT-icon");
+const MENT_ICON_THEME = {
   light: "light",
 };
 
-const GlIconCore: React.FC<GlIconProps> = ({
+const MENTIconCore: React.FC<MENTIconProps> = ({
   className,
   iconClassName,
   name,
@@ -35,7 +47,7 @@ const GlIconCore: React.FC<GlIconProps> = ({
       <svg
         className={bem.join(
           bemIcon({
-            light: theme === GL_ICON_THEME.light,
+            light: theme === MENT_ICON_THEME.light,
           }),
           iconClassName
         )}
@@ -48,6 +60,6 @@ const GlIconCore: React.FC<GlIconProps> = ({
   );
 };
 
-const GlIcon = memo(GlIconCore);
+const MENTIcon = memo(MENTIconCore);
 
-export { bemIcon, GL_ICON_THEME, GlIcon };
+export { bemIcon, MENT_ICON_THEME, MENTIcon };

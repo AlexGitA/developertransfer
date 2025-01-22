@@ -2,11 +2,11 @@
 
 import React, { forwardRef, useState, ChangeEvent, FocusEvent } from "react";
 import bem from "bero";
-import { GlIconValidation } from "../icon/MENT-icon-validation.tsx";
-import { GlFormNotice } from "../form/MENT-form-notice.tsx";
+import { MENTIconValidation } from "../icon/MENT-icon-validation.tsx";
+import { MENTFormNotice } from "../form/MENT-form-notice.tsx";
 import { join } from "bero";
 
-interface GlInputProps {
+interface MENTInputProps {
   centered?: boolean;
   className?: string;
   defaultValue?: string;
@@ -27,9 +27,9 @@ interface GlInputProps {
   [key: string]: any;
 }
 
-const bemInput = bem("gl-input");
+const bemInput = bem("MENT-input");
 
-export const GlInput = forwardRef<HTMLInputElement, GlInputProps>(
+export const MENTInput = forwardRef<HTMLInputElement, MENTInputProps>(
   (
     {
       centered,
@@ -84,7 +84,7 @@ export const GlInput = forwardRef<HTMLInputElement, GlInputProps>(
 
     return (
       <div
-        className={bem("gl-form-item", {
+        className={bem("MENT-form-item", {
           error,
           required,
           success,
@@ -117,7 +117,7 @@ export const GlInput = forwardRef<HTMLInputElement, GlInputProps>(
             id={`${id}_label`}
             className={
               !showLabel
-                ? join(bemInput("label", { centered }), "gl-screen-reader-only")
+                ? join(bemInput("label", { centered }), "MENT-screen-reader-only")
                 : bemInput("label", { centered })
             }
             {...labelCustomProps}
@@ -125,7 +125,7 @@ export const GlInput = forwardRef<HTMLInputElement, GlInputProps>(
             {labelText}
             {required && (
               <span
-                className={bem("gl-form-asterisk", {
+                className={bem("MENT-form-asterisk", {
                   withoutPlaceholder: !showLabel,
                 })}
                 dangerouslySetInnerHTML={{ __html: asteriskHTMLCode }}
@@ -133,10 +133,10 @@ export const GlInput = forwardRef<HTMLInputElement, GlInputProps>(
             )}
           </label>
           {withIcon && (
-            <GlIconValidation success={success} iconClassName={bemInput("icon")} />
+            <MENTIconValidation success={success} iconClassName={bemInput("icon")} />
           )}
         </div>
-        <GlFormNotice
+        <MENTFormNotice
           error={Boolean(displayError)}
           errorText={errorText}
           errorAttrs={{
@@ -154,4 +154,4 @@ export const GlInput = forwardRef<HTMLInputElement, GlInputProps>(
   }
 );
 
-GlInput.displayName = "GlInput";
+MENTInput.displayName = "MENTInput";

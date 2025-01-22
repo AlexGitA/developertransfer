@@ -1,5 +1,3 @@
-// @ts-ignore
-import React from "react";
 import "../../index.css";
 
 const Header = () => {
