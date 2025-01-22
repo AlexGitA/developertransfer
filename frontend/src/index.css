@@ -58,6 +58,46 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+main-header__left {
+  display: flex;
+  align-items: center;
+}
+
+header-right {
+  display: flex;
+  align-items: center;
+}
+
+profile-button {
+  background-color: white;
+  border: none;
+  color: #282c34;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+profile-button:hover {
+  background-color: #ddd;
+}
+
+main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: #282c34;
+  color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+main-header__left-logo {
+  margin-right: 1rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
