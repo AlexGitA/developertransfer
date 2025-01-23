@@ -4,13 +4,14 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-
+import Header from "@/layout/Header/Header.tsx"
 import { Button } from "@/components/ui/button.tsx"
 import {ChevronRight, Loader2, Router} from "lucide-react";
 
 export default function DerPlayground() {
     return (
-        <div className={"generalButton"}>
+        <div>
+            <Header/>
             <Button>Button</Button>
             <Button variant="secondary">Secondary</Button>
             <Button variant="destructive">Destructive</Button>
