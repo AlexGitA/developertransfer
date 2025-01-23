@@ -1,6 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@font-face {
+  font-family: 'UrbanJungle';
+  src: url('/src/fonts/AnkhSanctuary-PVK0B.ttf') format('truetype');
+}
+@keyframes fadeInOut {
+  0%, 100% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -58,28 +72,81 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-main-header {
+/*-------------------------------- Header Section Start ------------------------------*/
+.main-header {
+  width: 75%;
+  height: 10%;
+  position: absolute;
+  top: 0;
+  left: 12.5%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 1rem;
-  background-color: #282c34;
+  background-color: #215FCB;
   color: white;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  border-radius: 0 0 30px 30px;
 }
 
-main-header__left {
+.main-header__left {
   display: flex;
   align-items: center;
 }
 
-header-right {
-  display: flex;
-  align-items: center;
+.main-header__left-logo {
+  margin-right: 1rem;
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
-profile-button {
+.main-header__left-text {
+  font-family: 'UrbanJungle', sans-serif;
+  font-size: 48px;
+  color: white; /* Dunkles Grau für Eleganz */
+  letter-spacing: 3px;
+  margin-left: 25px;
+}
+
+.main-header__left-text-space {
+  margin-left: 15px;
+}
+
+.main-header__mid{
+  width: 25%;
+  position: absolute; /* Löst es aus dem normalen Layout */
+  left: 50%; /* Setzt den linken Punkt in die Mitte */
+  transform: translateX(-50%);
+}
+.main-header__mid-button {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
   background-color: white;
+  cursor: pointer;
+}
+
+.main-header__mid-button-text {
+  color: #215FCB;
+  margin-left: 15px;
+  animation: fadeInOut 4s infinite;
+  font-size: 16px; /* Textgröße */
+  font-weight: bold;
+}
+
+.main-header__mid-button-icon {
+  position: absolute;
+  right: 25px;
+  font-size: 18px; /* Größe des Icons */
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.profile-button {
+  background-color: #DFDFDE;
   border: none;
   color: #282c34;
   padding: 0.5rem 1rem;
@@ -88,15 +155,11 @@ profile-button {
   font-size: 1rem;
 }
 
-profile-button:hover {
+.profile-button:hover {
   background-color: #ddd;
 }
 
-main-header__left-logo {
-  margin-right: 1rem;
-  font-size: 1.5rem;
-  font-weight: bold;
-}
+/*-------------------------------- Header Section Start ------------------------------*/
 
 @media (prefers-color-scheme: light) {
   :root {

@@ -5,8 +5,15 @@ const Header = () => {
   return (
     <header className="main-header">
       <div className="main-header__left">
-        <h1 className="main-header__left-logo">MentorX</h1>
-        <MENTButton className="button" href="" target="_blank" variant="special" theme="light">🔍</MENTButton>
+        <h1 className="main-header__left-logo">
+            <text className="main-header__left-text">Mentor<span className="main-header__left-text-space">X</span></text>
+        </h1>
+      </div>
+      <div className="main-header__mid">
+          <MENTButton className="main-header__mid-button" href="" target="_blank" variant="special" theme="light">
+              <span className="main-header__mid-button-text">Suche deinen Mentor</span>
+              <span className="main-header__mid-button-icon">🔍</span>
+          </MENTButton>
       </div>
       <div className="main-header__right">
         <MENTButton className="profile-button" href="" target="_blank" variant="special" theme="light">Profil</MENTButton>
@@ -14,5 +21,6 @@ const Header = () => {
     </header>
   );
 };
+
 
 export default Header;
