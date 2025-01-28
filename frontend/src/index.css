@@ -94,40 +94,43 @@ h1 {
 }
 
 .main-header__mid{
-  width: 25%;
+  width: 35%;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
 }
 
 .main-header__mid-button {
-  display: flex;
-  justify-content: space-between;
   width: 100%;
-  background-color: black !important;
+  background-color: white !important;
+  color: white;
+  cursor: pointer;
+}
+
+.main-header__mid-button:hover {
+  width: 100%;
+  background-color: #B2B9DF !important;
+  color: white;
   cursor: pointer;
 }
 
 .main-header__mid-button-text {
   color: #215FCB;
-  margin-left: 15px;
-  animation: fadeInOut 4s infinite;
-  font-size: 16px; /* Textgröße */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
   font-weight: bold;
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
-.main-header__mid-button-icon {
-  position: absolute;
-  right: 25px;
-  font-size: 18px; /* Größe des Icons */
-}
-
-.header-right {
+.main-header__right {
   display: flex;
   align-items: center;
 }
 
-.profile-button {
+.main-header__right-profile-button {
   background-color: #DFDFDE;
   border: none;
   color: #282c34;
@@ -137,7 +140,7 @@ h1 {
   font-size: 1rem;
 }
 
-.profile-button:hover {
+.main-header__right-profile-button:hover {
   background-color: #ddd;
 }
 

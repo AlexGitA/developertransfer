@@ -1,5 +1,5 @@
 import "../../index.css";
-import {MENT_BUTTON_VARIANT, MENTButton} from "@/components/button/MENT-button.tsx";
+import { MENTButton } from "@/components/button/MENT-button.tsx";
 
 const Header = () => {
   return (
@@ -10,13 +10,12 @@ const Header = () => {
         </h1>
       </div>
       <div className="main-header__mid">
-          <MENTButton className="main-header__mid-button" variant={MENT_BUTTON_VARIANT.TERTIARY}>
-              <span className="main-header__mid-button-text">Suche deinen Mentor</span>
-              <span className="main-header__mid-button-icon">🔍</span>
+          <MENTButton className="main-header__mid-button">
+              <span className="main-header__mid-button-text">Suche deinen Mentor   🔍</span>
           </MENTButton>
       </div>
       <div className="main-header__right">
-        <MENTButton className="profile-button" href="" target="_blank" variant="special" theme="light">Profil</MENTButton>
+        <MENTButton className="main-header__right-profile-button" href="" target="_blank" variant="special" theme="light">Profil</MENTButton>
       </div>
     </header>
   );
