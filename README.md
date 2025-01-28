@@ -1,4 +1,4 @@
-# Project Name
+# MentorX
 
 ## Setup & Installation
 
@@ -15,16 +15,13 @@ pip install -r requirements.txt
 # Run migrations
 python manage.py migrate
 
-# Start Django server
-python manage.py runserver
-
 ## To start
 
 # Terminal 1 - Run Django
 python manage.py runserver
 
 # Terminal 2 - Run Vite
-go to frontend
+### go to frontend directory
 cd frontend
 ## npm run
 npm run dev
@@ -38,3 +35,15 @@ username: admin
 password: adminadmin
 ### else:
 python manage.py createsuperuser
+
+## Bug fixes
+
+### Migration / runserver failed
+```No module named 'rest_framework_simplejwt'```
+do this:
+```pip install --upgrade djangorestframework-simplejwt```
+
+### No Vite found
+```"vite" is not recognized as an internal or external command, operable program or batch file.```
+do this:
+```npm install -g vite```
