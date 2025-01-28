@@ -1,5 +1,3 @@
-"use strict";
-
 import React, { memo, SVGProps } from "react";
 import bem from "bero";
 
@@ -24,6 +22,7 @@ interface MENTIconProps extends SVGProps<SVGSVGElement> {
 }
 
 const bemIcon = bem("MENT-icon");
+
 const MENT_ICON_THEME = {
   light: "light",
 };
@@ -53,7 +52,7 @@ const MENTIconCore: React.FC<MENTIconProps> = ({
         )}
         {...props}
       >
-        <use xlinkHref={`#${name}`} />
+        <use xlinkHref={`#${name}`} href={`#${name}`} />
         <title>{titleSvg}</title>
       </svg>
     </span>

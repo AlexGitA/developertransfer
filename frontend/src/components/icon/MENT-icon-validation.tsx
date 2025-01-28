@@ -1,5 +1,3 @@
-"use strict";
-
 import React, { memo } from "react";
 import { MENTIcon } from "./MENT-icon.tsx";
 
