@@ -15,3 +15,6 @@ https://blog.logrocket.com/build-react-typescript-app-vite/
 
 ### Routing in React
 https://hygraph.com/blog/routing-in-react
+
+### Connect backend to frontend via Axios
+https://www.youtube.com/watch?v=qeNGRsv2RRg

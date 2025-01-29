@@ -60,8 +60,9 @@ INSTALLED_APPS = [
     'drf_yasg',
 ]
 
-CORS_ALLOWED_ORIGINS = ['http://localhost:5173']
+CORS_ALLOWED_ORIGINS = ['http://localhost:5173','http://localhost:5175']
 CORS_ALLOW_CREDENTIALS = True
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
