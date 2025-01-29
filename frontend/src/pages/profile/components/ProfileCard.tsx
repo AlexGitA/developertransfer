@@ -24,7 +24,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({userDetails, currentUserId, on
                         />
                     ) : (
                         <img
-                            src="/images/default-user.svg"
+                            src="/images/default-profile.png"
                             alt="Default user"
                             className="w-24 h-24 rounded-full border-[3px] border-primary object-cover"
                         />

@@ -1,6 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@font-face {
+  font-family: 'UrbanJungle';
+  src: url('/src/fonts/AnkhSanctuary-PVK0B.ttf') format('truetype');
+}
+@keyframes fadeInOut {
+  0%, 100% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -37,45 +51,103 @@ h1 {
   font-size: 3.2em;
 }
 
+
+/*-------------------------------- Header Section Start ------------------------------*/
+.main-header {
+  width: 100%;
+  height: 12%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: #215FCB;
+  color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  /*border-radius: 0 0 30px 30px;*/
+}
+
 .main-header__left {
   display: flex;
   align-items: center;
 }
 
-.header-right {
-  display: flex;
-  align-items: center;
-}
-
-.profile-button {
-  background-color: white;
-  border: none;
-  color: #282c34;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
-}
-
-.profile-button:hover {
-  background-color: #ddd;
-}
-
-.main-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  background-color: #282c34;
-  color: white;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
 
 .main-header__left-logo {
   margin-right: 1rem;
   font-size: 1.5rem;
   font-weight: bold;
 }
+
+.main-header__left-text {
+  font-family: 'UrbanJungle', sans-serif;
+  font-size: 48px;
+  color: white; /* Dunkles Grau für Eleganz */
+  letter-spacing: 3px;
+  margin-left: 25px;
+}
+
+.main-header__left-text-space {
+  margin-left: 15px;
+}
+
+.main-header__mid{
+  width: 35%;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.main-header__mid-button {
+  width: 100%;
+  background-color: white !important;
+  color: white;
+  cursor: pointer;
+}
+
+.main-header__mid-button:hover {
+  width: 100%;
+  background-color: #B2B9DF !important;
+  color: white;
+  cursor: pointer;
+}
+
+.main-header__mid-button-text {
+  color: #215FCB;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.main-header__right {
+  display: flex;
+  align-items: center;
+}
+
+.main-header__right-profile-button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.main-header__right-profile-button-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.main-header__right-profile-button:hover {
+  background-color: #ddd;
+}
+
+/*-------------------------------- Header Section End ------------------------------*/
 
 @media (prefers-color-scheme: light) {
   :root {
@@ -152,4 +224,8 @@ h1 {
 .generalButton {
   display: flex;
   flex-direction: column;
+}
+
+.generalButton:hover {
+  background-color: #DFDFDE;
 }

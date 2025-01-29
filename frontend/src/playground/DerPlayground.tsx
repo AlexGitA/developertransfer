@@ -1,5 +1,6 @@
 import { MENTButton, MENT_BUTTON_VARIANT, MENT_BUTTON_THEME } from '@/components/button/MENT-button.tsx';
 import MENTLoader from '@/components/SVGLoader/MENT-loader'
+import Header from '@/layout/Header/Header';
 
 const sampleIcon = "react";
 
@@ -13,6 +14,7 @@ export default function DerPlayground() {
             maxWidth: '400px',
             margin: '0 auto'
         }}>
+            <Header></Header>
             <MENTLoader/>
             {/* Primary Buttons */}
             <div>
