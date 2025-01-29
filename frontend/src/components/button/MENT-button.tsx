@@ -376,6 +376,7 @@ const MENTButtonCore = forwardRef<HTMLAnchorElement | HTMLButtonElement, MENTBut
             >
                 {href ? (
                     <ButtonLink
+                        className={className}
                         href={href}
                         target={target}
                         rel={rel}
@@ -395,6 +396,7 @@ const MENTButtonCore = forwardRef<HTMLAnchorElement | HTMLButtonElement, MENTBut
                     </ButtonLink>
                 ) : (
                     <BaseButton
+                        className={className}
                         type={type}
                         disabled={disabled || loading}
                         $variant={variant}
