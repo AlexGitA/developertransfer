@@ -1,8 +1,6 @@
 from chat.models import User, Todo, ChatMessage, Profile
 from django.contrib.auth.password_validation import validate_password
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
-from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class UserSerializer(serializers.ModelSerializer):
@@ -44,16 +42,15 @@ class RegisterSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
+        password = validated_data.pop('password')
         user = User.objects.create(
             username=validated_data['username'],
             email=validated_data['email']
-
-        )
-
-        user.set_password(validated_data['password'])
+    )
+        user.set_password(password)
         user.save()
-
         return user
+
 
 
 class TodoSerializer(serializers.ModelSerializer):
