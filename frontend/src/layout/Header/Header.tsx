@@ -1,5 +1,6 @@
 import "../../index.css";
 import { MENTButton } from "@/components/button/MENT-button.tsx";
+import ProfileButton from "@/layout/Header/profileButton.tsx";
 
 const Header = () => {
   return (
@@ -15,7 +16,7 @@ const Header = () => {
           </MENTButton>
       </div>
       <div className="main-header__right">
-        <MENTButton className="main-header__right-profile-button" href="" target="_blank" variant="special" theme="light">Profil</MENTButton>
+        <ProfileButton/>
       </div>
     </header>
   );
