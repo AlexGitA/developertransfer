@@ -10,7 +10,7 @@ const Header = () => {
             <text className="main-header__left-text">Mentor<span className="main-header__left-text-space">X</span></text>
         </h1>
       </div>
-      <div className="main-header__mid">
+      <div className="main-header__mid text-center">
           <MENTButton className="main-header__mid-button">
               <span className="main-header__mid-button-text">Suche deinen Mentor   🔍</span>
           </MENTButton>

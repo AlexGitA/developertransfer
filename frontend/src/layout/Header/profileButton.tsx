@@ -8,7 +8,7 @@ const ProfileButton = () => {
     useEffect(() => {
 
         const fetchProfileImage = async () => {
-            //const userProfileImage = 'https://example.com/profilbild.jpg';
+            // const userProfileImage = 'https://example.com/profilbild.jpg';
             // setProfileImage(userProfileImage);
         };
         fetchProfileImage();
@@ -17,7 +17,7 @@ const ProfileButton = () => {
     return (
         <MENTButton className="main-header__right-profile-button">
             <img
-                src={profileImage || "src/assets/default-profile.png"}
+                src={profileImage || "/images/default-profile.png"}
                 className="main-header__right-profile-button-image"
             />
         </MENTButton>

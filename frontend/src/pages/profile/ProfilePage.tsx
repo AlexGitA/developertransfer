@@ -1,4 +1,4 @@
-import Navbar from './components/Navbar';
+
 import {useState, useEffect} from "react";
 import LeftSidebar from './components/LeftSidebar';
 import RightSidebar from './components/RightSidebar';
@@ -7,6 +7,7 @@ import ProfileCard from './components/ProfileCard';
 import AxiosInstance from "@/lib/Axios";
 import axios, {} from 'axios';
 import {UserDetails} from '@/types/user';
+import Header from './../../layout/Header/Header'
 
 const ProfilePage = () => {
     const {id} = useParams(); // Get the id from URL
@@ -67,7 +68,7 @@ const ProfilePage = () => {
     return (
         <div className="min-h-screen flex flex-col">
             <div className="h-20">
-                <Navbar/>
+                <Header/>
             </div>
 
             <div className="flex-[1-5] flex">
