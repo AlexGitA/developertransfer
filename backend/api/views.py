@@ -1,6 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from ..models import UserDetails, TestClass
-from .serializers import TestClassSerializer
+from rest_framework.viewsets import ReadOnlyModelViewSet
+from .serializers import TestClassSerializer, UserDetailsReadSerializer
 
 
 class TestClassViewSet(ModelViewSet):
@@ -8,3 +9,6 @@ class TestClassViewSet(ModelViewSet):
     serializer_class = TestClassSerializer
 
 
+class UserDetailsReadView(ReadOnlyModelViewSet):
+    queryset = UserDetails.objects.all()
+    serializer_class = UserDetailsReadSerializer
