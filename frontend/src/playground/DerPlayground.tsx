@@ -1,5 +1,5 @@
-import { MENTButton, MENT_BUTTON_VARIANT, MENT_BUTTON_THEME } from '@/components/button/MENT-button.tsx';
-import MENTLoader from '@/components/SVGLoader/MENT-loader'
+import { MENTButton, MENT_BUTTON_VARIANT} from '@/components/button/MENT-button.tsx';
+import MENTLoader from '@/components/SVGLoader/MENT-loader';
 
 const sampleIcon = "react";
 
@@ -13,15 +13,21 @@ export default function DerPlayground() {
             maxWidth: '400px',
             margin: '0 auto'
         }}>
-            <MENTLoader/>
+            <MENTLoader />
             {/* Primary Buttons */}
             <div>
                 <h3>Primary Buttons</h3>
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                    <MENTButton>Primary Default</MENTButton>
-                    <MENTButton theme={MENT_BUTTON_THEME.DARK}>Primary Dark</MENTButton>
-                    <MENTButton loading></MENTButton>
-                    <MENTButton disabled>Primary Disabled</MENTButton>
+                    <MENTButton className="bg-customGreen text-white">
+                        Custom Green
+                    </MENTButton>
+                    <MENTButton className="bg-customBlue text-white">
+                        Custom Blue
+                    </MENTButton>
+                    <MENTButton className="bg-customOrange text-white" loading></MENTButton>
+                    <MENTButton className="bg-customGreen text-white" disabled>
+                        Custom Disabled
+                    </MENTButton>
                 </div>
             </div>
 
@@ -29,20 +35,24 @@ export default function DerPlayground() {
             <div>
                 <h3>Secondary Buttons</h3>
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                    <MENTButton variant={MENT_BUTTON_VARIANT.SECONDARY}>
-                        Secondary Default
-                    </MENTButton>
                     <MENTButton
                         variant={MENT_BUTTON_VARIANT.SECONDARY}
-                        theme={MENT_BUTTON_THEME.LIGHT}
+                        className="bg-customBlue text-white"
                     >
-                        Secondary Light
+                        Custom Blue Secondary
                     </MENTButton>
                     <MENTButton
                         variant={MENT_BUTTON_VARIANT.SECONDARY}
+                        className="bg-customGreen text-white"
+                    >
+                        Custom Green Secondary
+                    </MENTButton>
+                    <MENTButton
+                        variant={MENT_BUTTON_VARIANT.SECONDARY}
+                        className="bg-customOrange text-white"
                         isSmall
                     >
-                        Small Secondary
+                        Small Custom Orange
                     </MENTButton>
                 </div>
             </div>
@@ -51,14 +61,17 @@ export default function DerPlayground() {
             <div>
                 <h3>Tertiary Buttons</h3>
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                    <MENTButton variant={MENT_BUTTON_VARIANT.TERTIARY}>
-                        Tertiary Default
+                    <MENTButton
+                        variant={MENT_BUTTON_VARIANT.TERTIARY}
+                        className="bg-customBlue text-white"
+                    >
+                        Tertiary Blue
                     </MENTButton>
                     <MENTButton
                         variant={MENT_BUTTON_VARIANT.TERTIARY}
-                        theme={MENT_BUTTON_THEME.DARK}
+                        className="bg-customGreen text-white"
                     >
-                        Tertiary Dark
+                        Tertiary Green
                     </MENTButton>
                 </div>
             </div>
@@ -67,8 +80,11 @@ export default function DerPlayground() {
             <div>
                 <h3>Special Variant</h3>
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                    <MENTButton variant={MENT_BUTTON_VARIANT.SPECIAL}>
-                        Special Button
+                    <MENTButton
+                        variant={MENT_BUTTON_VARIANT.SPECIAL}
+                        className="bg-customOrange text-white"
+                    >
+                        Special Orange
                     </MENTButton>
                 </div>
             </div>
@@ -77,8 +93,10 @@ export default function DerPlayground() {
             <div>
                 <h3>Icon Buttons</h3>
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                    <MENTButton icon={"icon-arrow"}
-                                hasChildren={false}
+                    <MENTButton
+                        icon={"icon-arrow"}
+                        hasChildren={false}
+                        className="bg-customBlue text-white"
                     >
                     </MENTButton>
                     <MENTButton
@@ -86,12 +104,14 @@ export default function DerPlayground() {
                         fullWidth={true}
                         animate={true}
                         variant={MENT_BUTTON_VARIANT.SECONDARY}
+                        className="bg-customGreen text-white"
                     >
                         With Icon
                     </MENTButton>
                     <MENTButton
                         icon={sampleIcon}
                         isSmall
+                        className="bg-customOrange text-white"
                     >
                         Small Icon
                     </MENTButton>
@@ -101,7 +121,7 @@ export default function DerPlayground() {
             {/* Full Width Button */}
             <div>
                 <h3>Full Width</h3>
-                <MENTButton fullWidth>
+                <MENTButton className="bg-customGreen text-white" fullWidth>
                     Full Width Button
                 </MENTButton>
             </div>
@@ -113,6 +133,7 @@ export default function DerPlayground() {
                     href="https://example.com"
                     target="_blank"
                     rel="noopener noreferrer"
+                    className="bg-customBlue text-white"
                 >
                     Open Link
                 </MENTButton>
