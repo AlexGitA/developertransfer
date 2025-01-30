@@ -96,10 +96,10 @@ class UserDetails(models.Model):
         help_text="Startup vs corporate experience level"
     )
 
-    profile_pic = models.ImageField(
-        upload_to='profile_pics/',
+    profile_picture = models.ImageField(
+        upload_to='profile_pictures/',
         blank=True,
-        default='profile_pics/fallback-profile-image.png',
+        default='profile_pictures/default-profile.png',
         help_text="User's profile picture"
     )
 

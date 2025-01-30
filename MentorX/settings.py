@@ -188,3 +188,7 @@ PASSWORD_RESET_CONFIRM_REDIRECT_BASE_URL = \
 
 # Todo understand what the heck it is
 SITE_ID = 1
+
+# Media Settings
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

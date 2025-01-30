@@ -1,24 +1,23 @@
-
+// ProfilePage.tsx
 import {useState, useEffect} from "react";
 import LeftSidebar from './components/LeftSidebar';
 import RightSidebar from './components/RightSidebar';
 import {useParams} from 'react-router-dom';
 import ProfileCard from './components/ProfileCard';
 import AxiosInstance from "@/lib/Axios";
-import axios, {} from 'axios';
+import axios from 'axios';
 import {UserDetails} from '@/types/user';
 import Header from './../../layout/Header/Header'
 
 const ProfilePage = () => {
-    const {id} = useParams(); // Get the id from URL
+    const {id} = useParams();
     const [userData, setUserData] = useState<UserDetails | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    // TODO get the current users id (change to 1/2 to see the button)
-    const currentUserId = 1;
+    const currentUserId = 1; // TODO: Get from auth context
 
     useEffect(() => {
-        console.log("ProfilePage mounted, ID:", id); // Debug log
+        console.log("ProfilePage mounted, ID:", id);
         fetchUserData();
     }, [id]);
 
@@ -31,8 +30,7 @@ const ProfilePage = () => {
             setUserData(response.data);
             setError(null);
         } catch (err) {
-            // Type guard to check if err is AxiosError
-            if (axios.isAxiosError(err)) {  // or: if (err instanceof AxiosError)
+            if (axios.isAxiosError(err)) {
                 console.error('Full error object:', err);
                 setError(err.response?.data?.message || 'Failed to fetch user data');
                 if (err.response) {
@@ -43,7 +41,6 @@ const ProfilePage = () => {
                     });
                 }
             } else {
-                // Handle non-Axios errors
                 setError('An unexpected error occurred');
                 console.error('Non-Axios error:', err);
             }
@@ -58,11 +55,11 @@ const ProfilePage = () => {
     };
 
     if (loading) {
-        return <div>Loading...</div>; // Add a proper loading spinner component
+        return <div>Loading...</div>;
     }
 
     if (error) {
-        return <div>Error: {error}</div>; // Add a proper error component
+        return <div>Error: {error}</div>;
     }
 
     return (
