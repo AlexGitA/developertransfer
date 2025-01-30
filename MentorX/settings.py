@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     # Apps
     "authentication.apps.AuthenticationConfig",
     'backend.apps.BackendApiConfig',
+    'chat.apps.ChatConfig',
 
     # Auth
     "allauth",
