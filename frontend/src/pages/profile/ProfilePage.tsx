@@ -15,7 +15,7 @@ const ProfilePage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     // TODO get the current users id (change to 1/2 to see the button)
-    const currentUserId = 2;
+    const currentUserId = 1;
 
     useEffect(() => {
         console.log("ProfilePage mounted, ID:", id); // Debug log
@@ -64,19 +64,19 @@ const ProfilePage = () => {
     if (error) {
         return <div>Error: {error}</div>; // Add a proper error component
     }
-// TODO add a REAL NAVBAR
+
     return (
-        <div className="min-h-screen flex flex-col">
-            <div className="h-20">
+        <div className="min-h-screen flex bg-muted flex-col">
+            <div className="pb-10">
                 <Header/>
             </div>
 
-            <div className="flex-[1-5] flex">
-                <div className="w-[27vw] bg-amber-100 p-3">
+            <div className="flex-[1-5] flex pt-3">
+                <div className="w-[27vw] bg-white p-3">
                     <LeftSidebar/>
                 </div>
 
-                <main className="w-[46vw] bg-gray-50 p-6">
+                <main className="w-[46vw] bg-muted p-6">
                     {userData && (
                         <ProfileCard
                             userDetails={userData}
@@ -86,7 +86,7 @@ const ProfilePage = () => {
                     )}
                 </main>
 
-                <div className="w-[27vw] bg-amber-100 p-3">
+                <div className="w-[27vw] bg-white p-3">
                     <RightSidebar/>
                 </div>
             </div>

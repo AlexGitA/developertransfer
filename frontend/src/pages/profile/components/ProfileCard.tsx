@@ -1,6 +1,7 @@
 // components/ProfileCard.tsx
 import React from 'react';
 import {UserDetails} from '@/types/user';
+import CountryFlag from "@/components/ui/flag";
 import '@fortawesome/fontawesome-free/css/all.css';
 
 interface ProfileCardProps {
@@ -8,10 +9,11 @@ interface ProfileCardProps {
     currentUserId?: number;
     onEdit?: () => void;
 }
+
 // TODO find a better way to display the language and country and an empty profile
 const ProfileCard: React.FC<ProfileCardProps> = ({userDetails, currentUserId, onEdit}) => {
     return (
-        <div className="bg-secondary rounded-[25px] shadow-lg p-8">
+        <div className="bg-white text-sm rounded-[12px] shadow-lg p-8">
             <div className="flex flex-col items-center gap-4">
                 {/* Profile Image */}
                 {/* Profile Image */}
@@ -32,7 +34,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({userDetails, currentUserId, on
                     {/* Online status indicator */}
                     <div
                         className={`absolute bottom-[6px] right-[6px] w-4 h-4 rounded-full border-[2px] border-secondary ${
-                            userDetails.is_online ? 'bg-[#10b981]' : 'bg-[#6b7280]'
+                            userDetails.is_online ? 'bg-green-400' : 'bg-[#6b7280]'
                         }`}
                     />
                 </div>
@@ -51,27 +53,33 @@ const ProfileCard: React.FC<ProfileCardProps> = ({userDetails, currentUserId, on
                 </div>
 
                 <ul className="space-y-2 mb-2 text-text">
-                    {userDetails.country && userDetails.country !== '' && (
-                        <li className="flex gap-2 items-center">
-                            <span className="font-medium">Country:</span> {userDetails.country}
-                        </li>
-                    )}
                     {userDetails.preferred_language && (
-                        <li className="flex gap-2 items-center">
-                            <span className="font-medium">Language:</span> {userDetails.preferred_language}
-                        </li>
+                        <CountryFlag
+                            code={userDetails.preferred_language}
+                            text={userDetails.preferred_language}
+                            label="Language"
+                            showText={false}  // show the language code
+                        />
+                    )}
+
+                    {userDetails.country && userDetails.country !== '' && (
+                        <CountryFlag
+                            code={userDetails.country}
+                            label="Country"
+                            showText={false} // don't show the country code
+                            text={undefined}                        />
                     )}
                 </ul>
 
                 {/* Mentor Status */}
                 <div className="flex gap-2">
                     {userDetails.mentor && (
-                        <span className="px-4 py-2 rounded-[50px] bg-[#2BD72B] text-white font-medium">
+                        <span className="px-4 py-2 rounded-[50px] bg-primary-200 text-white font-medium">
                             Mentor
                         </span>
                     )}
                     {userDetails.looking_for_mentor && (
-                        <span className="px-4 py-2 rounded-[50px] bg-primary-200 text-primary font-medium">
+                        <span className="px-4 py-2 rounded-[50px] bg-green-400 text-white font-medium">
                             Looking for Mentor
                         </span>
                     )}
@@ -86,19 +94,19 @@ const ProfileCard: React.FC<ProfileCardProps> = ({userDetails, currentUserId, on
                 <div className="flex justify-center gap-4 mb-2">
                     {userDetails.github_profile && (
                         <a href={userDetails.github_profile} target="_blank" rel="noopener noreferrer"
-                           className="w-12 h-12 flex items-center justify-center rounded-full bg-primary-200 text-text-primary hover:bg-[#215FCB] hover:text-white transition-all duration-200">
+                           className="w-12 h-12 flex items-center justify-center rounded-full bg-primary-200 text-text hover:bg-secondary transition-all duration-200">
                             <i className="fab fa-github text-xl"></i>
                         </a>
                     )}
                     {userDetails.linkedin_profile && (
                         <a href={userDetails.linkedin_profile} target="_blank" rel="noopener noreferrer"
-                           className="w-12 h-12 flex items-center justify-center rounded-full bg-primary-200 text-primary hover:bg-[#215FCB] hover:text-white transition-all duration-200">
+                           className="w-12 h-12 flex items-center justify-center rounded-full bg-primary-200 text-text hover:bg-secondary transition-all duration-200">
                             <i className="fab fa-linkedin text-xl"></i>
                         </a>
                     )}
                     {userDetails.instagram_profile && (
                         <a href={userDetails.instagram_profile} target="_blank" rel="noopener noreferrer"
-                           className="w-12 h-12 flex items-center justify-center rounded-full bg-primary-200 text-primary hover:bg-[#215FCB] hover:text-white transition-all duration-200">
+                           className="w-12 h-12 flex items-center justify-center rounded-full bg-primary-200 text-text hover:bg-secondary transition-all duration-200">
                             <i className="fab fa-instagram text-xl"></i>
                         </a>
                     )}
