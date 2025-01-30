@@ -32,7 +32,7 @@ export interface UserDetails {
   startup_corporate_level: number | null;
 
   // Profile media
-  profile_pic: string;
+  profile_picture: string;
 
   // Social profiles
   github_profile: string | null;

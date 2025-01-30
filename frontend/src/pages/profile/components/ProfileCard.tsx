@@ -10,17 +10,15 @@ interface ProfileCardProps {
     onEdit?: () => void;
 }
 
-// TODO find a better way to display the language and country and an empty profile
 const ProfileCard: React.FC<ProfileCardProps> = ({userDetails, currentUserId, onEdit}) => {
     return (
         <div className="bg-white text-sm rounded-[12px] shadow-lg p-8">
             <div className="flex flex-col items-center gap-4">
                 {/* Profile Image */}
-                {/* Profile Image */}
                 <div className="relative inline-block">
-                    {userDetails.profile_pic ? (
+                     {userDetails.profile_picture ? (
                         <img
-                            src={userDetails.profile_pic}
+                            src={userDetails.profile_picture}
                             alt={`${userDetails.username}'s profile`}
                             className="w-24 h-24 rounded-full border-[3px] border-primary object-cover"
                         />
@@ -38,13 +36,14 @@ const ProfileCard: React.FC<ProfileCardProps> = ({userDetails, currentUserId, on
                         }`}
                     />
                 </div>
+
                 {/* User Info */}
                 <div className="text-center">
                     <h2 className="text-2xl font-bold mb-1 text-text">{userDetails.first_name}</h2>
                     <p className="text-accent mb-4 flex items-center justify-center gap-2">
                         @{userDetails.username}
                         {userDetails.is_verified && (
-                            <i className="fa-solid  fa-circle-check text-primary" title="Verified User"></i>
+                            <i className="fa-solid fa-circle-check text-primary" title="Verified User"></i>
                         )}
                     </p>
                     {userDetails.current_role && (
@@ -52,13 +51,14 @@ const ProfileCard: React.FC<ProfileCardProps> = ({userDetails, currentUserId, on
                     )}
                 </div>
 
+                {/* Language and Country */}
                 <ul className="space-y-2 mb-2 text-text">
                     {userDetails.preferred_language && (
                         <CountryFlag
                             code={userDetails.preferred_language}
                             text={userDetails.preferred_language}
                             label="Language"
-                            showText={false}  // show the language code
+                            showText={false}
                         />
                     )}
 
@@ -66,8 +66,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({userDetails, currentUserId, on
                         <CountryFlag
                             code={userDetails.country}
                             label="Country"
-                            showText={false} // don't show the country code
-                            text={undefined}                        />
+                            showText={false}
+                            text={undefined}
+                        />
                     )}
                 </ul>
 
@@ -123,18 +124,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({userDetails, currentUserId, on
                     </div>
                 )}
 
-                {/* Temporarily disabled Skills/Tags Section
-                <div className="flex flex-wrap justify-center gap-2 mb-2">
-                    <span
-                        className="px-3 py-1 rounded-full bg-green-100 text-grey-600 hover:bg-blue-100 hover:text-white">Angular</span>
-                    <span
-                        className="px-3 py-1 rounded-full bg-green-100 text-grey-600 hover:bg-blue-100 hover:text-white">DevOps</span>
-                    <span
-                        className="px-3 py-1 rounded-full bg-green-100 text-grey-600 hover:bg-blue-100 hover:text-white">Nuxt</span>
-                </div>
-                */}
                 {/* Edit Button */}
-                {/* TODO Condition needs to be done */}
                 {userDetails.id && currentUserId === userDetails.id && (
                     <button onClick={onEdit}
                             className="px-6 py-3 rounded-[50px] bg-[#215FCB] text-white hover:bg-[#5F7ABB] font-medium transition-all duration-200 flex items-center gap-2">
