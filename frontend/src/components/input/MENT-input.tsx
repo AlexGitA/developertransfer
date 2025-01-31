@@ -1,5 +1,3 @@
-"use strict";
-
 import React, { forwardRef, useState, ChangeEvent, FocusEvent } from "react";
 import bem from "bero";
 import { MENTIconValidation } from "../icon/MENT-icon-validation.tsx";
@@ -20,7 +18,6 @@ interface MENTInputProps {
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   onFocus?: (event: FocusEvent<HTMLInputElement>) => void;
   required?: boolean;
-  showLabel?: boolean;
   tabIndexer?: number;
   valid?: boolean;
   value?: string;
@@ -45,7 +42,6 @@ export const MENTInput = forwardRef<HTMLInputElement, MENTInputProps>(
       onChange = () => undefined,
       onFocus,
       required,
-      showLabel = true,
       tabIndexer,
       valid,
       value = "",
@@ -57,7 +53,6 @@ export const MENTInput = forwardRef<HTMLInputElement, MENTInputProps>(
     const error = valid === false;
     const displayError = error && errorText;
     const success = valid === true;
-    const asteriskHTMLCode = "&#42;";
 
     const [inputValue, setInputValue] = useState<string>("");
     const controlledValue = defaultValue ? undefined : inputValue;
@@ -116,21 +111,13 @@ export const MENTInput = forwardRef<HTMLInputElement, MENTInputProps>(
             htmlFor={id}
             id={`${id}_label`}
             className={
-              !showLabel
-                ? join(bemInput("label", { centered }), "MENT-screen-reader-only")
-                : bemInput("label", { centered })
+              required
+                  ? join(bemInput("label--required", { centered }), bemInput("label", { centered }))
+                  : bemInput("label", { centered })
             }
             {...labelCustomProps}
           >
             {labelText}
-            {required && (
-              <span
-                className={bem("MENT-form-asterisk", {
-                  withoutPlaceholder: !showLabel,
-                })}
-                dangerouslySetInnerHTML={{ __html: asteriskHTMLCode }}
-              />
-            )}
           </label>
           {withIcon && (
             <MENTIconValidation success={success} iconClassName={bemInput("icon")} />

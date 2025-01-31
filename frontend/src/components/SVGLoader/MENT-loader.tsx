@@ -1,6 +1,6 @@
 // @ts-ignore
 const MENTLoader = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" style={{display: 'none' }}>
+    <svg xmlns="http://www.w3.org/2000/svg" style={{display: 'none'}}>
         <symbol xmlns="http://www.w3.org/2000/svg" id="react" viewBox="0 0 256 228">
             <path
                 fill="#00D8FF"
@@ -8,8 +8,26 @@ const MENTLoader = () => (
             </path>
         </symbol>
         <symbol xmlns="http://www.w3.org/2000/svg" id="icon-arrow" viewBox="0 0 24 24">
-            <polygon xmlns="http://www.w3.org/2000/svg" points="7.293 4.707 14.586 12 7.293 19.293 8.707 20.707 17.414 12 8.707 3.293 7.293 4.707"/>
+            <polygon xmlns="http://www.w3.org/2000/svg"
+                     points="7.293 4.707 14.586 12 7.293 19.293 8.707 20.707 17.414 12 8.707 3.293 7.293 4.707"/>
         </symbol>
+        <symbol xmlns="http://www.w3.org/2000/svg" id="icon-invalid" viewBox="0 0 48 48" width="16px" height="18px">
+            <path fill="#FB0506" d="M44,24c0,11.045-8.955,20-20,20S4,35.045,4,24S12.955,4,24,4S44,12.955,44,24z"/>
+            <path fill="#fff" d="M29.656,15.516l2.828,2.828l-14.14,14.14l-2.828-2.828L29.656,15.516z"/>
+            <path fill="#fff" d="M32.484,29.656l-2.828,2.828l-14.14-14.14l2.828-2.828L32.484,29.656z"/>
+        </symbol>
+        <symbol xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 24 24">
+            <path fill="#2BD72B"
+                  d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10S2 17.514 2 12 6.486 2 12 2m0-2C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0z"/>
+            <path fill="#2BD72B"
+                  d="M10.5 16.5c-.42 0-.82-.176-1.094-.484l-2.963-2.97c-.274-.26-.443-.653-.443-1.06 0-.405.17-.798.462-1.078.482-.513 1.557-.55 2.113.037l1.925 1.93 4.943-4.958c.52-.55 1.575-.57 2.132.02.256.242.425.634.425 1.04 0 .402-.164.79-.45 1.068l-5.993 6.012c-.238.267-.637.443-1.057.443z"/>
+        </symbol>
+        <symbol xmlns="http://www.w3.org/2000/svg" version="1.1" id="icon-success" x="0px" y="0px" viewBox="0 0 16 16">
+            <path fill="#2BD72B" className="st0"
+                  d="M8,1.3c3.7,0,6.7,3,6.7,6.7s-3,6.7-6.7,6.7s-6.7-3-6.7-6.7S4.3,1.3,8,1.3 M8,0C3.6,0,0,3.6,0,8s3.6,8,8,8  s8-3.6,8-8S12.4,0,8,0z"/>
+            <path fill="#2BD72B" className="st0"
+                  d="M7,11c-0.3,0-0.5-0.1-0.7-0.3l-2-2C4.1,8.5,4,8.3,4,8c0-0.3,0.1-0.5,0.3-0.7c0.3-0.3,1-0.4,1.4,0L7,8.6l3.3-3.3  c0.3-0.4,1-0.4,1.4,0C11.9,5.4,12,5.7,12,6c0,0.3-0.1,0.5-0.3,0.7l-4,4C7.5,10.9,7.3,11,7,11L7,11z"/>
+            </symbol>
     </svg>
 );
 
