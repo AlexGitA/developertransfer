@@ -8,6 +8,7 @@ import { MENTIcon } from "../icon/MENT-icon.tsx";
 interface MENTInputProps {
   centered?: boolean;
   className?: string;
+  type?: string;
   defaultValue?: string;
   errorText?: string;
   hintText?: string;
@@ -33,6 +34,7 @@ export const MENTInput = forwardRef<HTMLInputElement, MENTInputProps>(
     {
       centered,
       className,
+        type,
       defaultValue,
       errorText = "",
       hintText,
@@ -98,6 +100,7 @@ export const MENTInput = forwardRef<HTMLInputElement, MENTInputProps>(
             id={id}
             name={id}
             ref={ref}
+            type={isPasswordVisible ? "text" : type}
             aria-invalid={!valid}
             aria-describedby={`${id}--text`}
             aria-required={required}
