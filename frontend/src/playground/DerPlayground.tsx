@@ -40,6 +40,7 @@ export default function DerPlayground() {
                 id="password"
                 type="password"
                 labelText="Password"
+                password={true}
                 required={true}
                 hintText="Minimum 8 characters with mix of letters and numbers"
             />

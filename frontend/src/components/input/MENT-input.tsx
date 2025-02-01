@@ -3,6 +3,7 @@ import bem from "bero";
 import { MENTIconValidation } from "../icon/MENT-icon-validation.tsx";
 import { MENTFormNotice } from "../form/MENT-form-notice.tsx";
 import { join } from "bero";
+import { MENTIcon } from "../icon/MENT-icon.tsx";
 
 interface MENTInputProps {
   centered?: boolean;
@@ -14,6 +15,7 @@ interface MENTInputProps {
   labelCustomProps?: React.LabelHTMLAttributes<HTMLLabelElement>;
   labelText?: string;
   noIcon?: boolean;
+  password?: boolean;
   onBlur?: (event: FocusEvent<HTMLInputElement>) => void;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   onFocus?: (event: FocusEvent<HTMLInputElement>) => void;
@@ -38,6 +40,7 @@ export const MENTInput = forwardRef<HTMLInputElement, MENTInputProps>(
       labelCustomProps,
       labelText,
       noIcon,
+      password,
       onBlur,
       onChange = () => undefined,
       onFocus,
@@ -55,6 +58,7 @@ export const MENTInput = forwardRef<HTMLInputElement, MENTInputProps>(
     const success = valid === true;
 
     const [inputValue, setInputValue] = useState<string>("");
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const controlledValue = defaultValue ? undefined : inputValue;
 
     const handleOnBlur = (event: FocusEvent<HTMLInputElement>) => {
@@ -76,6 +80,10 @@ export const MENTInput = forwardRef<HTMLInputElement, MENTInputProps>(
         onFocus(event);
       }
     };
+
+      const handlePasswordIconClick = () => {
+          setIsPasswordVisible((prevState) => !prevState);
+      };
 
     return (
       <div
@@ -119,7 +127,17 @@ export const MENTInput = forwardRef<HTMLInputElement, MENTInputProps>(
           >
             {labelText}
           </label>
-          {withIcon && (
+            {password && (
+                <MENTIcon
+                    name={isPasswordVisible ? "icon-eye--off" : "icon-eye"} // Toggle icon name
+                    title={isPasswordVisible ? "Password ausblenden" : "Password anzeigen"}
+                    iconClassName={bemInput("icon")}
+                    onClick={handlePasswordIconClick} // Add click handler
+                    role="button"
+                    tabIndex={0} // Make it focusable
+                />
+            )}
+          {withIcon && !password && (
             <MENTIconValidation success={success} iconClassName={bemInput("icon")} />
           )}
         </div>
