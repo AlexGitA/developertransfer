@@ -4,12 +4,43 @@ from django_countries.fields import CountryField
 from django.core.validators import URLValidator
 
 
-class TestClass(models.Model):
-    title = models.CharField(max_length=200)
-    body = models.TextField(max_length=100)
+# class Topic(models.Model):
+#   name = models.CharField(max_length=100)
+
+#  def __str__(self):
+#     return self.name
+
+
+class Room(models.Model):
+    name = models.CharField(
+        max_length=100,
+        help_text="Name of the room"
+    )
+    description = models.TextField(
+        null=True,
+        blank=True,
+        help_text="Detailed description of the room"
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+        help_text="Last time the room was updated"
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+        help_text="When the room was created"
+    )
+    updatedDate = models.DateField(
+        auto_now=True,
+        help_text="Date of last update"
+    )
+
+    class Meta:
+        ordering = ['-updated', '-created']
+        verbose_name = "Room"
+        verbose_name_plural = "Rooms"
 
     def __str__(self):
-        return f"Details of {self.title}"
+        return self.name
 
 
 # CLASS TO EXTEND THE DJANGO USER WITH CUSTOM DETAIL
@@ -26,7 +57,8 @@ class UserDetails(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name="details",
-        help_text="Associated user account"
+        help_text="Associated user account",
+        primary_key=True
     )
 
     is_online = models.BooleanField(

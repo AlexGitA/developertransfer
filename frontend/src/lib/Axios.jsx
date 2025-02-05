@@ -1,8 +1,6 @@
-import axios from 'axios'
+import axios from 'axios';
 
-// TODO needs to be completed and finished with authService.ts
-
-const baseUrl = 'http://localhost:8000'
+const baseUrl = 'http://localhost:8000';
 
 const AxiosInstance = axios.create({
     baseURL: baseUrl,
@@ -12,34 +10,42 @@ const AxiosInstance = axios.create({
         accept: 'application/json',
     },
     withCredentials: true
-})
+});
 
-// Request interceptor with the JWT token
-AxiosInstance.interceptors.request.use(
-    config => {
-        // Get token from localStorage or wherever you store it
-        const token = localStorage.getItem('access_token');
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        console.log('Starting Request:', config);
-        return config;
-    },
-    error => {
-        return Promise.reject(error);
+// Authentication helper functions
+export const handleLogout = async () => {
+    try {
+        const response = await AxiosInstance.post('/api/auth/logout/', {}, {
+            headers: {
+                'Authorization': `Token ${localStorage.getItem('access_token')}`
+            }
+        });
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('user');
+        console.log('Logout response:', response.data.detail);
+        window.location.href = '/login';
+    } catch (error) {
+        console.error('Logout error:', error);
     }
-);
+};
 
-// Response interceptor
-AxiosInstance.interceptors.response.use(
-    response => {
-        console.log('Response:', response);
-        return response;
-    },
-    error => {
-        console.log('Error:', error.response || error);
-        return Promise.reject(error);
+export const isAuthenticated = () => {
+    return !!localStorage.getItem('access_token');
+};
+
+// Get User Data
+export const getUserData = () => {
+    const userData = localStorage.getItem('user');
+    if (userData) {
+        return JSON.parse(userData);
     }
-);
+    return null;
+};
+
+// Get User Id
+export const getUserId = () => {
+    const user = getUserData();
+    return user ? user.pk : null;
+};
 
 export default AxiosInstance;

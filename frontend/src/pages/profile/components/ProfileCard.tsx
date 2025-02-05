@@ -11,12 +11,15 @@ interface ProfileCardProps {
 }
 
 const ProfileCard: React.FC<ProfileCardProps> = ({userDetails, currentUserId, onEdit}) => {
+    console.log('userDetails.id:', userDetails.id);
+    console.log('currentUserId:', currentUserId);
+    console.log('currentUserDetails:', userDetails);
     return (
         <div className="bg-white text-sm rounded-[12px] shadow-lg p-8">
             <div className="flex flex-col items-center gap-4">
                 {/* Profile Image */}
                 <div className="relative inline-block">
-                     {userDetails.profile_picture ? (
+                    {userDetails.profile_picture ? (
                         <img
                             src={userDetails.profile_picture}
                             alt={`${userDetails.username}'s profile`}

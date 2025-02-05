@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -61,9 +62,8 @@ INSTALLED_APPS = [
     'drf_yasg',
 ]
 
-CORS_ALLOWED_ORIGINS = ['http://localhost:5173','http://localhost:5175']
+CORS_ALLOWED_ORIGINS = ['http://localhost:5173', 'http://localhost:5175']
 CORS_ALLOW_CREDENTIALS = True
-
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -166,12 +166,14 @@ REST_FRAMEWORK = {
 }
 
 # Email Configuration Setup
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'lextech77@gmail.com'
-EMAIL_HOST_PASSWORD = 'fzsn hjwl jabu nork'
+BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv()
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587'))
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() == 'true'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 # PASSWORD_RESET_TIMEOUT = 900  # 15 minutes
 
 ACCOUNT_EMAIL_REQUIRED = True

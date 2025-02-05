@@ -1,19 +1,13 @@
 from rest_framework.serializers import ModelSerializer
-from ..models import TestClass, UserDetails
+from ..models import UserDetails, Room
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
 
 # Converts django models into JSON
 
-
-class TestClassSerializer(ModelSerializer):
-    class Meta:
-        model = TestClass
-        fields = ('id', 'title', 'body')
-
-
 class UserDetailsReadSerializer(ModelSerializer):
+    id = serializers.IntegerField(source='user.id')
     username = serializers.CharField(source='user.username', read_only=True)
     email = serializers.EmailField(source='user.email', read_only=True)
     first_name = serializers.CharField(source='user.first_name', read_only=True)
@@ -31,3 +25,9 @@ class UserDetailsWriteSerializer(ModelSerializer):
     class Meta:
         model = UserDetails
         fields = ['date_of_birth']
+
+
+class RoomSerializer(ModelSerializer):
+    class Meta:
+        model = Room
+        fields = '__all__'
