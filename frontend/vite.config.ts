@@ -5,6 +5,7 @@ import path from 'path'
 // path is now "@/components/ui/button"
 export default defineConfig({
   plugins: [react()],
+  assetsInclude: ['**/*.md'],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
