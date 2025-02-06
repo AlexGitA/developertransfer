@@ -43,6 +43,30 @@ class Room(models.Model):
         return self.name
 
 
+# SKILLS TO ADD TO THE USER
+class Skill(models.Model):
+    SKILL_TYPES = [
+        ('LANG', 'Programming Language'),
+        ('FRONT', 'Frontend'),
+        ('BACK', 'Backend'),
+        ('DB', 'Database'),
+        ('DEVOPS', 'DevOps & Cloud'),
+        ('MOBILE', 'Mobile Development'),
+        ('TEST', 'Testing'),
+        ('OTHER', 'Tools & Others')
+    ]
+
+    name = models.CharField(max_length=50, unique=True)
+    skill_type = models.CharField(max_length=10, choices=SKILL_TYPES)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ['name']
+
+
 # CLASS TO EXTEND THE DJANGO USER WITH CUSTOM DETAIL
 class UserDetails(models.Model):
     LANGUAGE_CHOICES = [
