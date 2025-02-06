@@ -22,7 +22,7 @@ class UserDetailsReadSerializer(ModelSerializer):
 
     class Meta:
         model = UserDetails
-        exclude = ['last_time_online', 'user', 'profile_pic', 'date_of_birth',
+        exclude = ['last_time_online', 'user', 'date_of_birth',
                    'profile_progress']
 
 
