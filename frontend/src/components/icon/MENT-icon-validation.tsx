@@ -25,7 +25,7 @@ const MENTIconValidationCore: React.FC<MENTIconValidationProps> = ({
   success,
   title,
 }) => {
-  const name = success ? "checkbox-checkmark" : "cross-small";
+  const name = success ? "icon-success" : "icon-invalid";
   return (
     <MENTIcon
       name={name}
