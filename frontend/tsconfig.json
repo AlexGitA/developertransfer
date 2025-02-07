@@ -8,7 +8,7 @@
     "baseUrl": ".",
      "allowJs": true,
     "paths": {
-      "@/*": ["./src/**"]
+      "@/*": ["./src/*", "./src/**"]
     }
   }
 }

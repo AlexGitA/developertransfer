@@ -4,7 +4,7 @@ import LeftSidebar from './components/LeftSidebar';
 import RightSidebar from './components/RightSidebar';
 import {useParams} from 'react-router-dom';
 import ProfileCard from './components/ProfileCard';
-import AxiosInstance from "@/lib/Axios";
+import AxiosInstance, {getUserId} from "@/lib/Axios";
 import axios from 'axios';
 import {UserDetails} from '@/types/user';
 import Header from './../../layout/Header/Header'
@@ -14,7 +14,7 @@ const ProfilePage = () => {
     const [userData, setUserData] = useState<UserDetails | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const currentUserId = 1; // TODO: Get from auth context
+    const currentUserId = getUserId();
 
     useEffect(() => {
         console.log("ProfilePage mounted, ID:", id);
@@ -63,6 +63,7 @@ const ProfilePage = () => {
     }
 
     return (
+
         <div className="min-h-screen flex bg-muted flex-col">
             <div className="pb-10">
                 <Header/>
