@@ -26,7 +26,7 @@ function App() {
                     <Route path="login" element={<LoginPage/>}/>
                     <Route path="register" element={<RegisterPage/>}/>
                     <Route path="verify-email" element={<VerifyEmailPage/>}/>
-                    <Route path="confirm-email" element={<EmailConfirmationPage/>}/>
+                    <Route path="confirm-email/:key" element={<EmailConfirmationPage/>}/>
 
                     {/* Info paths */}
                     <Route path="tos" element={<TermsOfService/>}/>

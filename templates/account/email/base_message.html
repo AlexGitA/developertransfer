@@ -1,0 +1,19 @@
+<!-- templates/account/email/base_message.html -->
+{% load i18n %}{% autoescape off %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333333; max-width: 600px; margin: 0 auto; padding: 20px;">
+    <div style="background-color: #ffffff; border-radius: 8px; padding: 20px; border: 1px solid #e5e7eb;">
+        {% block content %}{% endblock %}
+
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eeeeee; color: #666666; font-size: 14px;">
+            Best regards,<br>
+            The MentorX Team
+        </div>
+    </div>
+</body>
+</html>
+{% endautoescape %}
