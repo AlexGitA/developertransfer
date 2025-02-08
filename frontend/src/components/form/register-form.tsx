@@ -13,7 +13,9 @@ export function RegisterForm({className, ...props}: React.ComponentProps<"div">)
     const [loading, setLoading] = useState<boolean>(false);
     const [formData, setFormData] = useState({
         username: "",
-        password: ""
+        email: "",
+        password1: "",
+        password2: ""
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -90,14 +92,14 @@ export function RegisterForm({className, ...props}: React.ComponentProps<"div">)
                             </div>
                             <div className="grid gap-2">
                                 <div className="flex items-center">
-                                    <Label htmlFor="password">Email</Label>
+                                    <Label htmlFor="email">Email</Label>
                                 </div>
                                 <Input
-                                    id="password"
-                                    type="password"
+                                    id="email"
+                                    type="email"
                                     placeholder="youremail@mentorx.com"
                                     required
-                                    value={formData.password}
+                                    value={formData.email}
                                     onChange={handleChange}
                                 />
                             </div>
@@ -106,10 +108,10 @@ export function RegisterForm({className, ...props}: React.ComponentProps<"div">)
                                     <Label htmlFor="password">Password</Label>
                                 </div>
                                 <Input
-                                    id="password"
+                                    id="password1"
                                     type="password"
                                     required
-                                    value={formData.password}
+                                    value={formData.password1}
                                     onChange={handleChange}
                                 />
                             </div>
@@ -118,10 +120,10 @@ export function RegisterForm({className, ...props}: React.ComponentProps<"div">)
                                     <Label htmlFor="password">Password Confirmation</Label>
                                 </div>
                                 <Input
-                                    id="password"
+                                    id="password2"
                                     type="password"
                                     required
-                                    value={formData.password}
+                                    value={formData.password2}
                                     onChange={handleChange}
                                 />
                             </div>
@@ -169,7 +171,7 @@ export function RegisterForm({className, ...props}: React.ComponentProps<"div">)
                             </div>
                             <div className="text-center text-sm">
                                 Already have an account?{" "}
-                                <a href={`/login/`} className="underline underline-offset-4">
+                                <a href={`/login/`} className="underline underline-offset-4 hover:text-primary">
                                     Log in
                                 </a>
                             </div>

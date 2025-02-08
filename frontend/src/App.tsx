@@ -8,21 +8,29 @@ import HomePage from "@/pages/home/HomePage.tsx";
 import RegisterPage from "@/pages/auth/RegisterPage.tsx";
 import TermsOfService from "@/pages/legal/TermsOfService.tsx";
 import PrivacyPolicy from "@/pages/legal/PrivacyPolicy.tsx";
+import VerifyEmailPage from "@/pages/auth/VerifyEmailPage.tsx";
+import EmailConfirmationPage from "@/pages/auth/EmailConfirmationPage.tsx";
 
 function App() {
     return (
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Layout/>}>
+                    {/* Main paths */}
                     <Route index element={<Navigate to="/home" replace/>}/>
                     <Route path="playground" element={<DerPlayground/>}/>
                     <Route path="profile/:id" element={<ProfilePage/>}/>
                     <Route path="home" element={<HomePage/>}/>
+
+                    {/* Auth paths */}
                     <Route path="login" element={<LoginPage/>}/>
                     <Route path="register" element={<RegisterPage/>}/>
+                    <Route path="verify-email" element={<VerifyEmailPage/>}/>
+                    <Route path="confirm-email" element={<EmailConfirmationPage/>}/>
+
+                    {/* Info paths */}
                     <Route path="tos" element={<TermsOfService/>}/>
                     <Route path="pp" element={<PrivacyPolicy/>}/>
-                    {/* Add more routes as needed */}
                 </Route>
             </Routes>
         </BrowserRouter>

@@ -47,7 +47,7 @@ const Header = () => {
                     </button>
                 ) : (
                     <button
-                        className="px-4 py-2 rounded hover:bg-gray-100 text-primary dark:hover:bg-gray-700 dark:text-white transition-colors"
+                        className="px-4 py-2 rounded hover:bg-gray-100 hover:text-primary text-white dark:hover:bg-gray-700 dark:text-white transition-colors"
                         onClick={() => navigate('/login')}
                     >
                         Login
