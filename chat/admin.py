@@ -1,6 +1,5 @@
 from django.contrib import admin
-from chat.models import User,Profile, Todo, ChatMessage
-
+from chat.models import Profile, Todo, ChatMessage
 
 class UserAdmin(admin.ModelAdmin):
     list_display = ['username', 'email']
@@ -19,7 +18,6 @@ class ChatMessageAdmin(admin.ModelAdmin):
     list_editable = ['is_read', 'message']
     list_display = ['user','sender', 'reciever', 'is_read', 'message']
 
-admin.site.register(User, UserAdmin)
 admin.site.register( Profile,ProfileAdmin)
 admin.site.register( Todo,TodoAdmin)
 admin.site.register( ChatMessage,ChatMessageAdmin)
