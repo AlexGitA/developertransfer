@@ -222,15 +222,16 @@ const ProfileCard: React.FC<ProfileCardProps> = ({userDetails, currentUserId, on
                     </button>
                 </div>
             )}
-                {/* Edit Button */}
-                {userDetails.id && currentUserId === userDetails.id && (
-                    <button onClick={() => setIsEditDialogOpen(true)}
-                            className="px-6 py-3 rounded-[50px] bg-[#215FCB] hover:bg-[#5F7ABB] dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-medium transition-all duration-200 flex items-center gap-2">
-                        <i className="fas fa-edit"></i>
-                        Edit Profile
-                    </button>
-                )}
-            </div>
+            {/* Edit Button */}
+            {userDetails.id && currentUserId === userDetails.id && (
+                <button
+                    onClick={() => setIsEditDialogOpen(true)}
+                    className="px-6 py-3 rounded-[50px] bg-[#215FCB] hover:bg-[#5F7ABB] dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-medium transition-all duration-200 flex items-center gap-2"
+                >
+                    <i className="fas fa-edit"></i>
+                    Edit Profile
+                </button>
+            )}
 
             {/* Add the EditProfileDialog component here */}
             <EditProfileDialog
