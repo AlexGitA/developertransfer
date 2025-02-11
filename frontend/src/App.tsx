@@ -10,6 +10,7 @@ import TermsOfService from "@/pages/legal/TermsOfService.tsx";
 import PrivacyPolicy from "@/pages/legal/PrivacyPolicy.tsx";
 import VerifyEmailPage from "@/pages/auth/VerifyEmailPage.tsx";
 import EmailConfirmationPage from "@/pages/auth/EmailConfirmationPage.tsx";
+import PostPage from "@/pages/post/PostPage.tsx";
 
 function App() {
     return (
@@ -31,6 +32,10 @@ function App() {
                     {/* Info paths */}
                     <Route path="tos" element={<TermsOfService/>}/>
                     <Route path="pp" element={<PrivacyPolicy/>}/>
+
+                    {/* Post paths */}
+                    <Route path="post" element={<PostPage/>}/>
+
                 </Route>
             </Routes>
         </BrowserRouter>

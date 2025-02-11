@@ -51,7 +51,7 @@ const ProfilePage = () => {
 
     const handleEditProfile = () => {
         console.log('Edit profile clicked');
-        // Add edit profile logic here
+        // todo Add edit profile logic here
     };
 
     if (loading) {
@@ -69,13 +69,13 @@ const ProfilePage = () => {
             </div>
 
             <div className="flex-1 flex pt-3 gap-6">
-                {/* Left Sidebar - adjusted positioning and colors */}
+                {/* Left Sidebar */}
                 <aside
                     className="w-72 hidden lg:block fixed left-0 top-[3.5rem] bottom-0 overflow-y-auto px-6 py-6">
                     <LeftSidebar/>
                 </aside>
 
-                {/* Main content - adjusted margins to account for fixed sidebars */}
+                {/* Main content */}
                 <main className={`
           flex-1 
           px-4 sm:px-6 py-4
@@ -96,7 +96,7 @@ const ProfilePage = () => {
                     )}
                 </main>
 
-                {/* Right Sidebar - matched styling with left */}
+                {/* Right Sidebar */}
                 <aside
                     className="w-72 hidden lg:block fixed right-0 top-[3.5rem] bottom-0 overflow-y-auto px-6 py-6">
                     <RightSidebar/>
