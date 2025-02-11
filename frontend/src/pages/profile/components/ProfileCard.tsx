@@ -1,10 +1,9 @@
-import React, {useState} from 'react';
-import {UserDetails} from '@/types/user';
+import React, { useState } from 'react';
+import { UserDetails } from '@/types/user';
 import CountryFlag from "@/components/ui/flag";
 import '@fortawesome/fontawesome-free/css/all.css';
 import SkillBadges from "@/pages/profile/components/SkillBadges.tsx";
-import { Badge } from "@/components/ui/badge";
-import EditProfileDialog from './EditProfileDialog'; // Add this import
+import EditProfileDialog from './EditProfileDialog';
 
 interface ProfileCardProps {
     userDetails: UserDetails;
@@ -12,19 +11,18 @@ interface ProfileCardProps {
     onEdit?: () => void;
 }
 
-const ProfileCard: React.FC<ProfileCardProps> = ({userDetails, currentUserId, onEdit}) => {
+const ProfileCard: React.FC<ProfileCardProps> = ({ userDetails, currentUserId, onEdit }) => {
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+
     return (
-        <div
-            className="bg-white dark:bg-gray-800/95 text-sm rounded-[12px] shadow-lg dark:shadow-gray-900/20 p-4 sm:p-6 transition-colors">
+        <div className="bg-white dark:bg-gray-800/95 text-sm rounded-[12px] shadow-lg dark:shadow-gray-900/20 p-4 sm:p-6 transition-colors">
             {/* Main Grid Layout */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
                 {/* Left Column - Basic Info */}
                 <div className="lg:col-span-1">
                     <div className="flex flex-col items-center space-y-4">
                         {/* Profile Image with Gradient Border */}
-                        <div
-                            className="relative inline-block p-1 rounded-full bg-gradient-to-r from-primary-300 to-primary-500 dark:from-blue-500 dark:to-blue-700">
+                        <div className="relative inline-block p-1 rounded-full bg-gradient-to-r from-primary-300 to-primary-500 dark:from-blue-500 dark:to-blue-700">
                             <img
                                 src={userDetails.profile_picture || "/images/default-profile.png"}
                                 alt={`${userDetails.username}'s profile`}
@@ -38,8 +36,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({userDetails, currentUserId, on
                         </div>
 
                         {/* Basic Info with Background Accent */}
-                        <div
-                            className="text-center w-full bg-gray-50 dark:bg-gray-800 dark:border dark:border-gray-700/50 rounded-xl p-4">
+                        <div className="text-center w-full bg-gray-50 dark:bg-gray-800 dark:border dark:border-gray-700/50 rounded-xl p-4">
                             <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-1">
                                 {userDetails.first_name}
                             </h2>
@@ -60,31 +57,26 @@ const ProfileCard: React.FC<ProfileCardProps> = ({userDetails, currentUserId, on
                         {/* Status Badges with Gradient */}
                         <div className="flex flex-wrap justify-center gap-2">
                             {userDetails.mentor && (
-                                <span
-                                    className="px-4 py-1.5 rounded-[50px] bg-gradient-to-r from-primary-400 to-primary-500 dark:from-blue-600 dark:to-blue-700 text-white text-xs sm:text-sm font-medium shadow-sm dark:shadow-gray-900/20">
+                                <span className="px-4 py-1.5 rounded-[50px] bg-gradient-to-r from-primary-400 to-primary-500 dark:from-blue-600 dark:to-blue-700 text-white text-xs sm:text-sm font-medium shadow-sm dark:shadow-gray-900/20">
                                     <i className="fas fa-user-graduate mr-1.5"></i>
                                     Mentor
                                 </span>
                             )}
                             {userDetails.looking_for_mentor && (
-                                <span
-                                    className="px-4 py-1.5 rounded-[50px] bg-gradient-to-r from-green-400 to-green-500 dark:from-green-600 dark:to-green-700 text-white text-xs sm:text-sm font-medium shadow-sm dark:shadow-gray-900/20">
+                                <span className="px-4 py-1.5 rounded-[50px] bg-gradient-to-r from-green-400 to-green-500 dark:from-green-600 dark:to-green-700 text-white text-xs sm:text-sm font-medium shadow-sm dark:shadow-gray-900/20">
                                     <i className="fas fa-search mr-1.5"></i>
                                     Looking for Mentor
                                 </span>
                             )}
                             {/* Message Button */}
-                            <button
-                                className="px-4 py-1.5 rounded-[50px] bg-gradient-to-r from-blue-400 to-blue-500 dark:from-blue-500 dark:to-blue-600 text-white text-xs sm:text-sm font-medium shadow-sm dark:shadow-gray-900/20 hover:from-blue-500 hover:to-blue-600 transition-all duration-200"
-                            >
+                            <button className="px-4 py-1.5 rounded-[50px] bg-gradient-to-r from-blue-400 to-blue-500 dark:from-blue-500 dark:to-blue-600 text-white text-xs sm:text-sm font-medium shadow-sm dark:shadow-gray-900/20 hover:from-blue-500 hover:to-blue-600 transition-all duration-200">
                                 <i className="fas fa-paper-plane mr-1.5"></i>
                                 Message
                             </button>
                         </div>
 
                         {/* Location, Language and Social Links Card */}
-                        <div
-                            className="flex flex-col items-center gap-4 w-full bg-gray-50 dark:bg-gray-800 dark:border dark:border-gray-700/50 rounded-xl p-4">
+                        <div className="flex flex-col items-center gap-4 w-full bg-gray-50 dark:bg-gray-800 dark:border dark:border-gray-700/50 rounded-xl p-4">
                             {/* Location and Language */}
                             <div className="flex justify-center gap-4">
                                 {userDetails.preferred_language && (
@@ -112,8 +104,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({userDetails, currentUserId, on
                             </div>
 
                             {/* Divider */}
-                            <div
-                                className="w-full h-px bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-600 to-transparent"/>
+                            <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-600 to-transparent"/>
 
                             {/* Social Links */}
                             <div className="flex gap-3">
@@ -175,21 +166,21 @@ const ProfileCard: React.FC<ProfileCardProps> = ({userDetails, currentUserId, on
                     )}
 
                     {/* Skills Section */}
-                    <div
-                        className="bg-gray-50 dark:bg-gray-800 dark:border dark:border-gray-700/50 rounded-xl p-4 space-y-3">
+                    {userDetails.goals && (
+                    <div className="bg-gray-50 dark:bg-gray-800 dark:border dark:border-gray-700/50 rounded-xl p-4 space-y-3">
                         <h3 className="text-primary dark:text-blue-400 font-medium text-sm sm:text-base flex items-center gap-2">
                             <i className="fas fa-code"/>
                             Skills
                         </h3>
                         <SkillBadges skills={userDetails.skills_info}/>
                     </div>
+                    )}
                 </div>
             </div>
 
             {/* GitHub Activity Chart - Full Width */}
             {userDetails.github_profile && (
-                <div
-                    className="hidden lg:block mt-4 sm:mt-6 bg-gray-50 dark:bg-gray-800 dark:border dark:border-gray-700/50 rounded-xl p-4">
+                <div className="hidden lg:block mt-4 sm:mt-6 bg-gray-50 dark:bg-gray-800 dark:border dark:border-gray-700/50 rounded-xl p-4">
                     <div className="flex items-center justify-between mb-4">
                         <h3 className="text-primary dark:text-blue-400 font-medium text-sm sm:text-base flex items-center gap-2">
                             <i className="fab fa-github"/>
@@ -204,35 +195,27 @@ const ProfileCard: React.FC<ProfileCardProps> = ({userDetails, currentUserId, on
                     </div>
                     <div className="bg-white dark:bg-gray-900 rounded-lg p-2">
                         <img
-                            src="https://ghchart.rshah.org/twoichai"
-                            alt="2016rshah's Github chart"
+                            src={`https://ghchart.rshah.org/${userDetails.github_profile.split('/').pop()}`}
+                            alt="GitHub contribution chart"
                             className="w-full rounded-lg"
                         />
                     </div>
                 </div>
             )}
-            {/* Edit Button - Bottom */}
+
+            {/* Edit Button */}
             {userDetails.id && currentUserId === userDetails.id && (
                 <div className="mt-4 sm:mt-6 flex justify-center">
                     <button
-                        onClick={onEdit}
+                        onClick={() => setIsEditDialogOpen(true)}
                         className="px-6 py-2.5 rounded-[50px] bg-gradient-to-r from-primary-400 to-primary-500 dark:from-blue-600 dark:to-blue-700 hover:from-primary-500 hover:to-primary-600 dark:hover:from-blue-700 dark:hover:to-blue-800 text-white text-sm sm:text-base font-medium transition-all duration-200 flex items-center gap-2 shadow-sm dark:shadow-gray-900/20">
                         <i className="fas fa-edit"/>
                         Edit Profile
                     </button>
                 </div>
             )}
-                {/* Edit Button */}
-                {userDetails.id && currentUserId === userDetails.id && (
-                    <button onClick={() => setIsEditDialogOpen(true)}
-                            className="px-6 py-3 rounded-[50px] bg-[#215FCB] hover:bg-[#5F7ABB] dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-medium transition-all duration-200 flex items-center gap-2">
-                        <i className="fas fa-edit"></i>
-                        Edit Profile
-                    </button>
-                )}
-            </div>
 
-            {/* Add the EditProfileDialog component here */}
+            {/* Edit Profile Dialog */}
             <EditProfileDialog
                 isOpen={isEditDialogOpen}
                 onClose={() => setIsEditDialogOpen(false)}
