@@ -1,8 +1,10 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {UserDetails} from '@/types/user';
 import CountryFlag from "@/components/ui/flag";
 import '@fortawesome/fontawesome-free/css/all.css';
 import SkillBadges from "@/pages/profile/components/SkillBadges.tsx";
+import { Badge } from "@/components/ui/badge";
+import EditProfileDialog from './EditProfileDialog'; // Add this import
 
 interface ProfileCardProps {
     userDetails: UserDetails;
@@ -11,6 +13,7 @@ interface ProfileCardProps {
 }
 
 const ProfileCard: React.FC<ProfileCardProps> = ({userDetails, currentUserId, onEdit}) => {
+    const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     return (
         <div
             className="bg-white dark:bg-gray-800/95 text-sm rounded-[12px] shadow-lg dark:shadow-gray-900/20 p-4 sm:p-6 transition-colors">
@@ -208,7 +211,6 @@ const ProfileCard: React.FC<ProfileCardProps> = ({userDetails, currentUserId, on
                     </div>
                 </div>
             )}
-
             {/* Edit Button - Bottom */}
             {userDetails.id && currentUserId === userDetails.id && (
                 <div className="mt-4 sm:mt-6 flex justify-center">
@@ -220,6 +222,22 @@ const ProfileCard: React.FC<ProfileCardProps> = ({userDetails, currentUserId, on
                     </button>
                 </div>
             )}
+                {/* Edit Button */}
+                {userDetails.id && currentUserId === userDetails.id && (
+                    <button onClick={() => setIsEditDialogOpen(true)}
+                            className="px-6 py-3 rounded-[50px] bg-[#215FCB] hover:bg-[#5F7ABB] dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-medium transition-all duration-200 flex items-center gap-2">
+                        <i className="fas fa-edit"></i>
+                        Edit Profile
+                    </button>
+                )}
+            </div>
+
+            {/* Add the EditProfileDialog component here */}
+            <EditProfileDialog
+                isOpen={isEditDialogOpen}
+                onClose={() => setIsEditDialogOpen(false)}
+                userDetails={userDetails}
+            />
         </div>
     );
 };
