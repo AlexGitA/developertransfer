@@ -3,7 +3,6 @@ from rest_framework.routers import DefaultRouter
 from .views import UserDetailsReadView, RoomViewSet
 
 backend_router = DefaultRouter()
-backend_router.register(r'rooms', RoomViewSet, basename='rooms')
 backend_router.register(r'user-details', UserDetailsReadView, basename='user-details')
 
 urlpatterns = backend_router.urls

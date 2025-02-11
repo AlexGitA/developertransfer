@@ -44,10 +44,19 @@ urlpatterns = [
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 
+    # Admin
     path('admin/', admin.site.urls),
+
+    # API Endpoints
     path('api/auth/', include('authentication.urls')),
     path('api/', include('backend.api.urls')),
     path('chat/', include('chat.urls')),
+    path('skills/', include('backend.api.skills_urls')),
+    path('rooms/', include('backend.api.rooms_urls')),
+
+    # JWT Authentication
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
+    # Media Folder Connection
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -45,4 +45,13 @@ export interface UserDetails {
 
   // Additional information
   goals: string | null;
+
+  // Skills of the user
+  skills: number[];         // Array of IDs for write operations
+  skills_info: {
+    id: number;
+    name: string;
+    skill_type: string;
+    type_display: string;
+  }[];
 }

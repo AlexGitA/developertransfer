@@ -63,33 +63,47 @@ const ProfilePage = () => {
     }
 
     return (
-
-        <div className="min-h-screen flex bg-muted flex-col">
-            <div className="pb-10">
+        <div className="min-h-screen flex bg-white transition-colors dark:bg-gray-900 flex-col">
+            <div className="pb-5">
                 <Header/>
             </div>
 
-            <div className="flex-[1-5] flex pt-3">
-                <div className="w-[27vw] bg-white p-3">
+            <div className="flex-1 flex pt-3 gap-6">
+                {/* Left Sidebar - adjusted positioning and colors */}
+                <aside
+                    className="w-72 hidden lg:block fixed left-0 top-[3.5rem] bottom-0 overflow-y-auto px-6 py-6">
                     <LeftSidebar/>
-                </div>
+                </aside>
 
-                <main className="w-[46vw] bg-muted p-6">
+                {/* Main content - adjusted margins to account for fixed sidebars */}
+                <main className={`
+          flex-1 
+          px-4 sm:px-6 py-4
+          mx-auto
+          w-full
+          pt-10
+          lg:ml-72 lg:mr-72 
+          ${window.innerWidth >= 1024 ? 'max-w-5xl' : 'max-w-2xl'}
+        `}>
                     {userData && (
-                        <ProfileCard
-                            userDetails={userData}
-                            currentUserId={currentUserId}
-                            onEdit={handleEditProfile}
-                        />
+                        <div className="lg:px-0 px-0 sm:px-4">
+                            <ProfileCard
+                                userDetails={userData}
+                                currentUserId={currentUserId}
+                                onEdit={handleEditProfile}
+                            />
+                        </div>
                     )}
                 </main>
 
-                <div className="w-[27vw] bg-white p-3">
+                {/* Right Sidebar - matched styling with left */}
+                <aside
+                    className="w-72 hidden lg:block fixed right-0 top-[3.5rem] bottom-0 overflow-y-auto px-6 py-6">
                     <RightSidebar/>
-                </div>
+                </aside>
             </div>
         </div>
-    );
-};
+    )
+}
 
 export default ProfilePage;

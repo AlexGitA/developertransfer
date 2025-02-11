@@ -1,6 +1,9 @@
 // just a placeholder
-function RightSidebar() {
-    return <div></div>;
+import { RecentPostsSidebar } from "@/pages/profile/components/RecentPosts";
+
+export const RightSidebar = () => {
+  return <RecentPostsSidebar />;
 }
+
 
 export default RightSidebar;
