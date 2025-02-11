@@ -3,7 +3,7 @@
 @tailwind utilities;
 @font-face {
   font-family: 'UrbanJungle';
-  /*src: url('/src/fonts/AnkhSanctuary-PVK0B.ttf') format('truetype');*/
+  src: url('/src/fonts/AnkhSanctuary-PVK0B.ttf') format('truetype');
 }
 @keyframes fadeInOut {
   0%, 100% {

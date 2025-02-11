@@ -18,7 +18,7 @@ export default defineConfig({
     manifest: true,
   },
   server: {
-    // Configure Vite to proxy API requests to Django
+    port: 5173, //default running port set
     proxy: {
       '/api': {
         target: 'http://localhost:8000',

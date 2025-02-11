@@ -196,6 +196,11 @@ class UserDetails(models.Model):
         help_text="User's professional goals (comma-separated)"
     )
 
+    skills = models.ManyToManyField(
+        Skill,
+        blank=True,
+        help_text="User's technical skills")
+
     class Meta:
         verbose_name = "User detail"
         verbose_name_plural = "User details"
