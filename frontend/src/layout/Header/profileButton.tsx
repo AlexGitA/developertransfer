@@ -1,11 +1,9 @@
 import {useState, useEffect} from 'react';
-import {useNavigate} from 'react-router-dom';
 import {MENTButton} from "@/components/button/MENT-button";
 import AxiosInstance, {getUserId} from "@/lib/Axios";
 
 const ProfileButton = () => {
     const [profileImage, setProfileImage] = useState('');
-    const navigate = useNavigate();
     const currentUserId = getUserId();
 
     useEffect(() => {
