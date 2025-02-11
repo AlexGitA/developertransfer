@@ -3,7 +3,7 @@ import { MENTButton } from "@/components/button/MENT-button.tsx";
 import ProfileButton from "@/layout/Header/profileButton.tsx";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { getUserId, handleLogout, isAuthenticated } from '@/lib/axios';
-import { useState } from "react";
+import React, { useState } from "react";
 import DarkModeToggle from "@/components/button/DarkModeToggle.tsx";
 import '@fortawesome/fontawesome-free/css/all.css';
 
@@ -39,8 +39,8 @@ const Header = () => {
                         onClick={() => navigate('/post')}
                         className={`flex items-center text-white gap-2 px-3 py-1.5 rounded-lg transition-all
                             ${isActive('/post') 
-                                ? 'bg-primary-400/10 text-primary-500 text-muted dark:text-primary-300' 
-                                : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50'
+                                ? 'bg-white/10 text-primary dark:text-primary-300' 
+                                : 'hover:text-primary hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50'
                             }`}
                     >
                         <i className="fas fa-newspaper text-lg"/>
@@ -51,7 +51,9 @@ const Header = () => {
 
             <div className="main-header__mid text-center">
                 <MENTButton className="main-header__mid-button">
-                    <span className="main-header__mid-button-text">Suche deinen Mentor   🔍</span>
+                    <span className="main-header__mid-button-text">Search for your Mentor
+                         <i className="fa-solid fa-magnifying-glass text-lg"/>
+                    </span>
                 </MENTButton>
             </div>
 
