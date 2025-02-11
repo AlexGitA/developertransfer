@@ -1,4 +1,3 @@
-import {LoginForm} from "@/components/form/login-form.tsx"
 import {RegisterForm} from "@/components/form/register-form.tsx";
 
 export default function RegisterPage() {

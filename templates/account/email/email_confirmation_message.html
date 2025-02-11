@@ -1,0 +1,40 @@
+<!-- templates/account/email/email_confirmation_message.html -->
+{% extends "account/email/base_message.html" %}
+{% load account %}
+{% load i18n %}
+
+{% block content %}{% autoescape off %}
+{% user_display user as user_display %}
+<div style="margin-bottom: 20px;">
+    <h2 style="color: #1f2937; margin-bottom: 16px; font-size: 24px;">Hey {{ user_display }}! 👋</h2>
+    
+    <p style="margin-bottom: 16px; color: #374151;">
+        Welcome to MentorX! We're excited to have you join our community. To get started, we just need to verify your email address.
+    </p>
+
+    <div style="text-align: center; margin: 30px 0;">
+        <a href="http://localhost:5173/api/auth/account-confirm-email/{{ key }}/" 
+           style="background-color: #2563eb; 
+                  color: white; 
+                  padding: 12px 24px; 
+                  text-decoration: none; 
+                  border-radius: 6px; 
+                  font-weight: bold; 
+                  display: inline-block;">
+            Verify Email Address
+        </a>
+    </div>
+
+    <p style="color: #666666; font-size: 14px; margin-top: 24px;">
+        If you didn't create an account with MentorX, you can safely ignore this email.
+    </p>
+
+    <p style="color: #666666; font-size: 14px; margin-top: 24px;">
+        Button not working? Copy and paste this link into your browser:<br>
+        <a href="http://localhost:5173/api/auth/account-confirm-email/{{ key }}/" 
+           style="color: #2563eb; text-decoration: underline;">
+            http://localhost:5173/api/auth/account-confirm-email/{{ key }}/
+        </a>
+    </p>
+</div>
+{% endautoescape %}{% endblock %}
