@@ -2,7 +2,9 @@ from django.db.models import OuterRef, Subquery
 from django.db.models import Q
 from rest_framework.views import APIView
 
-from chat.models import User, Todo, Profile, ChatMessage
+from chat.models import Todo, Profile, ChatMessage
+from django.contrib.auth.models import User
+
 
 from chat.serializer import MyTokenObtainPairSerializer, RegisterSerializer, TodoSerializer, MessageSerializer, ProfileSerializer,UserSerializer
 
