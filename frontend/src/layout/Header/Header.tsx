@@ -2,11 +2,8 @@ import "../../index.css";
 import { MENTButton } from "@/components/button/MENT-button.tsx";
 import ProfileButton from "@/layout/Header/profileButton.tsx";
 import { useNavigate, useLocation } from 'react-router-dom';
-import { getUserId, handleLogout, isAuthenticated } from '@/lib/axios';
-import React, { useState } from "react";
-import {useNavigate} from 'react-router-dom';
+import { useState } from "react";
 import {handleLogout, isAuthenticated} from '@/lib/axios';
-import {useState} from "react";
 import DarkModeToggle from "@/components/button/DarkModeToggle.tsx";
 import '@fortawesome/fontawesome-free/css/all.css';
 
@@ -81,7 +78,6 @@ const Header = () => {
                     </button>
                 {isLoggedIn ? (
                     <button
-                        className="px-2 py-1 text-white rounded hover:bg-gray-100 hover:text-primary dark:text-white dark:hover:bg-gray-700 dark:hover:text-primary-200 transition-colors"
                         className="px-4 py-2 text-white rounded hover:bg-gray-100 hover:text-primary
                         dark:text-white dark:hover:bg-gray-700 dark:hover:text-primary-200 transition-colors"
                         onClick={() => {
