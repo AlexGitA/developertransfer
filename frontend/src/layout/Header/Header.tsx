@@ -2,7 +2,7 @@ import "../../index.css";
 import {MENTButton} from "@/components/button/MENT-button.tsx";
 import ProfileButton from "@/layout/Header/profileButton.tsx";
 import {useNavigate} from 'react-router-dom';
-import {getUserId, handleLogout, isAuthenticated} from '@/lib/axios';
+import {handleLogout, isAuthenticated} from '@/lib/axios';
 import {useState} from "react";
 import DarkModeToggle from "@/components/button/DarkModeToggle.tsx";
 
@@ -34,10 +34,12 @@ const Header = () => {
             </div>
             <div className="main-header__right flex items-center gap-2">
                 <DarkModeToggle/>
+                {/* todo should not try to get to user a user if not logged in */}
                 <ProfileButton/>
                 {isLoggedIn ? (
                     <button
-                        className="px-4 py-2 text-white rounded hover:bg-gray-100 hover:text-primary dark:text-white dark:hover:bg-gray-700 dark:hover:text-primary-200 transition-colors"
+                        className="px-4 py-2 text-white rounded hover:bg-gray-100 hover:text-primary
+                        dark:text-white dark:hover:bg-gray-700 dark:hover:text-primary-200 transition-colors"
                         onClick={() => {
                             handleLogout();
                             setIsLoggedIn(false);

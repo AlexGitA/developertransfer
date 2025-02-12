@@ -52,7 +52,7 @@ urlpatterns = [
     path('api/', include('backend.api.urls')),
     path('chat/', include('chat.urls')),
     path('skills/', include('backend.api.skills_urls')),
-    path('rooms/', include('backend.api.rooms_urls')),
+    path('posts/', include('backend.api.posts_urls')),
 
     # JWT Authentication
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),

@@ -87,7 +87,6 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ userDetails, currentUserId, o
                                             label="Language"
                                             showText={false}
                                         />
-                                        <span className="text-xs text-gray-500 dark:text-gray-400">Language</span>
                                     </div>
                                 )}
                                 {userDetails.country && userDetails.country !== '' && (
@@ -98,7 +97,6 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ userDetails, currentUserId, o
                                             showText={false}
                                             text={undefined}
                                         />
-                                        <span className="text-xs text-gray-500 dark:text-gray-400">Country</span>
                                     </div>
                                 )}
                             </div>

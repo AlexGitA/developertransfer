@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
-from ..models import UserDetails, Room, Skill
+from ..models import UserDetails, Skill, Post
 from rest_framework.viewsets import ReadOnlyModelViewSet
-from .serializers import UserDetailsReadSerializer, RoomSerializer, SkillSerializer
+from .serializers import UserDetailsReadSerializer, SkillSerializer, PostSerializer
 
 
 class UserDetailsReadView(ReadOnlyModelViewSet):
@@ -9,9 +9,9 @@ class UserDetailsReadView(ReadOnlyModelViewSet):
     serializer_class = UserDetailsReadSerializer
 
 
-class RoomViewSet(ModelViewSet):
-    queryset = Room.objects.all()
-    serializer_class = RoomSerializer
+class PostViewSet(ModelViewSet):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
 
 
 class SkillViewSet(ModelViewSet):
