@@ -4,45 +4,6 @@ from django_countries.fields import CountryField
 from django.core.validators import URLValidator
 
 
-# class Topic(models.Model):
-#   name = models.CharField(max_length=100)
-
-#  def __str__(self):
-#     return self.name
-
-
-class Room(models.Model):
-    name = models.CharField(
-        max_length=100,
-        help_text="Name of the room"
-    )
-    description = models.TextField(
-        null=True,
-        blank=True,
-        help_text="Detailed description of the room"
-    )
-    updated = models.DateTimeField(
-        auto_now=True,
-        help_text="Last time the room was updated"
-    )
-    created = models.DateTimeField(
-        auto_now_add=True,
-        help_text="When the room was created"
-    )
-    updatedDate = models.DateField(
-        auto_now=True,
-        help_text="Date of last update"
-    )
-
-    class Meta:
-        ordering = ['-updated', '-created']
-        verbose_name = "Room"
-        verbose_name_plural = "Rooms"
-
-    def __str__(self):
-        return self.name
-
-
 # SKILLS TO ADD TO THE USER
 class Skill(models.Model):
     SKILL_TYPES = [
@@ -207,3 +168,183 @@ class UserDetails(models.Model):
 
     def __str__(self):
         return f"Details of {self.user.username}"
+
+
+### Post Classes
+class Topic(models.Model):
+    name = models.CharField(
+        max_length=15,
+        unique=True,
+        help_text="Name of the topic"
+    )
+    description = models.TextField(
+        null=True,
+        blank=True,
+        help_text="Description of the topic"
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+        help_text="When the topic was created"
+    )
+    followers = models.ManyToManyField(
+        User,
+        related_name='followed_topics',
+        blank=True,
+        help_text="Users following this topic"
+    )
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = "Topic"
+        verbose_name_plural = "Topics"
+
+    def __str__(self):
+        return self.name
+
+
+class Post(models.Model):
+    title = models.CharField(
+        max_length=50,
+        help_text="Title of the post"
+    )
+    content = models.TextField(
+        help_text="Content of the post"
+    )
+    url = models.URLField(
+        max_length=200,
+        blank=True,
+        null=True,
+        help_text="URL for link posts"
+    )
+    # todo: create post media upload
+    media = models.FileField(
+        upload_to='post_media/',
+        blank=True,
+        null=True,
+        help_text="Media file for image/video posts"
+    )
+
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='posts',
+        help_text="User who created the post"
+    )
+    topic = models.ForeignKey(
+        Topic,
+        on_delete=models.CASCADE,
+        related_name='posts',
+        help_text="Topic of the post"
+    )
+
+    likes = models.ManyToManyField(
+        User,
+        related_name='liked_posts',
+        blank=True,
+        help_text="Users who liked this post"
+    )
+    likes_count = models.PositiveIntegerField(
+        default=0,
+        help_text="Number of likes"
+    )
+    comments_count = models.PositiveIntegerField(
+        default=0,
+        help_text="Number of comments"
+    )
+
+    is_pinned = models.BooleanField(
+        default=False,
+        help_text="Whether the post is pinned to the top"
+    )
+    is_archived = models.BooleanField(
+        default=False,
+        help_text="Whether the post is archived"
+    )
+
+    # todo adjust the model
+    created = models.DateTimeField(
+        auto_now_add=True,
+        help_text="When the post was created"
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+        help_text="Last time the post was updated"
+    )
+
+    class Meta:
+        ordering = ['-created']
+        verbose_name = "Post"
+        verbose_name_plural = "Posts"
+        indexes = [
+            models.Index(fields=['-created']),
+            models.Index(fields=['author']),
+            models.Index(fields=['topic']),
+        ]
+
+    def __str__(self):
+        return self.title
+
+    def update_likes_count(self):
+        self.likes_count = self.likes.count()
+        self.save()
+
+
+class Comment(models.Model):
+    content = models.TextField(
+        help_text="Content of the comment"
+    )
+    post = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        related_name='comments',
+        help_text="Associated post"
+    )
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='comments',
+        help_text="User who wrote the comment"
+    )
+    parent = models.ForeignKey(
+        'self',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='replies',
+        help_text="Parent comment for nested replies"
+    )
+    likes = models.ManyToManyField(
+        User,
+        related_name='liked_comments',
+        blank=True,
+        help_text="Users who liked this comment"
+    )
+    likes_count = models.PositiveIntegerField(
+        default=0,
+        help_text="Number of likes on this comment"
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+        help_text="When the comment was created"
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+        help_text="Last time the comment was updated"
+    )
+
+    class Meta:
+        ordering = ['-created']
+        verbose_name = "Comment"
+        verbose_name_plural = "Comments"
+        indexes = [
+            models.Index(fields=['-created']),
+            models.Index(fields=['post']),
+            models.Index(fields=['author']),
+        ]
+
+    def __str__(self):
+        return f"Comment by {self.author.username} on {self.post.title}"
+
+    def update_likes_count(self):
+        self.likes_count = self.likes.count()
+        self.save()

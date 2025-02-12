@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from ..models import UserDetails, Room, Skill
+from ..models import UserDetails, Skill, Post
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
@@ -13,7 +13,7 @@ class UserDetailsReadSerializer(ModelSerializer):
     first_name = serializers.CharField(source='user.first_name', read_only=True)
     last_name = serializers.CharField(source='user.last_name', read_only=True)
     country = serializers.CharField(allow_null=True)
-    #skills = serializers.PrimaryKeyRelatedField(many=True, queryset=Skill.objects.all())  # For write operations
+    # skills = serializers.PrimaryKeyRelatedField(many=True, queryset=Skill.objects.all())  # For write operations
     skills_info = serializers.SerializerMethodField()  # For read operations
 
     class Meta:
@@ -40,13 +40,14 @@ class UserDetailsWriteSerializer(ModelSerializer):
         fields = ['date_of_birth']
 
 
-class RoomSerializer(ModelSerializer):
-    class Meta:
-        model = Room
-        fields = '__all__'
-
-
 class SkillSerializer(ModelSerializer):
     class Meta:
         model = Skill
+        fields = '__all__'
+
+
+# todo: finish
+class PostSerializer(ModelSerializer):
+    class Meta:
+        model = Post
         fields = '__all__'

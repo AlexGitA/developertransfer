@@ -4,6 +4,9 @@ import ProfileButton from "@/layout/Header/profileButton.tsx";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { getUserId, handleLogout, isAuthenticated } from '@/lib/axios';
 import React, { useState } from "react";
+import {useNavigate} from 'react-router-dom';
+import {handleLogout, isAuthenticated} from '@/lib/axios';
+import {useState} from "react";
 import DarkModeToggle from "@/components/button/DarkModeToggle.tsx";
 import '@fortawesome/fontawesome-free/css/all.css';
 
@@ -68,6 +71,7 @@ const Header = () => {
 
             <div className="main-header__right flex items-center gap-2">
                 <DarkModeToggle/>
+                {/* todo should not try to get to user a user if not logged in */}
                 <ProfileButton/>
                 {/* Todo, add on log in condition*/}
                     <button
@@ -78,6 +82,8 @@ const Header = () => {
                 {isLoggedIn ? (
                     <button
                         className="px-2 py-1 text-white rounded hover:bg-gray-100 hover:text-primary dark:text-white dark:hover:bg-gray-700 dark:hover:text-primary-200 transition-colors"
+                        className="px-4 py-2 text-white rounded hover:bg-gray-100 hover:text-primary
+                        dark:text-white dark:hover:bg-gray-700 dark:hover:text-primary-200 transition-colors"
                         onClick={() => {
                             handleLogout();
                             setIsLoggedIn(false);
