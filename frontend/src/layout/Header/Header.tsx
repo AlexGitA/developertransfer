@@ -37,14 +37,23 @@ const Header = () => {
                 <nav className="flex items-center gap-4">
                     <button
                         onClick={() => navigate('/post')}
-                        className={`flex items-center text-white gap-2 px-3 py-1.5 rounded-lg transition-all
+                        className={`flex items-center text-white gap-2 px-2.5 py-1.5 rounded-lg transition-all
                             ${isActive('/post') 
                                 ? 'bg-white/10 text-primary dark:text-primary-300' 
                                 : 'hover:text-primary hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50'
-                            }`}
-                    >
+                            }`}>
                         <i className="fas fa-newspaper text-lg"/>
                         <span className="text-sm font-medium">Posts</span>
+                    </button>
+                    <button
+                        onClick={() => navigate('/chats')}
+                        className={`flex items-center text-white gap-2 px-2.5 py-1.5 rounded-lg transition-all
+                            ${isActive('/chats') 
+                                ? 'bg-white/10 text-primary dark:text-primary-300' 
+                                : 'hover:text-primary hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50'
+                            }`}>
+                        <i className="fa-regular fa-comment text-lg"/>
+                        <span className="text-sm font-medium">Chats</span>
                     </button>
                 </nav>
             </div>
@@ -60,9 +69,15 @@ const Header = () => {
             <div className="main-header__right flex items-center gap-2">
                 <DarkModeToggle/>
                 <ProfileButton/>
+                {/* Todo, add on log in condition*/}
+                    <button
+                        onClick={() => navigate('/settings')}
+                        className="px-2 py-1 rounded hover:bg-gray-100 hover:text-primary text-white dark:hover:bg-gray-700 dark:text-white transition-colors">
+                        <i className="fa-solid fa-gear text-lg"/>
+                    </button>
                 {isLoggedIn ? (
                     <button
-                        className="px-4 py-2 text-white rounded hover:bg-gray-100 hover:text-primary dark:text-white dark:hover:bg-gray-700 dark:hover:text-primary-200 transition-colors"
+                        className="px-2 py-1 text-white rounded hover:bg-gray-100 hover:text-primary dark:text-white dark:hover:bg-gray-700 dark:hover:text-primary-200 transition-colors"
                         onClick={() => {
                             handleLogout();
                             setIsLoggedIn(false);
@@ -72,7 +87,7 @@ const Header = () => {
                     </button>
                 ) : (
                     <button
-                        className="px-4 py-2 rounded hover:bg-gray-100 hover:text-primary text-white dark:hover:bg-gray-700 dark:text-white transition-colors"
+                        className="px-2 py-1 rounded hover:bg-gray-100 hover:text-primary text-white dark:hover:bg-gray-700 dark:text-white transition-colors"
                         onClick={() => navigate('/login')}
                     >
                         Login
