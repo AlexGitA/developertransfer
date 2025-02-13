@@ -65,9 +65,8 @@ pip freeze > requirements.txt
 ```
 
 # Super User credentials
-
-- username: admin
-- password: adminadmin
+    "username": "admin",
+    "password": "adminadmin"
 
 ### else:
 
@@ -75,11 +74,16 @@ pip freeze > requirements.txt
 python manage.py createsuperuser
 ```
 
-### Test user TIKI
+### Test user peterX
+    http://localhost:5173/profile/4
+    "username": "peterX",
+    "password": "pass4Peter"
 
-    "username": "TIKI",
-    "email": "ibenyuk@gmail.com",
-    "password": "pass4Tim!"
+### Test user markusX
+    http://localhost:5173/profile/5
+    "username": "markusX",
+    "password": "pass4Markus"
+
 
 ## Bug fixes
 
