@@ -22,7 +22,6 @@ const ProfileButton = () => {
     }, [currentUserId]);
 
     return (
-        //todo check with ammar if its a good idea to use href, bc styles disappear and also the routing looks like shit
         <MENTButton href={`/profile/${currentUserId}`}
                     className="main-header__right-profile-button"
         >
