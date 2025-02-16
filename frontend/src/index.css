@@ -151,7 +151,7 @@ h1 {
 
 /*________________________________ Input Section Start -----------------------------*/
 .MENT-form-item {
-  margin: 0 10px 28px;
+  margin-bottom: 28px;
 }
 
 .MENT-input {
@@ -199,6 +199,7 @@ h1 {
   position: absolute;
   left: 16px;
   top: 14px;
+  cursor: text;
 }
 
 .MENT-input__label--required::before {
@@ -237,6 +238,57 @@ h1 {
   position: absolute;
 }
 /*________________________________ Input Section End -------------------------------*/
+/*________________________________ Form Section Start ------------------------------*/
+.MENT-login-form {
+  border: 1px solid #b7b7b7;
+  width: 600px;
+}
+
+.MENT-login-form__client {
+  padding: 60px;
+}
+
+.MENT-login-form__action-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.forgot-password {
+  font-size: 12px;
+}
+
+.form-item-distant {
+  margin-bottom: 30px;
+}
+
+.quick-login-form__barrier::before, .quick-login-form__barrier::after {
+  content: "";
+  height: 1px;
+  width: 100%;
+  background-color: #dddddd;
+}
+
+.quick-login-form__barrier {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.quick-login-form__barrier-text {
+  width: 100%;
+  text-align: center;
+  color: #767676;
+  text-wrap: nowrap;
+  text-transform: uppercase;
+}
+
+.quick-login-form__buttons {
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+  margin: 16px 0;
+}
+/*________________________________ Form Section End --------------------------------*/
 
 @media (prefers-color-scheme: light) {
   :root {

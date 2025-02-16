@@ -1,0 +1,17 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\frontend",
+    "\\frontend\\src",
+    "\\frontend\\src\\components",
+    "\\frontend\\src\\components\\button",
+    "\\frontend\\src\\components\\form",
+    "\\frontend\\src\\components\\input",
+    "\\frontend\\src\\features",
+    "\\frontend\\src\\features\\auth",
+    "\\frontend\\src\\features\\auth\\components",
+    "\\frontend\\src\\features\\auth\\components\\LoginForm"
+  ],
+  "SelectedNode": "\\frontend\\src\\features\\auth\\components\\LoginForm\\LoginForm.tsx",
+  "PreviewInSolutionExplorer": false
+}

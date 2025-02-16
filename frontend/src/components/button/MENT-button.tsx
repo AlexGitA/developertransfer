@@ -96,7 +96,6 @@ interface BaseButtonProps {
     $animate: boolean;
     $isSmall: boolean;
     $hasIcon: boolean;
-    $hasChildren: boolean;
 }
 
 const TextWrapper = styled.span`
@@ -130,7 +129,7 @@ const BaseButton = styled.button<BaseButtonProps>`
     transition: all 0.2s ease;
     width: ${({ $fullWidth }) => $fullWidth ? '100%' : 'auto'};
 
-    ${({ $isSmall, $hasChildren }) => css`
+    ${({ $isSmall }) => css`
         font-size: ${$isSmall ? '14px' : '16px'};
 
         ${IconWrapper} {
@@ -138,10 +137,6 @@ const BaseButton = styled.button<BaseButtonProps>`
                 width: ${$isSmall ? '14px' : '.9375rem'};
                 height: ${$isSmall ? '14px' : '.6875rem'};
             }
-
-            ${!$hasChildren && css`
-                justify-content: center;
-            `}
         }
     `}
 
@@ -180,8 +175,12 @@ const BaseButton = styled.button<BaseButtonProps>`
                 }
             `}
 
-    ${({$animate}) => css`
-        padding: ${$animate ? '0px' : '8px 16px' };
+    ${({$hasIcon}) => css`
+        padding: ${$hasIcon ? '20px 15px' : '8px 24px' };
+    `}
+    
+    ${({$animate}) => $animate && css`
+        padding: 8px 16px;
     `}
 
     ${({ $disabled, $loading }) =>
@@ -271,7 +270,7 @@ const Loader = styled.div`
 const IconWrapper = styled.span<IconWrapperProps>`
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: center;
     width: 1.5rem;
 
     ${({ theme }) => theme?.icon && css`
@@ -388,7 +387,6 @@ const MENTButtonCore = forwardRef<HTMLAnchorElement | HTMLButtonElement, MENTBut
                         $isSmall={isSmall}
                         $hasIcon={!!icon}
                         $animate={animate}
-                        $hasChildren={!!children}
                         ref={ref as React.Ref<HTMLAnchorElement>}
                         {...restProps}
                     >
@@ -407,7 +405,6 @@ const MENTButtonCore = forwardRef<HTMLAnchorElement | HTMLButtonElement, MENTBut
                         $isSmall={isSmall}
                         $hasIcon={!!icon}
                         $animate={animate}
-                        $hasChildren={!!children}
                         ref={ref as React.Ref<HTMLButtonElement>}
                         onFocus={() => setFocus(true)}
                         onBlur={() => setFocus(false)}
