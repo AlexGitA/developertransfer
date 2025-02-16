@@ -42,6 +42,16 @@ export const getUserData = () => {
     return null;
 };
 
+// Get User Token
+export const getUserToken = () => {
+    const access_token = localStorage.getItem('access_token');
+    if (access_token) {
+        return JSON.parse(access_token);
+    }
+    return null;
+};
+
+
 // Get User Id
 export const getUserId = () => {
     const user = getUserData();
