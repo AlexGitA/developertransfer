@@ -59,17 +59,21 @@ const Header = () => {
             </div>
 
             <div className="main-header__mid text-center">
-                <MENTButton className="main-header__mid-button">
-                    <span className="main-header__mid-button-text">Search for your Mentor
-                         <i className="fa-solid fa-magnifying-glass text-lg"/>
-                    </span>
-                </MENTButton>
+                {location.pathname !== '/home' && (
+                    <MENTButton className="main-header__mid-button">
+            <span className="main-header__mid-button-text">Search for your Mentor
+                <i className="fa-solid fa-magnifying-glass text-lg"/>
+            </span>
+                    </MENTButton>
+                )}
             </div>
 
             <div className="main-header__right flex items-center gap-2">
                 <DarkModeToggle/>
                 {isLoggedIn && (
+                    <ProfileButton/>)}
                 <ProfileButton/>)}
+
                 {isLoggedIn && (
                     <button
                         onClick={() => navigate('/settings')}
