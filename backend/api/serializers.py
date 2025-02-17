@@ -6,6 +6,8 @@ from rest_framework import serializers
 
 # Converts django models into JSON
 
+
+# Serializer for reading user's  details
 class UserDetailsReadSerializer(ModelSerializer):
     id = serializers.IntegerField(source='user.id')
     username = serializers.CharField(source='user.username', read_only=True)
@@ -18,7 +20,9 @@ class UserDetailsReadSerializer(ModelSerializer):
 
     class Meta:
         model = UserDetails
-        exclude = ['last_time_online', 'user', 'date_of_birth',
+        exclude = ['last_time_online',
+                   'user',
+                   'date_of_birth',
                    'profile_progress']
 
     def get_skills_info(self, obj):
@@ -33,11 +37,44 @@ class UserDetailsReadSerializer(ModelSerializer):
         ]
 
 
-# TODO implement the write method
-class UserDetailsWriteSerializer(ModelSerializer):
+# Serializer for updating user's own details
+class UserDetailsUpdateSerializer(ModelSerializer):
+    id = serializers.IntegerField(source='user.id', read_only=True)
+    first_name = serializers.CharField(source='user.first_name')
+    last_name = serializers.CharField(source='user.last_name')
+
     class Meta:
         model = UserDetails
-        fields = ['date_of_birth']
+        fields = [
+            'id',
+            'first_name',
+            'last_name',
+            'current_role',
+            'country',
+            'preferred_language',
+            'bio',
+            'goals',
+            'github_profile',
+            'instagram_profile',
+            'looking_for_mentor',
+            'mentor'
+        ]
+
+    def update(self, instance, validated_data):
+        # Get the user data from validated_data
+        user_data = validated_data.pop('user', {})
+
+        # Update the associated user's first and last name
+        if user_data:
+            user = instance.user
+            if 'first_name' in user_data:
+                user.first_name = user_data['first_name']
+            if 'last_name' in user_data:
+                user.last_name = user_data['last_name']
+            user.save()
+
+        # Update the UserDetails fields
+        return super().update(instance, validated_data)
 
 
 class SkillSerializer(ModelSerializer):
