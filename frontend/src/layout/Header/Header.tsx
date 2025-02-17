@@ -72,7 +72,6 @@ const Header = () => {
                 <DarkModeToggle/>
                 {isLoggedIn && (
                     <ProfileButton/>)}
-                <ProfileButton/>)}
 
                 {isLoggedIn && (
                     <button
