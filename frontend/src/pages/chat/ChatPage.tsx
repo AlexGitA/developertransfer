@@ -1,13 +1,12 @@
-// HomePage
-import Header from "@/layout/Header/Header.tsx";
-import LeftSidebar from "@/pages/home/components/LeftSidebar.tsx";
-import RightSidebar from "@/pages/home/components/RightSidebar.tsx";
-import ProfileGalery from "@/pages/home/components/ProfileGalery.tsx";
-import SearchBar from "@/pages/home/components/SearchBar.tsx";
+// ChatPage.tsx
+import {Chat} from "@/pages/chat/components/Chat.tsx";
+import Header from './../../layout/Header/Header'
+import LeftSidebar from "@/pages/profile/components/LeftSidebar.tsx";
+import RightSidebar from "@/pages/profile/components/RightSidebar.tsx";
 
-const HomePage = () => {
-
-    return (<div className="min-h-screen flex bg-white transition-colors dark:bg-gray-900 flex-col">
+const PostPage = () => {
+    return (
+        <div className="min-h-screen flex bg-white transition-colors dark:bg-gray-900 flex-col">
             <div className="pb-5">
                 <Header/>
             </div>
@@ -28,8 +27,12 @@ const HomePage = () => {
           pt-10
           lg:ml-72 lg:mr-72 
           ${window.innerWidth >= 1024 ? 'max-w-5xl' : 'max-w-2xl'}
-        `}><SearchBar/>
-                   <ProfileGalery/>
+        `}>
+
+                    <div className="lg:px-0 px-0 sm:px-4">
+                         <Chat />
+                    </div>
+
                 </main>
 
                 {/* Right Sidebar */}
@@ -42,4 +45,4 @@ const HomePage = () => {
     )
 }
 
-export default HomePage;
+export default PostPage;
