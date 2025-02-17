@@ -12,12 +12,15 @@ import VerifyEmailPage from "@/pages/auth/VerifyEmailPage.tsx";
 import EmailConfirmationPage from "@/pages/auth/EmailConfirmationPage.tsx";
 import PostPage from "@/pages/post/PostPage.tsx";
 import {AuthRoute} from "@/pages/auth/AuthRoute.tsx";
+import ChatPage from "@/pages/chat/ChatPage.tsx";
 
 function App() {
     return (
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Layout/>}>
+                    {/* API is unreachable */}
+                    <Route path="/api/" element={<Navigate to="/" replace />} />
                     {/* Main paths */}
                     <Route index element={<Navigate to="/home" replace/>}/>
                     <Route path="playground" element={<DerPlayground/>}/>
@@ -31,6 +34,9 @@ function App() {
                         <Route path="verify-email" element={<VerifyEmailPage/>}/>
                         <Route path="confirm-email/:key" element={<EmailConfirmationPage/>}/>
                     </Route>
+
+                    {/* Chat */}
+                    <Route path="chats" element={<ChatPage/>}/>
 
                     {/* Info paths */}
                     <Route path="tos" element={<TermsOfService/>}/>
