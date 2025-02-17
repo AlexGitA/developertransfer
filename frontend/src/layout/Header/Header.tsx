@@ -59,23 +59,25 @@ const Header = () => {
             </div>
 
             <div className="main-header__mid text-center">
-                <MENTButton className="main-header__mid-button">
-                    <span className="main-header__mid-button-text">Search for your Mentor
-                         <i className="fa-solid fa-magnifying-glass text-lg"/>
-                    </span>
-                </MENTButton>
+                {location.pathname !== '/home' && (
+                    <MENTButton className="main-header__mid-button">
+            <span className="main-header__mid-button-text">Search for your Mentor
+                <i className="fa-solid fa-magnifying-glass text-lg"/>
+            </span>
+                    </MENTButton>
+                )}
             </div>
 
             <div className="main-header__right flex items-center gap-2">
                 <DarkModeToggle/>
-                {/* todo should not try to get to user a user if not logged in */}
-                <ProfileButton/>
-                {/* Todo, add on log in condition*/}
+                {isLoggedIn && (
+                    <ProfileButton/>)}
+                {isLoggedIn && (
                     <button
                         onClick={() => navigate('/settings')}
                         className="px-2 py-1 rounded hover:bg-gray-100 hover:text-primary text-white dark:hover:bg-gray-700 dark:text-white transition-colors">
                         <i className="fa-solid fa-gear text-lg"/>
-                    </button>
+                    </button> )}
                 {isLoggedIn ? (
                     <button
                         className="px-4 py-2 text-white rounded hover:bg-gray-100 hover:text-primary
