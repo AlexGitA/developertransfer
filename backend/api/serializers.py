@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from ..models import UserDetails, Skill, Post
+from ..models import UserDetails, Skill, Post, Topic
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
@@ -87,4 +87,10 @@ class SkillSerializer(ModelSerializer):
 class PostSerializer(ModelSerializer):
     class Meta:
         model = Post
+        fields = '__all__'
+
+
+class TopicSerializer(ModelSerializer):
+    class Meta:
+        model = Topic
         fields = '__all__'

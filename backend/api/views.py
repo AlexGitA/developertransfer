@@ -1,5 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
-from ..models import UserDetails, Skill, Post
+from ..models import UserDetails, Skill, Post, Topic
 from rest_framework.response import Response
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
@@ -8,7 +8,7 @@ from django.core.exceptions import PermissionDenied
 from .serializers import UserDetailsReadSerializer, SkillSerializer, PostSerializer, UserDetailsUpdateSerializer
 
 from rest_framework import filters
-from .serializers import UserDetailsReadSerializer, SkillSerializer, PostSerializer
+from .serializers import UserDetailsReadSerializer, SkillSerializer, PostSerializer, TopicSerializer
 
 
 # ViewSet to get the UserDetails
@@ -64,6 +64,11 @@ class UserDetailsUpdateView(ModelViewSet):
 class PostViewSet(ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+
+
+class TopicViewSet(ModelViewSet):
+    queryset = Topic.objects.all()
+    serializer_class = TopicSerializer
 
 
 # ViewSet to get the Skills

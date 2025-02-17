@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
-import type { Post as PostType } from "@/types/post-types"
+import type { Posts as PostType } from "@/types/post-types"
 import { Comment } from "./CommentComponent"
 
 interface PostProps {
@@ -59,9 +59,9 @@ export const Post: React.FC<PostProps> = ({ post }) => {
 
             {/* Tags */}
             <div className="flex flex-wrap gap-2 mt-3">
-              {post.tags.map((tag) => (
-                <span key={tag} className="px-2 py-1 text-xs rounded-full bg-primary/20 text-primary">
-                  {tag}
+              {post.topic.map((topic) => (
+                <span key={topic.id} className="px-2 py-1 text-xs rounded-full bg-primary/20 text-primary">
+                  {topic.name}
                 </span>
               ))}
             </div>
@@ -70,7 +70,7 @@ export const Post: React.FC<PostProps> = ({ post }) => {
             <div className="flex items-center gap-4 mt-4">
               <Button variant="ghost" size="sm">
                 <i className="fas fa-comment-alt mr-2" />
-                {post.commentsCount} Comments
+                {post.comments_count} Comments
               </Button>
               <Button variant="ghost" size="sm">
                 <i className="fas fa-share mr-2" />

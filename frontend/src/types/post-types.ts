@@ -12,21 +12,34 @@ export interface Comment {
   replies?: Comment[];
 }
 
-export interface Post {
+export interface Posts {
   id: string;
   title: string;
   content: string;
+  url: string;
   author: {
     id: string;
     username: string;
     avatar?: string;
   };
+
+  topic: Topic[];
   createdAt: Date;
   updatedAt: Date;
   closed: boolean;
   likes: number;
-  commentsCount: number;
+  likes_count: number;
+  comments_count: number;
+  is_pinned: boolean;
+  is_archived: boolean;
   comments: Comment[];
-  tags: string[];
   type: 'text' | 'image' | 'link';
+}
+
+export interface Topic {
+    id: string;
+    name: string;
+    description: string | null;
+    created: string;
+    followers: string[];
 }
