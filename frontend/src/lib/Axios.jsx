@@ -15,20 +15,41 @@ const AxiosInstance = axios.create({
 // Authentication helper functions
 export const handleLogout = async () => {
     try {
+        const token = localStorage.getItem('access_token');
+        console.log('Attempting logout with token:', token);
+
+        if (!token) {
+            throw new Error('No access token found');
+        }
+
         const response = await AxiosInstance.post('/api/auth/logout/', {}, {
             headers: {
-                'Authorization': `Token ${localStorage.getItem('access_token')}`
+                'Authorization': `Token ${token}`
             }
         });
+
+        console.log('Logout response:', response.data);
+
+        // Only clear storage and redirect if the request was successful
         localStorage.removeItem('access_token');
         localStorage.removeItem('user');
-        console.log('Logout response:', response.data.detail);
         window.location.href = '/login';
-    } catch (error) {
-        console.error('Logout error:', error);
+
+    } catch (error) {  // Removed the ': any' type annotation
+        console.error('Logout error:', {
+            message: error.message,
+            response: error.response?.data,
+            status: error.response?.status
+        });
+
+        // If we get a 401, it means the token is already invalid/expired
+        if (error.response?.status === 401) {
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('user');
+            window.location.href = '/login';
+        }
     }
 };
-
 export const isAuthenticated = () => {
     return !!localStorage.getItem('access_token');
 };
