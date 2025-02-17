@@ -1,14 +1,19 @@
 from rest_framework.viewsets import ModelViewSet
 from ..models import UserDetails, Skill, Post
+from rest_framework.response import Response
+from rest_framework import viewsets, status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ReadOnlyModelViewSet
 from django.core.exceptions import PermissionDenied
 from .serializers import UserDetailsReadSerializer, SkillSerializer, PostSerializer, UserDetailsUpdateSerializer
+
 from rest_framework import filters
 from .serializers import UserDetailsReadSerializer, SkillSerializer, PostSerializer
 
 
 # ViewSet to get the UserDetails
 # todo add search for multiple skills
+
 class UserDetailsReadView(ReadOnlyModelViewSet):
     queryset = UserDetails.objects.all()
     serializer_class = UserDetailsReadSerializer

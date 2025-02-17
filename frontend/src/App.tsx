@@ -11,6 +11,7 @@ import PrivacyPolicy from "@/pages/legal/PrivacyPolicy.tsx";
 import VerifyEmailPage from "@/pages/auth/VerifyEmailPage.tsx";
 import EmailConfirmationPage from "@/pages/auth/EmailConfirmationPage.tsx";
 import PostPage from "@/pages/post/PostPage.tsx";
+import {AuthRoute} from "@/pages/auth/AuthRoute.tsx";
 
 function App() {
     return (
@@ -24,10 +25,12 @@ function App() {
                     <Route path="home" element={<HomePage/>}/>
 
                     {/* Auth paths */}
-                    <Route path="login" element={<LoginPage/>}/>
-                    <Route path="register" element={<RegisterPage/>}/>
-                    <Route path="verify-email" element={<VerifyEmailPage/>}/>
-                    <Route path="confirm-email/:key" element={<EmailConfirmationPage/>}/>
+                    <Route element={<AuthRoute/>}>
+                        <Route path="login" element={<LoginPage/>}/>
+                        <Route path="register" element={<RegisterPage/>}/>
+                        <Route path="verify-email" element={<VerifyEmailPage/>}/>
+                        <Route path="confirm-email/:key" element={<EmailConfirmationPage/>}/>
+                    </Route>
 
                     {/* Info paths */}
                     <Route path="tos" element={<TermsOfService/>}/>
