@@ -1,3 +1,4 @@
+// HomePage
 import Header from "@/layout/Header/Header.tsx";
 import LeftSidebar from "@/pages/home/components/LeftSidebar.tsx";
 import RightSidebar from "@/pages/home/components/RightSidebar.tsx";

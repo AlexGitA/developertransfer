@@ -57,10 +57,19 @@ INSTALLED_APPS = [
     # Other
     'corsheaders',
     'django_countries',
+    'channels',
 
     # Swagger
     'drf_yasg',
 ]
+
+#CHANNEL_LAYERS = {
+#    "default": {
+#        "BACKEND": "channels.layers.InMemoryChannelLayer",
+#    },
+#}
+
+#ASGI_APPLICATION = 'MentorX.asgi.application'
 
 CORS_ALLOWED_ORIGINS = ['http://localhost:5173', 'http://localhost:5175']
 CORS_ALLOW_CREDENTIALS = True
