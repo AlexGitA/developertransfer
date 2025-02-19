@@ -1,5 +1,6 @@
 import bem from 'bero'
 import {MENTButton} from "@/components/button/MENT-button.tsx";
+import CountryFlag from "@/components/ui/flag";
 
 const bemProfileCard = bem("MENT-profile-card");
 
@@ -30,7 +31,12 @@ const ProfileCard = ({fullName, userName, profileImage, spokenLanguage, flag, bi
             <div className={bemProfileCard("right")}>
                 <div className={bemProfileCard("right-info")}>
                     <div className={bemProfileCard("right-info__country")}>
-                        <span className={bemProfileCard("right-info__country-image")} role="img" aria-label={spokenLanguage}>{flag}</span>
+                        <CountryFlag
+                            code={flag}
+                            text={flag}
+                            label="Language"
+                            showText={false}
+                        />
                         <span className={bemProfileCard("right-info__country-language")}>{spokenLanguage}</span>
                     </div>
                     <p className={bemProfileCard("right-info__bio")}>
