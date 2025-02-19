@@ -2,7 +2,7 @@
 import {Post} from "@/pages/post/components/PostComponent.tsx";
 
 import Header from './../../layout/Header/Header'
-import LeftSidebar from "@/pages/profile/components/LeftSidebar.tsx";
+import LeftSidebar from "@/pages/post/components/LeftSidebar.tsx";
 import RightSidebar from "@/pages/profile/components/RightSidebar.tsx";
 
 import {mockPosts} from "./mock-data"
