@@ -1,6 +1,7 @@
 import bem from 'bero'
 import {MENTButton} from "@/components/button/MENT-button.tsx";
 import CountryFlag from "@/components/ui/flag";
+import SkillBadges from "@/pages/profile/components/SkillBadges"
 
 const bemProfileCard = bem("MENT-profile-card");
 
@@ -48,9 +49,7 @@ const ProfileCard = ({fullName, userName, profileImage, spokenLanguage, flag, bi
                         Skills
                     </h3>
                     <ul className={bemProfileCard("right-info__skills-list")}>
-                        {skills.map((skill: string, index: number) => (
-                            <li key={index}> {skill} </li>
-                        )).filter((_: null, index: number) => index < 15)}
+                        <SkillBadges skills={skills}/>
                     </ul>
                 </div>
             </div>

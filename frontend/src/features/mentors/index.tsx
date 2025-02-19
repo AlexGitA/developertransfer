@@ -27,7 +27,7 @@ const MentorList: React.FC = () => {
                     spokenLanguage={mentor.country}
                     flag={mentor.country}
                     bio={mentor.bio}
-                    skills={[]}
+                    skills={mentor.skills_info}
                     onActionButtonClick={() => { }}
                 />
             ))}
