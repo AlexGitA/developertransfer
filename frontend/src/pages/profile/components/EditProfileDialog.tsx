@@ -23,6 +23,7 @@ const EditProfileDialog = ({isOpen, onClose, userDetails}: EditProfileDialogProp
     const [formData, setFormData] = useState({
         username: userDetails.username || "",
         first_name: userDetails.first_name || "",
+        last_name: userDetails.last_name || "",
         current_role: userDetails.current_role || "",
         country: userDetails.country || "",
         preferred_language: userDetails.preferred_language || "",
@@ -155,6 +156,19 @@ const EditProfileDialog = ({isOpen, onClose, userDetails}: EditProfileDialogProp
                                     value={formData.first_name}
                                     onChange={handleInputChange}
                                     placeholder="Enter your first name"
+                                    className="border-gray-300"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="last_name" className="flex items-center gap-2">
+                                    <i className="fas fa-signature text-gray-400"></i>
+                                    Last Name
+                                </Label>
+                                <Input
+                                    id="last_name"
+                                    value={formData.last_name}
+                                    onChange={handleInputChange}
+                                    placeholder="Enter your last name"
                                     className="border-gray-300"
                                 />
                             </div>
@@ -383,7 +397,8 @@ const EditProfileDialog = ({isOpen, onClose, userDetails}: EditProfileDialogProp
                                 </Label>
                                 <Switch
                                     id="looking_for_mentor"
-                                    defaultChecked={userDetails.looking_for_mentor}
+                                    checked={formData.looking_for_mentor}
+                                    onCheckedChange={(checked) => handleSwitchChange('looking_for_mentor', checked)}
                                 />
                             </div>
                         </div>
