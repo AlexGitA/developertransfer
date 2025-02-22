@@ -16,7 +16,7 @@ const HomePage = () => {
                     <LeftSidebar/>
                 </div>
 
-                <main className="w-[46vw] bg-gray-50 p-6">
+                <main className="w-[46vw] bg-gray-50 p-6 dark:bg-gray-800">
                     <div className="app__content">
                         <MentorList/>
                     </div>

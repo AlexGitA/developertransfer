@@ -238,6 +238,14 @@ h1 {
 }
 /*________________________________ Input Section End -------------------------------*/
 /*________________________________ Card Section Start ------------------------------*/
+.MENT-mentor-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  height: 100vh;
+  overflow-x: hidden;
+  padding: 10px 20px 10px 10px;
+}
 .MENT-profile-card {
   display: flex;
   position: relative;
@@ -246,14 +254,15 @@ h1 {
   border-radius: 15px;
   border: 1px solid #b7b7b7;
   cursor: pointer;
-  top: 0px;
+  background-color: hsl(var(--background));
+  top: 0;
 
   &:hover {
     transition: all 0.2s ease-out;
-    box-shadow: 0px 4px 8px rgba(38, 38, 38, 0.2);
+    box-shadow: 0 4px 8px var(--shadow);
     top: -4px;
-    border: 1px solid #cccccc;
-    background-color: white;
+    border: 1px solid hsl(var(--border));
+    background-color: hsl(var(--card));
   }
 
   &:before {
@@ -262,12 +271,12 @@ h1 {
     z-index: -1;
     top: -16px;
     right: -16px;
-    background: #00838d;
     height: 32px;
     width: 32px;
     border-radius: 32px;
     transform: scale(2);
     transform-origin: 50% 50%;
+    background-color: hsl(var(--background));
     transition: transform 0.15s ease-out;
   }
 
@@ -346,10 +355,6 @@ h1 {
 .MENT-profile-card__right-info__skills-list {
   padding-top: 10px;
   height: 100%;
-  display: grid;
-  grid-template-columns: repeat(5,minmax(0,2fr));
-  grid-template-rows: repeat(3, minmax(0, 0.26fr));
-  grid-gap: 5px;
   align-items: center;
   font-size: 12px;
 }
@@ -397,6 +402,7 @@ h1 {
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    --shadow: rgba(38, 38, 38, 0.2);
   }
   .dark {
     --background: 0 0% 3.9%;
@@ -431,6 +437,7 @@ h1 {
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    --shadow: rgba(240, 240, 240, 0.4);
   }
 }
 

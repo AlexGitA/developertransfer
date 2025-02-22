@@ -1,11 +1,14 @@
 import bem from 'bero'
-import {MENTButton} from "@/components/button/MENT-button.tsx";
+import {Button} from '@/components/ui/button.tsx'
 import CountryFlag from "@/components/ui/flag";
+import SkillBadges from "@/pages/profile/components/SkillBadges.tsx";
+
 
 const bemProfileCard = bem("MENT-profile-card");
 
 // @ts-ignore
-const ProfileCard = ({fullName, userName, profileImage, spokenLanguage, flag, bio, skills, onActionButtonClick}) => {
+const ProfileCard = ({fullName, userName, profileImage, spokenLanguage, bio, skills, more_skills}) => {
+    more_skills = Boolean(more_skills);
     return (
         <div className={bemProfileCard()}>
             <div className={bemProfileCard("left")}>
@@ -18,26 +21,24 @@ const ProfileCard = ({fullName, userName, profileImage, spokenLanguage, flag, bi
                 <div className={bemProfileCard("left-username")}>
                     <span className={bemProfileCard("left-username-text")}>@{userName}</span>
 
-                    <MENTButton
+                    <Button
                     className={bemProfileCard("left-action")}
-                    variant="primary"
+                    variant="default"
                     type="button"
-                    isSmall
                     >
                         Connect
-                    </MENTButton>
+                    </Button>
                 </div>
             </div>
             <div className={bemProfileCard("right")}>
                 <div className={bemProfileCard("right-info")}>
                     <div className={bemProfileCard("right-info__country")}>
                         <CountryFlag
-                            code={flag}
-                            text={flag}
+                            code={spokenLanguage}
+                            text={spokenLanguage}
                             label="Language"
                             showText={false}
                         />
-                        <span className={bemProfileCard("right-info__country-language")}>{spokenLanguage}</span>
                     </div>
                     <p className={bemProfileCard("right-info__bio")}>
                         {bio}
@@ -47,11 +48,9 @@ const ProfileCard = ({fullName, userName, profileImage, spokenLanguage, flag, bi
                     <h3 className={bemProfileCard("right-info__skills-text")}>
                         Skills
                     </h3>
-                    <ul className={bemProfileCard("right-info__skills-list")}>
-                        {skills.map((skill: string, index: number) => (
-                            <li key={index}> {skill} </li>
-                        )).filter((_: null, index: number) => index < 15)}
-                    </ul>
+                    <div className={bemProfileCard("right-info__skills-list")}>
+                        <SkillBadges skills={skills} more_skills={more_skills} />
+                    </div>
                 </div>
             </div>
         </div>
