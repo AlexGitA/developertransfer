@@ -39,6 +39,7 @@ const ProfileCard = ({fullName, userName, profileImage, spokenLanguage, bio, ski
                             label="Language"
                             showText={false}
                         />
+                        <span className={bemProfileCard("right-info__country-language")}>{spokenLanguage}</span>
                     </div>
                     <p className={bemProfileCard("right-info__bio")}>
                         {bio}
