@@ -95,14 +95,22 @@ const PostPage = () => {
             setLoading(false);
         }
     };
-    const postPost = async (data) => {
+    const postPost = async (data: {
+        title: string;
+        content: string;
+        topic: Topic[];
+    }) => {
         try {
             setLoading(true);
-            console.log('Fetching user data for ID:', currentUserId);
-            const response = await AxiosInstance.post(`/posts/`, data);
+            const response = await AxiosInstance.post('/posts/', {
+                title: data.title,
+                content: data.content,
+                author: currentUserId,
+                topic: selectedTopics[0].id
+            });
             console.log('Response received:', response.data);
-            setTopics(response.data);
             setError(null);
+            return response.data;
         } catch (err) {
             if (axios.isAxiosError(err)) {
                 console.error('Full error object:', err);
@@ -159,40 +167,23 @@ const PostPage = () => {
 
     const handleSubmit = () => {
         if (!title || !content || selectedTopics.length === 0) {
-        // Popup öffnen, falls eines der Felder leer ist
-        setPopupOpenMissing(true);
-        setPopupMessageMissing('Bitte alle Felder ausfüllen: Titel, Inhalt und Thema.');
-        return; // Stoppt das Weiterverarbeiten
+            setPopupOpenMissing(true);
+            setPopupMessageMissing('Bitte alle Felder ausfüllen: Titel, Inhalt und Thema.');
+            return;
         }
-        else {
-            setNewPost(
-                {
-                    id: "",
-                    title: title,
-                    content: content,
-                    url: "",
-                    author: {
-                        id: currentUserId ?? "1",
-                        username: userData?.username ?? "Anonymus",
-                        avatar: userData?.profile_picture ?? "/placeholder.svg?height=32&width=32",
-                    },
-                    topic: selectedTopics,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
-                    closed: false,
-                    likes: 0,
-                    likes_count: 0,
-                    comments_count: 0,
-                    is_pinned: false,
-                    is_archived: false,
-                    comments: [],
-                    type: 'text'
-                }
-            )
-            postPost(newPost);
-            console.log(newPost);
-            setPopupOpen(false);
-        }
+        
+        // Send only the necessary data
+        postPost({
+            title: title,
+            content: content,
+            topic: selectedTopics
+        });
+        
+        setPopupOpen(false);
+        // Optionally reset form
+        setTitle('');
+        setContent('');
+        setSelectedTopics([]);
     };
     const closePopup = () => {
     setPopupOpen(false);
