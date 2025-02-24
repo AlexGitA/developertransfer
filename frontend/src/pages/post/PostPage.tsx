@@ -1,5 +1,5 @@
 // PostPage1.tsx
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Post} from "@/pages/post/components/PostComponent.tsx";
 
 import Header from './../../layout/Header/Header'
@@ -9,15 +9,17 @@ import RightSidebar from "@/pages/profile/components/RightSidebar.tsx";
 import AxiosInstance, {getUserId} from "@/lib/Axios";
 import {Posts, Comment, Topic} from '@/types/post-types';
 import {mockPosts} from "./mock-data"
-import {MENTButton} from "@/components/button/MENT-button";
 import {MENTInput} from "@/components/input/MENT-input";
 import {UserDetails} from "@/types/user";
 import axios from 'axios';
 
 
 const PostPage = () => {
-    const [isPopupOpen, setPopupOpen] = useState(true);
+    const [isPopupOpen, setPopupOpen] = useState(false);
     const currentUserId = getUserId();
+
+    const [isPopupOpenMissing, setPopupOpenMissing] = useState(false);
+    const [PopupMessageMissing, setPopupMessageMissing] = useState("");
 
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
     const [title, setTitle] = useState<string>();
@@ -97,7 +99,7 @@ const PostPage = () => {
         try {
             setLoading(true);
             console.log('Fetching user data for ID:', currentUserId);
-            const response = await AxiosInstance.post(`/topic`, data);
+            const response = await AxiosInstance.post(`/posts/`, data);
             console.log('Response received:', response.data);
             setTopics(response.data);
             setError(null);
@@ -156,31 +158,44 @@ const PostPage = () => {
 
 
     const handleSubmit = () => {
-        setNewPost(
-            {
-                  title: title,
-                  content: content,
-                  url: "",
-                  author: {
-                    id: currentUserId ?? "1",
-                    username: userData?.username ?? "Anonymus",
-                    avatar: userData?.profile_picture ?? "/placeholder.svg?height=32&width=32",
-                  },
-                  topic: selectedTopics,
-                  createdAt: new Date(),
-                  updatedAt: new Date(),
-                  closed: false,
-                  likes: 0,
-                  likes_count: 0,
-                  comments_count: 0,
-                  is_pinned: false,
-                  is_archived: false,
-                  comments: [],
+        if (!title || !content || selectedTopics.length === 0) {
+        // Popup öffnen, falls eines der Felder leer ist
+        setPopupOpenMissing(true);
+        setPopupMessageMissing('Bitte alle Felder ausfüllen: Titel, Inhalt und Thema.');
+        return; // Stoppt das Weiterverarbeiten
+        }
+        else {
+            setNewPost(
+                {
+                    id: "",
+                    title: title,
+                    content: content,
+                    url: "",
+                    author: {
+                        id: currentUserId ?? "1",
+                        username: userData?.username ?? "Anonymus",
+                        avatar: userData?.profile_picture ?? "/placeholder.svg?height=32&width=32",
+                    },
+                    topic: selectedTopics,
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                    closed: false,
+                    likes: 0,
+                    likes_count: 0,
+                    comments_count: 0,
+                    is_pinned: false,
+                    is_archived: false,
+                    comments: [],
+                    type: 'text'
                 }
-        )
-        postPost(newPost)
-        console.log(newPost);
-        setPopupOpen(false);
+            )
+            postPost(newPost);
+            console.log(newPost);
+            setPopupOpen(false);
+        }
+    };
+    const closePopup = () => {
+    setPopupOpen(false);
     };
     return (
         <div className="min-h-screen flex bg-white transition-colors dark:bg-gray-900 flex-col">
@@ -206,7 +221,10 @@ const PostPage = () => {
           ${window.innerWidth >= 1024 ? 'max-w-5xl' : 'max-w-2xl'}
         `}>
                     <div className="lg:px-0 px-0 sm:px-4">
-                        <MENTButton onClick={handleAddClick}>Add</MENTButton>
+                        <button
+                            className="px-4 py-1.5 rounded-[50px] bg-gradient-to-r from-blue-400 to-blue-500 dark:from-blue-500 dark:to-blue-600 text-white text-xs sm:text-sm font-medium shadow-sm dark:shadow-gray-900/20 hover:from-blue-500 hover:to-blue-600 transition-all duration-200" onClick={handleAddClick}>
+                            Add
+                        </button>
                     </div>
                     <div className="lg:px-0 px-0 sm:px-4">
                         {mockPosts.map((post) => (
@@ -222,6 +240,14 @@ const PostPage = () => {
                     <RightSidebar/>
                 </aside>
             </div>
+            {isPopupOpenMissing && (
+                <div className="popup">
+                    <div className="popup-content">
+                        <p>{PopupMessageMissing}</p>
+                        <button onClick={closePopup}>Schließen</button>
+                    </div>
+                 </div>
+            )}
             {/* Popup Form */}
             {isPopupOpen && (
                 <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
@@ -304,8 +330,14 @@ const PostPage = () => {
 
                             {/* Submit Button */}
                             <div className="mt-4 flex justify-between">
-                                <MENTButton onClick={handleClosePopup}>Cancel</MENTButton>
-                                <MENTButton onClick={handleSubmit}>Submit</MENTButton>
+                                <button
+                                className="px-4 py-1.5 rounded-[50px] bg-gradient-to-r from-blue-400 to-blue-500 dark:from-blue-500 dark:to-blue-600 text-white text-xs sm:text-sm font-medium shadow-sm dark:shadow-gray-900/20 hover:from-blue-500 hover:to-blue-600 transition-all duration-200" onClick={handleClosePopup}>
+                                Cancel
+                                </button>
+                                <button
+                                className="px-4 py-1.5 rounded-[50px] bg-gradient-to-r from-blue-400 to-blue-500 dark:from-blue-500 dark:to-blue-600 text-white text-xs sm:text-sm font-medium shadow-sm dark:shadow-gray-900/20 hover:from-blue-500 hover:to-blue-600 transition-all duration-200" onClick={handleSubmit}>
+                                Submit
+                                </button>
                             </div>
                         </form>
                     </div>
