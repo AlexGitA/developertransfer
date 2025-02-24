@@ -6,9 +6,10 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
-import type { Posts as PostType } from "@/types/post-types"
+import type { Posts as PostType, CreateCommentData } from "@/types/post-types"
 import { Comment } from "./CommentComponent"
 import { getUserId } from "@/lib/Axios"
+import AxiosInstance from "@/lib/Axios"
 
 interface PostProps {
   post: PostType
@@ -17,7 +18,66 @@ interface PostProps {
 
 export const Post: React.FC<PostProps> = ({ post, onDelete }) => {
   const [isExpanded, setIsExpanded] = useState(false)
+  const [showComments, setShowComments] = useState(false)
+  const [loadedComments, setLoadedComments] = useState<Comment[]>([])
+  const [isLoadingComments, setIsLoadingComments] = useState(false)
+  const [showCommentInput, setShowCommentInput] = useState(false)
+  const [newCommentContent, setNewCommentContent] = useState('')
+  const [isSubmittingComment, setIsSubmittingComment] = useState(false)
   const currentUserId = getUserId()
+
+  const fetchComments = async () => {
+    try {
+      setIsLoadingComments(true);
+      const response = await AxiosInstance.get<Comment[]>(`/api/comments/?post_id=${post.id}`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      setLoadedComments(response.data);
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+    } finally {
+      setIsLoadingComments(false);
+    }
+  };
+
+  const handleCommentsClick = () => {
+    setShowComments(!showComments);
+    if (!showComments && loadedComments.length === 0) {
+      fetchComments();
+    }
+  };
+
+  const handleCreateComment = async () => {
+    if (!newCommentContent.trim()) return;
+
+    try {
+      setIsSubmittingComment(true);
+      const commentData: CreateCommentData = {
+        content: newCommentContent,
+        post: Number(post.id)  // Convert string to number
+      };
+
+      await AxiosInstance.post('/api/comments/', commentData, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      
+      // Refresh comments
+      await fetchComments();
+      
+      // Reset input
+      setNewCommentContent('');
+      setShowCommentInput(false);
+      
+    } catch (error) {
+      console.error('Error creating comment:', error);
+    } finally {
+      setIsSubmittingComment(false);
+    }
+  };
 
   console.log('Raw post data:', post);  // Log the entire post
   console.log('Topic data:', post.topic);  // Log just the topic data
@@ -27,8 +87,8 @@ export const Post: React.FC<PostProps> = ({ post, onDelete }) => {
   
   console.log('Processed topics:', topics);  // Log the processed topics
 
-  // Ensure comments is always an array
-  const comments = post.comments || []
+  // Get comments from post data
+  const postComments = post.comments || []
 
   return (
     <Card className="mb-4 hover:shadow-md transition-shadow relative">
@@ -93,7 +153,11 @@ export const Post: React.FC<PostProps> = ({ post, onDelete }) => {
 
             {/* Actions */}
             <div className="flex items-center gap-4 mt-4">
-              <Button variant="ghost" size="sm">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={handleCommentsClick}
+              >
                 <i className="fas fa-comment-alt mr-2" />
                 {post.comments_count} Comments
               </Button>
@@ -108,14 +172,56 @@ export const Post: React.FC<PostProps> = ({ post, onDelete }) => {
             </div>
 
             {/* Comments section */}
-            {comments.length > 0 && (
+            {showComments && (
               <div className="mt-4">
                 <Separator className="my-4" />
-                <div className="space-y-4">
-                  {comments.map((comment) => (
-                    <Comment key={comment.id} comment={comment} />
-                  ))}
+                
+                {/* Comment creation */}
+                <div className="mb-4">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowCommentInput(!showCommentInput)}
+                    className="mb-2"
+                  >
+                    <i className="fas fa-plus mr-2" />
+                    {showCommentInput ? "Cancel" : "Add Comment"}
+                  </Button>
+                  
+                  {showCommentInput && (
+                    <div className="space-y-2">
+                      <textarea
+                        className="w-full p-2 border rounded-md dark:bg-gray-800 dark:border-gray-700"
+                        rows={3}
+                        placeholder="Write your comment..."
+                        value={newCommentContent}
+                        onChange={(e) => setNewCommentContent(e.target.value)}
+                      />
+                      <div className="flex justify-end">
+                        <Button
+                          onClick={handleCreateComment}
+                          disabled={isSubmittingComment || !newCommentContent.trim()}
+                          className="px-4 py-1.5 rounded-[50px] bg-gradient-to-r from-blue-400 to-blue-500 dark:from-blue-500 dark:to-blue-600 text-white text-xs sm:text-sm font-medium shadow-sm dark:shadow-gray-900/20 hover:from-blue-500 hover:to-blue-600 transition-all duration-200"
+                        >
+                          {isSubmittingComment ? 'Submitting...' : 'Submit'}
+                        </Button>
+                      </div>
+                    </div>
+                  )}
                 </div>
+
+                {/* Existing comments */}
+                {isLoadingComments ? (
+                  <div className="text-center py-4">Loading comments...</div>
+                ) : loadedComments.length > 0 ? (
+                  <div className="space-y-4">
+                    {loadedComments.map((comment) => (
+                      <Comment key={comment.id} comment={comment} />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-4">No comments yet</div>
+                )}
               </div>
             )}
           </div>

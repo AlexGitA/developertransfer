@@ -1,11 +1,11 @@
 from rest_framework.viewsets import ModelViewSet
-from ..models import UserDetails, Skill, Post, Topic
+from ..models import UserDetails, Skill, Post, Topic, Comment
 from rest_framework.response import Response
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ReadOnlyModelViewSet
 from django.core.exceptions import PermissionDenied
-from .serializers import UserDetailsReadSerializer, SkillSerializer, PostSerializer, UserDetailsUpdateSerializer
+from .serializers import UserDetailsReadSerializer, SkillSerializer, PostSerializer, UserDetailsUpdateSerializer, CommentSerializer
 
 from rest_framework import filters
 from .serializers import UserDetailsReadSerializer, SkillSerializer, PostSerializer, TopicSerializer
@@ -75,3 +75,54 @@ class TopicViewSet(ModelViewSet):
 class SkillViewSet(ModelViewSet):
     queryset = Skill.objects.all()
     serializer_class = SkillSerializer
+
+
+class CommentViewSet(viewsets.ModelViewSet):
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        # Filter comments by post if post_id is provided
+        post_id = self.request.query_params.get('post_id', None)
+        if post_id is not None:
+            return Comment.objects.filter(post_id=post_id).order_by('-created')
+        return Comment.objects.all().order_by('-created')
+    
+    def perform_create(self, serializer):
+        # Automatically set the author to the current user
+        serializer.save(author=self.request.user)
+    
+    def create(self, request, *args, **kwargs):
+        # Add validation for required fields
+        if 'content' not in request.data:
+            return Response(
+                {'error': 'Content is required'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        if 'post' not in request.data:
+            return Response(
+                {'error': 'Post ID is required'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+            
+        # Create the comment
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        # Save with the current user as author
+        comment = serializer.save(author=self.request.user)
+        
+        # Update the post's comment count
+        post = Post.objects.get(id=request.data['post'])
+        post.comments_count = post.comments.count()
+        post.save()
+        
+        # Get the updated serializer data with author details
+        response_serializer = self.get_serializer(comment)
+        
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            response_serializer.data,  # Use the new serializer with complete data
+            status=status.HTTP_201_CREATED, 
+            headers=headers
+        )

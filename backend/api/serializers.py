@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from ..models import UserDetails, Skill, Post, Topic
+from ..models import UserDetails, Skill, Post, Topic, Comment
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
@@ -94,3 +94,31 @@ class TopicSerializer(ModelSerializer):
     class Meta:
         model = Topic
         fields = '__all__'
+
+
+class CommentAuthorSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField()
+    
+    class Meta:
+        model = User
+        fields = ['id', 'username']
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    author = CommentAuthorSerializer(read_only=True)
+    author_id = serializers.IntegerField(source='author.id', read_only=True)
+    
+    class Meta:
+        model = Comment
+        fields = [
+            'id', 
+            'content', 
+            'post', 
+            'author',
+            'author_id',
+            'parent',
+            'likes_count',
+            'created', 
+            'updated'
+        ]
+        read_only_fields = ['author', 'author_id', 'likes_count', 'created', 'updated']
