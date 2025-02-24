@@ -8,7 +8,7 @@ import RightSidebar from "@/pages/profile/components/RightSidebar.tsx";
 
 import AxiosInstance, {getUserId} from "@/lib/Axios";
 import {Posts, Comment, Topic} from '@/types/post-types';
-import {mockPosts} from "./mock-data"
+
 import {MENTInput} from "@/components/input/MENT-input";
 import {UserDetails} from "@/types/user";
 import axios from 'axios';
@@ -30,14 +30,16 @@ const PostPage = () => {
     const [selectedTopics, setSelectedTopics] = useState<Topic[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [posts, setPosts] = useState<Posts[]>([]);
 
     useEffect(() => {
         console.log("ProfilePage mounted, ID:", currentUserId);
         fetchUserData();
         fetchTopics();
+        fetchPosts();
     }, [currentUserId]);
 
-    const [newPost, setNewPost] = useState<Posts>();
+    
 
 
     const fetchUserData = async () => {
@@ -95,6 +97,83 @@ const PostPage = () => {
             setLoading(false);
         }
     };
+
+    const fetchPosts = async () => {
+        try {
+            setLoading(true);
+            const response = await AxiosInstance.get('/posts/?include=author');
+            console.log('Raw post data from server:', JSON.stringify(response.data, null, 2));
+            
+            const postsWithAuthors = await Promise.all(
+                response.data.map(async (post: Posts) => {
+                    try {
+                        const authorResponse = await AxiosInstance.get(`/api/user-details/${post.author}`);
+                        
+                        // Log the topic data before processing
+                        console.log('Topic data for post', post.id, ':', post.topic);
+                        
+                        // Fetch topic details if we only have IDs
+                        let topicData = post.topic;
+                        if (!Array.isArray(post.topic)) {
+                            // Wenn es ein einzelnes Topic ist, machen wir es zu einem Array
+                            topicData = [post.topic];
+                        }
+                        
+                        // Hole die Details für jedes Topic
+                        const topicsWithDetails = await Promise.all(
+                            topicData.map(async (topic: string | Topic) => {
+                                if (typeof topic === 'string' || typeof topic === 'number') {
+                                    try {
+                                        const topicResponse = await AxiosInstance.get(`/topic/${topic}`);
+                                        return topicResponse.data;
+                                    } catch (error) {
+                                        console.error('Error fetching topic details:', error);
+                                        return { id: topic, name: 'Unknown Topic' };
+                                    }
+                                }
+                                return topic;
+                            })
+                        );
+
+                        return {
+                            ...post,
+                            author: {
+                                id: post.author,
+                                ...authorResponse.data,
+                                username: authorResponse.data.username || 'Unknown User'
+                            },
+                            topic: topicsWithDetails
+                        };
+                    } catch (error) {
+                        console.error(`Error fetching author details for post ${post.id}:`, error);
+                        return {
+                            ...post,
+                            author: {
+                                id: post.author,
+                                username: 'Unknown User'
+                            },
+                            topic: Array.isArray(post.topic) ? post.topic : [{ id: post.topic, name: 'Unknown Topic' }]
+                        };
+                    }
+                })
+            );
+            
+            console.log('Posts with authors and topics:', postsWithAuthors);
+            setPosts(postsWithAuthors);
+            setError(null);
+        } catch (err) {
+            if (axios.isAxiosError(err)) {
+                console.error('Error fetching posts:', err);
+                setError(err.response?.data?.message || 'Failed to fetch posts');
+            } else {
+                setError('An unexpected error occurred');
+                console.error('Non-Axios error:', err);
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const postPost = async (data: {
         title: string;
         content: string;
@@ -106,10 +185,13 @@ const PostPage = () => {
                 title: data.title,
                 content: data.content,
                 author: currentUserId,
-                topic: selectedTopics[0].id
+                topics: selectedTopics.map(topic => topic.id)
             });
             console.log('Response received:', response.data);
             setError(null);
+            
+            await fetchPosts();
+            
             return response.data;
         } catch (err) {
             if (axios.isAxiosError(err)) {
@@ -188,6 +270,30 @@ const PostPage = () => {
     const closePopup = () => {
     setPopupOpen(false);
     };
+
+    const handleDeletePost = async (postId: string) => {
+        try {
+            setLoading(true);
+            await AxiosInstance.delete(`/posts/${postId}`);
+            
+            // Refresh posts after deletion
+            await fetchPosts();
+            
+            // Optional: Show success message
+            setError(null);
+        } catch (err) {
+            if (axios.isAxiosError(err)) {
+                console.error('Error deleting post:', err);
+                setError(err.response?.data?.message || 'Failed to delete post');
+            } else {
+                setError('An unexpected error occurred');
+                console.error('Non-Axios error:', err);
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div className="min-h-screen flex bg-white transition-colors dark:bg-gray-900 flex-col">
             <div className="pb-5">
@@ -218,9 +324,21 @@ const PostPage = () => {
                         </button>
                     </div>
                     <div className="lg:px-0 px-0 sm:px-4">
-                        {mockPosts.map((post) => (
-                            <Post key={post.id} post={post}/>
-                        ))}
+                        {loading ? (
+                            <div className="text-center py-4">Loading posts...</div>
+                        ) : error ? (
+                            <div className="text-center text-red-500 py-4">{error}</div>
+                        ) : posts.length === 0 ? (
+                            <div className="text-center py-4">No posts available</div>
+                        ) : (
+                            posts.map((post) => (
+                                <Post 
+                                    key={post.id} 
+                                    post={post}
+                                    onDelete={handleDeletePost}
+                                />
+                            ))
+                        )}
                     </div>
 
                 </main>
@@ -252,7 +370,7 @@ const PostPage = () => {
                                 type="text"
                                 required={true}
                                 value={title}
-                                onChange={(e) => handleInputChangeTitle(e)}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChangeTitle(e)}
                             />
 
                             {/* Content Field */}
@@ -262,7 +380,7 @@ const PostPage = () => {
                                 type="text"
                                 required={true}
                                 value={content}
-                                onChange={(e) => handleInputChangeContent(e)}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChangeContent(e)}
                             />
 
                             <h3>Select Topics</h3>

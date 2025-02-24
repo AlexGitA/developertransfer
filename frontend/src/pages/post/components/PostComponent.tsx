@@ -8,17 +8,42 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 import type { Posts as PostType } from "@/types/post-types"
 import { Comment } from "./CommentComponent"
+import { getUserId } from "@/lib/Axios"
 
 interface PostProps {
   post: PostType
+  onDelete?: (postId: string) => void
 }
 
-export const Post: React.FC<PostProps> = ({ post }) => {
+export const Post: React.FC<PostProps> = ({ post, onDelete }) => {
   const [isExpanded, setIsExpanded] = useState(false)
+  const currentUserId = getUserId()
+
+  console.log('Raw post data:', post);  // Log the entire post
+  console.log('Topic data:', post.topic);  // Log just the topic data
+
+  // Convert topic to array if it's a single object
+  const topics = Array.isArray(post.topic) ? post.topic : [post.topic]
+  
+  console.log('Processed topics:', topics);  // Log the processed topics
+
+  // Ensure comments is always an array
+  const comments = post.comments || []
 
   return (
-    <Card className="mb-4 hover:shadow-md transition-shadow">
+    <Card className="mb-4 hover:shadow-md transition-shadow relative">
       <CardContent className="p-4">
+        {post.author.id === currentUserId && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="absolute top-2 right-2 text-red-500 hover:text-red-700 hover:bg-red-100"
+            onClick={() => onDelete && onDelete(post.id)}
+          >
+            <i className="fas fa-trash" />
+          </Button>
+        )}
+
         <div className="flex items-start gap-4">
           {/* Voting */}
           <div className="flex flex-col items-center gap-1">
@@ -59,7 +84,7 @@ export const Post: React.FC<PostProps> = ({ post }) => {
 
             {/* Tags */}
             <div className="flex flex-wrap gap-2 mt-3">
-              {post.topic.map((topic) => (
+              {topics.map((topic) => (
                 <span key={topic.id} className="px-2 py-1 text-xs rounded-full bg-primary/20 text-primary">
                   {topic.name}
                 </span>
@@ -83,11 +108,11 @@ export const Post: React.FC<PostProps> = ({ post }) => {
             </div>
 
             {/* Comments section */}
-            {post.comments.length > 0 && (
+            {comments.length > 0 && (
               <div className="mt-4">
                 <Separator className="my-4" />
                 <div className="space-y-4">
-                  {post.comments.map((comment) => (
+                  {comments.map((comment) => (
                     <Comment key={comment.id} comment={comment} />
                   ))}
                 </div>
