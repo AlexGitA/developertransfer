@@ -6,10 +6,10 @@ const AxiosInstance = axios.create({
     baseURL: baseUrl,
     timeout: 5000,
     headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
+        "Content-Type": 'application/json',
+        accept: 'application/json',
     },
-    withCredentials: true,
+    withCredentials: true
 });
 
 AxiosInstance.interceptors.request.use(
@@ -26,27 +26,37 @@ AxiosInstance.interceptors.request.use(
     }
 );
 
+// Authentication helper functions
 export const handleLogout = async () => {
     try {
         const token = localStorage.getItem('access_token');
+        console.log('Attempting logout with token:', token);
+
         if (!token) {
             throw new Error('No access token found');
         }
+
         const response = await AxiosInstance.post('/api/auth/logout/', {}, {
-            headers: { 'Authorization': `Token ${token}` }
+            headers: {
+                'Authorization': `Token ${token}`
+            }
         });
+
         console.log('Logout response:', response.data);
 
+        // Only clear storage and redirect if the request was successful
         localStorage.removeItem('access_token');
         localStorage.removeItem('user');
         window.location.href = '/login';
-    } catch (error) {
+
+    } catch (error) {  // Removed the ': any' type annotation
         console.error('Logout error:', {
             message: error.message,
             response: error.response?.data,
-            status: error.response?.status,
+            status: error.response?.status
         });
 
+        // If we get a 401, it means the token is already invalid/expired
         if (error.response?.status === 401) {
             localStorage.removeItem('access_token');
             localStorage.removeItem('user');
@@ -54,11 +64,11 @@ export const handleLogout = async () => {
         }
     }
 };
-
 export const isAuthenticated = () => {
     return !!localStorage.getItem('access_token');
 };
 
+// Get User Data
 export const getUserData = () => {
     const userData = localStorage.getItem('user');
     if (userData) {
@@ -67,7 +77,17 @@ export const getUserData = () => {
     return null;
 };
 
-// Hole User-Id
+// Get User Token
+export const getUserToken = () => {
+    const access_token = localStorage.getItem('access_token');
+    if (access_token) {
+        return JSON.parse(access_token);
+    }
+    return null;
+};
+
+
+// Get User Id
 export const getUserId = () => {
     const user = getUserData();
     return user ? user.pk : null;

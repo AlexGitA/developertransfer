@@ -37,7 +37,7 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({ onSelectUser }) => {
         <Card className="bg-gray-50 dark:bg-gray-800/95 border-0 shadow-none">
             <CardHeader className="pb-2">
                 <CardTitle className="text-primary dark:text-blue-400 text-lg">
-                    Chats
+                    MentorX Users
                 </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
