@@ -16,7 +16,7 @@ interface ChatMessage {
 }
 
 interface ChatProps {
-  recieverId: number; // User-ID des Chatpartners
+  recieverId: number; // Die User-ID des Chatpartners
 }
 
 export const Chat: React.FC<ChatProps> = ({ recieverId }) => {
@@ -28,12 +28,15 @@ export const Chat: React.FC<ChatProps> = ({ recieverId }) => {
 
   const currentUserId = getUserId();
 
+  // Nachrichten laden via REST
   useEffect(() => {
     fetchMessages();
   }, [recieverId]);
 
+  // WebSocket-Verbindung aufbauen mit sortiertem Raumnamen
   useEffect(() => {
-    const roomName = `chat_${currentUserId}_${recieverId}`;
+    const sortedIds = [currentUserId, recieverId].sort((a, b) => a - b);
+    const roomName = `chat_${sortedIds[0]}_${sortedIds[1]}`;
     const wsUrl = `ws://localhost:8000/ws/chat/${roomName}/`;
     const newSocket = new WebSocket(wsUrl);
 
@@ -44,10 +47,12 @@ export const Chat: React.FC<ChatProps> = ({ recieverId }) => {
     newSocket.onmessage = (e) => {
       const data = JSON.parse(e.data);
       if (data.message) {
+        // Prüfe anhand des mitgesendeten sender-Feldes, ob die Nachricht vom aktuellen Nutzer stammt
+        const isFromCurrentUser = data.sender === currentUserId;
         const newChatMessage: ChatMessage = {
-          id: Date.now(),
+          id: Date.now(), // Temporäre ID; im echten Szenario solltest du z.B. msg.id vom Backend verwenden
           content: data.message,
-          isUser: false,
+          isUser: isFromCurrentUser,
           timestamp: new Date().toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
@@ -75,29 +80,25 @@ export const Chat: React.FC<ChatProps> = ({ recieverId }) => {
       const response = await AxiosInstance.get(
           `/chat/get-messages/${currentUserId}/${recieverId}/`
       );
-      const apiMessages = response.data.map((msg: any) => ({
-        id: msg.id,
-        content: msg.message,
-        isUser: extractUserId(msg.sender) === currentUserId,
-        timestamp: new Date(msg.date).toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-      }));
+      const apiMessages = response.data.map((msg: any) => {
+        // Extrahiere hier sender als Zahl, falls msg.sender ein Objekt ist
+        const senderId = typeof msg.sender === "object" ? msg.sender.id : msg.sender;
+        return {
+          id: msg.id,
+          content: msg.message,
+          isUser: senderId === currentUserId,
+          timestamp: new Date(msg.date).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+        };
+      });
       setMessages(apiMessages);
     } catch (err: any) {
       setError(err.message || "Fehler beim Laden der Nachrichten");
     } finally {
       setLoading(false);
     }
-  };
-
-  // Wie in ChatList: Extrahiere ggf. die ID, falls msg.sender ein Objekt ist
-  const extractUserId = (user: any): number => {
-    if (user && typeof user === "object" && user.id) {
-      return user.id;
-    }
-    return user;
   };
 
   const handleSendMessage = async () => {
@@ -110,7 +111,10 @@ export const Chat: React.FC<ChatProps> = ({ recieverId }) => {
         reciever: recieverId,
         message: newMessage,
       };
+      // Nachricht per REST speichern
       await AxiosInstance.post("/chat/send-messages/", payload);
+
+      // Setze die Nachricht lokal sofort als "gesendet" (isUser: true)
       const newChatMessage: ChatMessage = {
         id: Date.now(),
         content: newMessage,
@@ -121,9 +125,12 @@ export const Chat: React.FC<ChatProps> = ({ recieverId }) => {
         }),
       };
       setMessages((prev) => [...prev, newChatMessage]);
+
+      // Sende Nachricht via WebSocket mit sender-Feld
       if (socket) {
-        socket.send(JSON.stringify({ message: newMessage }));
+        socket.send(JSON.stringify({ message: newMessage, sender: currentUserId }));
       }
+
       setNewMessage("");
     } catch (err: any) {
       setError(err.message || "Fehler beim Senden der Nachricht");
@@ -134,6 +141,7 @@ export const Chat: React.FC<ChatProps> = ({ recieverId }) => {
 
   return (
       <div className="flex flex-col h-full w-full bg-background rounded-lg shadow-md overflow-hidden">
+        {/* Titel */}
         <div className="p-4 bg-primary text-primary-foreground flex-shrink-0">
           <h1 className="text-2xl font-bold text-center">Chat</h1>
         </div>
@@ -147,6 +155,7 @@ export const Chat: React.FC<ChatProps> = ({ recieverId }) => {
             <div className="p-2 text-center text-sm text-gray-500">Lade Daten ...</div>
         )}
 
+        {/* Nachrichtenbereich */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {messages.map((msg) => (
               <Message
@@ -158,6 +167,7 @@ export const Chat: React.FC<ChatProps> = ({ recieverId }) => {
           ))}
         </div>
 
+        {/* Eingabefeld */}
         <div className="p-4 bg-muted flex-shrink-0">
           <div className="flex space-x-2">
             <Input
@@ -177,3 +187,5 @@ export const Chat: React.FC<ChatProps> = ({ recieverId }) => {
       </div>
   );
 };
+
+export default Chat;
