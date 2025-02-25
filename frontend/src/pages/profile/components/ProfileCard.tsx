@@ -4,6 +4,8 @@ import CountryFlag from "@/components/ui/flag";
 import '@fortawesome/fontawesome-free/css/all.css';
 import SkillBadges from "@/pages/profile/components/SkillBadges.tsx";
 import EditProfileDialog from './EditProfileDialog';
+import { useNavigate } from 'react-router-dom';
+
 
 interface ProfileCardProps {
     userDetails: UserDetails;
@@ -13,6 +15,7 @@ interface ProfileCardProps {
 
 const ProfileCard: React.FC<ProfileCardProps> = ({userDetails, currentUserId, onEdit}) => {
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+    const navigate = useNavigate();
 
     return (
         <div
@@ -75,6 +78,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({userDetails, currentUserId, on
                             )}
                             {/* Message Button */}
                             <button
+                                onClick={() => navigate('/chats')}
                                 className="px-4 py-1.5 rounded-[50px] bg-gradient-to-r from-blue-400 to-blue-500 dark:from-blue-500 dark:to-blue-600 text-white text-xs sm:text-sm font-medium shadow-sm dark:shadow-gray-900/20 hover:from-blue-500 hover:to-blue-600 transition-all duration-200">
                                 <i className="fas fa-paper-plane mr-1.5"></i>
                                 Message
