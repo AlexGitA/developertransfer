@@ -1,3 +1,4 @@
+// src/pages/chat/components/Message.tsx
 import React from "react";
 
 interface MessageProps {
@@ -17,13 +18,7 @@ export const Message: React.FC<MessageProps> = ({ content, isUser, timestamp }) 
                 } shadow-md`}
             >
                 <p className="text-sm">{content}</p>
-                <p
-                    className={`text-xs mt-1 ${
-                        isUser
-                            ? "text-primary-foreground/70"
-                            : "text-secondary-foreground/70"
-                    }`}
-                >
+                <p className={`text-xs mt-1 ${isUser ? "text-primary-foreground/70" : "text-secondary-foreground/70"}`}>
                     {timestamp}
                 </p>
             </div>

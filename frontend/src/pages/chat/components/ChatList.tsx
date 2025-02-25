@@ -1,17 +1,20 @@
+// src/pages/chat/components/ChatList.tsx
 import React, { useEffect, useState } from "react";
 import AxiosInstance, { getUserId } from "@/lib/Axios";
 
 interface InboxMessage {
     id: number;
-    sender: number;
-    reciever: number;
+    sender: any;    // Kann entweder eine Zahl oder ein Objekt sein
+    reciever: any;  // Kann entweder eine Zahl oder ein Objekt sein
     message: string;
     date: string;
 }
 
-export const ChatList: React.FC<{
+interface ChatListProps {
     onSelectUser: (userId: number) => void;
-}> = ({ onSelectUser }) => {
+}
+
+export const ChatList: React.FC<ChatListProps> = ({ onSelectUser }) => {
     const currentUserId = getUserId();
     const [inbox, setInbox] = useState<InboxMessage[]>([]);
     const [error, setError] = useState<string | null>(null);
@@ -24,16 +27,24 @@ export const ChatList: React.FC<{
         try {
             setError(null);
             const res = await AxiosInstance.get(`/chat/my-messages/${currentUserId}/`);
-            // Das sollte eine Liste von Nachrichten sein, die laut View gefiltert sind.
             setInbox(res.data);
         } catch (err: any) {
-            setError(err.message);
+            setError(err.message || "Fehler beim Laden der Nachrichten");
         }
     };
 
-    // Ermitteln, wer der Chatpartner ist (sender oder reciever)
+    // Extrahiere die User-ID, falls sender oder reciever Objekte sind
+    const extractUserId = (user: any): number => {
+        if (user && typeof user === "object" && user.id) {
+            return user.id;
+        }
+        return user;
+    };
+
     const getChatPartnerId = (msg: InboxMessage) => {
-        return msg.sender === currentUserId ? msg.reciever : msg.sender;
+        const senderId = extractUserId(msg.sender);
+        const recieverId = extractUserId(msg.reciever);
+        return senderId === currentUserId ? recieverId : senderId;
     };
 
     return (

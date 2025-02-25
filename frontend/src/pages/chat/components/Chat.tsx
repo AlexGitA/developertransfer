@@ -1,13 +1,13 @@
+// src/pages/chat/components/Chat.tsx
 "use client";
 
 import React, { useState, useEffect } from "react";
-import AxiosInstance, { getUserId } from "@/lib/Axios"; // <-- Pfad ggf. anpassen
+import AxiosInstance, { getUserId } from "@/lib/Axios";
 import { Message } from "./Message";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Send } from "lucide-react";
 
-// Nachrichtentyp für den State
 interface ChatMessage {
   id: number;
   content: string;
@@ -15,9 +15,8 @@ interface ChatMessage {
   timestamp: string;
 }
 
-// Prop-Typ für Chat: Wer ist der Empfänger?
 interface ChatProps {
-  recieverId: number;
+  recieverId: number; // Die User-ID des Chatpartners
 }
 
 export const Chat: React.FC<ChatProps> = ({ recieverId }) => {
@@ -27,35 +26,33 @@ export const Chat: React.FC<ChatProps> = ({ recieverId }) => {
   const [error, setError] = useState<string | null>(null);
   const [socket, setSocket] = useState<WebSocket | null>(null);
 
-  // Aktueller User
   const currentUserId = getUserId();
 
-  // 1) Nachrichten beim ersten Rendern (oder wenn sich recieverId ändert) laden
+  // Nachrichten laden via REST
   useEffect(() => {
     fetchMessages();
   }, [recieverId]);
 
-  // 2) WebSocket-Verbindung aufbauen
+  // WebSocket-Verbindung aufbauen mit sortiertem Raumnamen
   useEffect(() => {
-    // Beispiel: Raumname kann so aussehen:
-    // "chat_<currentUserId>_<recieverId>"
-    const roomName = `chat_${currentUserId}_${recieverId}`;
-
-    // WebSocket-URL anpassen, falls du HTTPS/SSL oder einen anderen Host verwendest
-    const newSocket = new WebSocket(`ws://localhost:8000/ws/chat/${roomName}/`);
+    const sortedIds = [currentUserId, recieverId].sort((a, b) => a - b);
+    const roomName = `chat_${sortedIds[0]}_${sortedIds[1]}`;
+    const wsUrl = `ws://localhost:8000/ws/chat/${roomName}/`;
+    const newSocket = new WebSocket(wsUrl);
 
     newSocket.onopen = () => {
-      console.log("WebSocket connected");
+      console.log("WebSocket connected:", wsUrl);
     };
 
     newSocket.onmessage = (e) => {
       const data = JSON.parse(e.data);
-      // Falls im JSON ein "message"-Feld enthalten ist, ist es eine neue Chat-Nachricht
       if (data.message) {
+        // Prüfe anhand des mitgesendeten sender-Feldes, ob die Nachricht vom aktuellen Nutzer stammt
+        const isFromCurrentUser = data.sender === currentUserId;
         const newChatMessage: ChatMessage = {
-          id: Date.now(), // Temporäre ID
+          id: Date.now(), // Temporäre ID; im echten Szenario solltest du z.B. msg.id vom Backend verwenden
           content: data.message,
-          isUser: false, // Gehen wir davon aus, dass eingehende WebSocket-Msgs vom anderen User stammen
+          isUser: isFromCurrentUser,
           timestamp: new Date().toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
@@ -71,56 +68,53 @@ export const Chat: React.FC<ChatProps> = ({ recieverId }) => {
 
     setSocket(newSocket);
 
-    // Cleanup, wenn Komponente unmountet oder recieverId wechselt
     return () => {
       newSocket.close();
     };
   }, [recieverId]);
 
-  // Funktion zum Laden aller Nachrichten via REST
   const fetchMessages = async () => {
     try {
       setLoading(true);
       setError(null);
-
-      // GET: /chat/get-messages/<sender_id>/<reciever_id>/
       const response = await AxiosInstance.get(
           `/chat/get-messages/${currentUserId}/${recieverId}/`
       );
-      // Backend liefert: [{ id, sender, reciever, message, date, ... }, ...]
-      const apiMessages = response.data.map((msg: any) => ({
-        id: msg.id,
-        content: msg.message,
-        isUser: msg.sender === currentUserId,
-        timestamp: new Date(msg.date).toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-      }));
+      const apiMessages = response.data.map((msg: any) => {
+        // Extrahiere hier sender als Zahl, falls msg.sender ein Objekt ist
+        const senderId = typeof msg.sender === "object" ? msg.sender.id : msg.sender;
+        return {
+          id: msg.id,
+          content: msg.message,
+          isUser: senderId === currentUserId,
+          timestamp: new Date(msg.date).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+        };
+      });
       setMessages(apiMessages);
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || "Fehler beim Laden der Nachrichten");
     } finally {
       setLoading(false);
     }
   };
 
-  // Funktion zum Senden einer neuen Nachricht
   const handleSendMessage = async () => {
     if (!newMessage.trim()) return;
     try {
       setLoading(true);
       setError(null);
-
-      // (A) REST-POST an Django, damit die Nachricht in DB gespeichert wird
       const payload = {
         sender: currentUserId,
         reciever: recieverId,
         message: newMessage,
       };
+      // Nachricht per REST speichern
       await AxiosInstance.post("/chat/send-messages/", payload);
 
-      // (B) Direkt im State anzeigen
+      // Setze die Nachricht lokal sofort als "gesendet" (isUser: true)
       const newChatMessage: ChatMessage = {
         id: Date.now(),
         content: newMessage,
@@ -132,15 +126,14 @@ export const Chat: React.FC<ChatProps> = ({ recieverId }) => {
       };
       setMessages((prev) => [...prev, newChatMessage]);
 
-      // (C) WebSocket-Broadcast, damit der andere User die Nachricht in Echtzeit sieht
+      // Sende Nachricht via WebSocket mit sender-Feld
       if (socket) {
-        socket.send(JSON.stringify({ message: newMessage }));
+        socket.send(JSON.stringify({ message: newMessage, sender: currentUserId }));
       }
 
-      // Eingabefeld leeren
       setNewMessage("");
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || "Fehler beim Senden der Nachricht");
     } finally {
       setLoading(false);
     }
@@ -148,21 +141,18 @@ export const Chat: React.FC<ChatProps> = ({ recieverId }) => {
 
   return (
       <div className="flex flex-col h-full w-full bg-background rounded-lg shadow-md overflow-hidden">
-        {/* Oberer Bereich (Titel) */}
+        {/* Titel */}
         <div className="p-4 bg-primary text-primary-foreground flex-shrink-0">
           <h1 className="text-2xl font-bold text-center">Chat</h1>
         </div>
 
-        {/* Fehler-/Lade-Anzeige */}
         {error && (
             <div className="p-2 text-red-500 text-center">
               Fehler beim Laden/Senden: {error}
             </div>
         )}
         {loading && (
-            <div className="p-2 text-center text-sm text-gray-500">
-              Lade Daten ...
-            </div>
+            <div className="p-2 text-center text-sm text-gray-500">Lade Daten ...</div>
         )}
 
         {/* Nachrichtenbereich */}
@@ -177,7 +167,7 @@ export const Chat: React.FC<ChatProps> = ({ recieverId }) => {
           ))}
         </div>
 
-        {/* Eingabefeld unten */}
+        {/* Eingabefeld */}
         <div className="p-4 bg-muted flex-shrink-0">
           <div className="flex space-x-2">
             <Input
@@ -186,9 +176,7 @@ export const Chat: React.FC<ChatProps> = ({ recieverId }) => {
                 placeholder="Type your message..."
                 className="flex-grow"
                 onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    handleSendMessage();
-                  }
+                  if (e.key === "Enter") handleSendMessage();
                 }}
             />
             <Button onClick={handleSendMessage}>
@@ -199,3 +187,5 @@ export const Chat: React.FC<ChatProps> = ({ recieverId }) => {
       </div>
   );
 };
+
+export default Chat;
