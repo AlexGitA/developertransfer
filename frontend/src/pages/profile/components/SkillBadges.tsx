@@ -15,7 +15,7 @@ const getBadgeColor = (skillType: string) => {
   }
 };
 
-const SkillBadges = ({ skills }: { skills: { id: number; name: string; skill_type: string }[] }) => {
+const SkillBadges = ({skills, more_skills}: { skills: { id: number; name: string; skill_type: string }[]; more_skills?: boolean | null; }) => {
   return (
     <div className="flex flex-wrap gap-2">
       {skills.map((skill) => (
@@ -26,6 +26,13 @@ const SkillBadges = ({ skills }: { skills: { id: number; name: string; skill_typ
           {skill.name}
         </span>
       ))}
+      {more_skills &&
+          <span
+              className={'bg-gray-200 text-gray-800 border border-gray-400 px-3 py-1 rounded-lg text-sm font-medium transition duration-200'}
+          >
+          more...
+        </span>
+      }
     </div>
   );
 };
