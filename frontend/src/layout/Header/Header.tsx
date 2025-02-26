@@ -1,11 +1,11 @@
 import "../../index.css";
-import { MENTButton } from "@/components/button/MENT-button.tsx";
 import ProfileButton from "@/layout/Header/profileButton.tsx";
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useState } from "react";
+import {useNavigate, useLocation} from 'react-router-dom';
+import {useState} from "react";
 import {handleLogout, isAuthenticated} from '@/lib/axios';
 import DarkModeToggle from "@/components/button/DarkModeToggle.tsx";
 import '@fortawesome/fontawesome-free/css/all.css';
+import {Search} from "lucide-react";
 
 const Header = () => {
     const navigate = useNavigate();
@@ -38,44 +38,49 @@ const Header = () => {
                     <button
                         onClick={() => navigate('/post')}
                         className={`flex items-center text-white gap-2 px-2.5 py-1.5 rounded-lg transition-all
-                            ${isActive('/post') 
-                                ? 'bg-white/10 text-primary dark:text-primary-300' 
-                                : 'hover:text-primary hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50'
-                            }`}>
+                            ${isActive('/post')
+                            ? 'bg-white/10 text-primary dark:text-primary-300'
+                            : 'hover:text-primary hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50'
+                        }`}>
                         <i className="fas fa-newspaper text-lg"/>
                         <span className="text-sm font-medium">Posts</span>
                     </button>
                     <button
                         onClick={() => navigate('/chats')}
                         className={`flex items-center text-white gap-2 px-2.5 py-1.5 rounded-lg transition-all
-                            ${isActive('/chats') 
-                                ? 'bg-white/10 text-primary dark:text-primary-300' 
-                                : 'hover:text-primary hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50'
-                            }`}>
+                            ${isActive('/chats')
+                            ? 'bg-white/10 text-primary dark:text-primary-300'
+                            : 'hover:text-primary hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50'
+                        }`}>
                         <i className="fa-regular fa-comment text-lg"/>
                         <span className="text-sm font-medium">Chats</span>
                     </button>
                 </nav>
             </div>
 
-            <div className="main-header__mid text-center">
-                <MENTButton className="main-header__mid-button">
-                    <span className="main-header__mid-button-text">Search for your Mentor
-                         <i className="fa-solid fa-magnifying-glass text-lg"/>
-                    </span>
-                </MENTButton>
+            <div className="main-header__mid flex justify-center">
+                {location.pathname !== '/home' && (
+                    <button
+                        onClick={() => navigate('/home')}
+                        className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm hover:shadow-md transition-shadow"
+                    >
+                        <span className="font-bold text-primary">Search for your Mentor</span>
+                        <Search size={18} className="text-primary font-bold"/>
+                    </button>
+                )}
             </div>
 
             <div className="main-header__right flex items-center gap-2">
                 <DarkModeToggle/>
-                {/* todo should not try to get to user a user if not logged in */}
-                <ProfileButton/>
-                {/* Todo, add on log in condition*/}
+                {isLoggedIn && (
+                    <ProfileButton/>)}
+
+                {isLoggedIn && (
                     <button
                         onClick={() => navigate('/settings')}
                         className="px-2 py-1 rounded hover:bg-gray-100 hover:text-primary text-white dark:hover:bg-gray-700 dark:text-white transition-colors">
                         <i className="fa-solid fa-gear text-lg"/>
-                    </button>
+                    </button>)}
                 {isLoggedIn ? (
                     <button
                         className="px-4 py-2 text-white rounded hover:bg-gray-100 hover:text-primary

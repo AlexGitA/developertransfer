@@ -173,7 +173,7 @@ class UserDetails(models.Model):
 ### Post Classes
 class Topic(models.Model):
     name = models.CharField(
-        max_length=15,
+        max_length=25,
         unique=True,
         help_text="Name of the topic"
     )
@@ -204,7 +204,7 @@ class Topic(models.Model):
 
 class Post(models.Model):
     title = models.CharField(
-        max_length=50,
+        max_length=150,
         help_text="Title of the post"
     )
     content = models.TextField(

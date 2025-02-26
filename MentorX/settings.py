@@ -57,10 +57,19 @@ INSTALLED_APPS = [
     # Other
     'corsheaders',
     'django_countries',
+    'channels',
 
     # Swagger
     'drf_yasg',
 ]
+
+#CHANNEL_LAYERS = {
+#    "default": {
+#        "BACKEND": "channels.layers.InMemoryChannelLayer",
+#    },
+#}
+
+#ASGI_APPLICATION = 'MentorX.asgi.application'
 
 CORS_ALLOWED_ORIGINS = ['http://localhost:5173', 'http://localhost:5175']
 CORS_ALLOW_CREDENTIALS = True
@@ -176,8 +185,8 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 # PASSWORD_RESET_TIMEOUT = 900  # 15 minutes
 
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+#ACCOUNT_EMAIL_REQUIRED = True
+#ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 
 # TODO CORSHEADERS + right right url
 # <EMAIL_CONFIRM_REDIRECT_BASE_URL>/<key>

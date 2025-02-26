@@ -74,15 +74,9 @@ pip freeze > requirements.txt
 python manage.py createsuperuser
 ```
 
-### Test user peterX
-    http://localhost:5173/profile/4
-    "username": "peterX",
-    "password": "pass4Peter"
+### Test user peterX (id:4), markusX (id:5), timX (id:6), alexX (id:7), ammarX (id:8), illyaX (id:10)
+    "password": "pass4Test"
 
-### Test user markusX
-    http://localhost:5173/profile/5
-    "username": "markusX",
-    "password": "pass4Markus"
 
 
 ## Bug fixes
