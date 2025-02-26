@@ -3,7 +3,7 @@ import { MENTButton } from "@/components/button/MENT-button.tsx";
 import ProfileButton from "@/layout/Header/profileButton.tsx";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState } from "react";
-import {handleLogout, isAuthenticated} from '@/lib/Axios';
+import {handleLogout, isAuthenticated} from '@/lib/axios';
 import DarkModeToggle from "@/components/button/DarkModeToggle.tsx";
 import '@fortawesome/fontawesome-free/css/all.css';
 
