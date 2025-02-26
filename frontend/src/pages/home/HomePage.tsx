@@ -2,6 +2,7 @@ import Header from "@/layout/Header/Header.tsx";
 import LeftSidebar from "@/pages/home/components/LeftSidebar.tsx";
 import RightSidebar from "@/pages/home/components/RightSidebar.tsx";
 import MentorList from "@/features/mentors";
+import SearchBar from "@/pages/home/components/SearchBar";
 
 const HomePage = () => {
 
@@ -17,6 +18,7 @@ const HomePage = () => {
                 </div>
 
                 <main className="w-[46vw] bg-gray-50 p-6 dark:bg-gray-800">
+                    <SearchBar/>
                     <div className="app__content">
                         <MentorList/>
                     </div>
