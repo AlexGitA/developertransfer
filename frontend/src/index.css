@@ -237,6 +237,128 @@ h1 {
   position: absolute;
 }
 /*________________________________ Input Section End -------------------------------*/
+/*________________________________ Card Section Start ------------------------------*/
+.MENT-mentor-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  height: 100vh;
+  overflow-x: hidden;
+  padding: 10px 20px 10px 10px;
+}
+.MENT-profile-card {
+  display: flex;
+  position: relative;
+  max-width: 1000px;
+  height: 200px;
+  border-radius: 15px;
+  border: 1px solid #b7b7b7;
+  cursor: pointer;
+  background-color: hsl(var(--background));
+  top: 0;
+
+  &:hover {
+    transition: all 0.2s ease-out;
+    box-shadow: 0 4px 8px var(--shadow);
+    top: -4px;
+    border: 1px solid hsl(var(--border));
+    background-color: hsl(var(--card));
+  }
+
+  &:before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: -16px;
+    right: -16px;
+    height: 32px;
+    width: 32px;
+    border-radius: 32px;
+    transform: scale(2);
+    transform-origin: 50% 50%;
+    background-color: hsl(var(--background));
+    transition: transform 0.15s ease-out;
+  }
+
+  &:hover:before {
+    transform: scale(2.15);
+  }
+}
+.MENT-profile-card__left {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 20%;
+  height: 100%;
+}
+
+.MENT-profile-card__left-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 15px;
+}
+
+.MENT-profile-card__left-fullname {
+  position: absolute;
+  top: 5px;
+  color: white;
+  font-weight: 600;
+}
+
+.MENT-profile-card__left-username {
+  position: absolute;
+  bottom: 0;
+  padding: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.MENT-profile-card__left-username-text {
+  font-size: 12px;
+  color: white;
+}
+
+.MENT-profile-card__right {
+  display: flex;
+  padding: 20px;
+  width: 80%;
+}
+
+.MENT-profile-card__right-info {
+  width: 60%;
+  padding-right: 20px;
+  border-right: 1px solid #b7b7b7;
+}
+
+.MENT-profile-card__right-info__country-language {
+  margin-left: 15px;
+}
+
+.MENT-profile-card__right-info__bio {
+  width: 100%;
+}
+
+.MENT-profile-card__right-info__skills {
+  width: 40%;
+  padding-left: 20px;
+}
+
+.MENT-profile-card__right-info__skills-text {
+  width: 100%;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #b7b7b7;
+}
+
+.MENT-profile-card__right-info__skills-list {
+  padding-top: 10px;
+  height: 100%;
+  align-items: center;
+  font-size: 12px;
+}
+/*________________________________ Card Section End --------------------------------*/
 
 @media (prefers-color-scheme: light) {
   :root {
@@ -280,6 +402,7 @@ h1 {
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    --shadow: rgba(38, 38, 38, 0.2);
   }
   .dark {
     --background: 0 0% 3.9%;
@@ -314,6 +437,7 @@ h1 {
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    --shadow: rgba(240, 240, 240, 0.4);
   }
 }
 

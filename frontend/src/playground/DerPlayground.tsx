@@ -1,60 +1,27 @@
-import { MENTInput } from '@/components/input/MENT-input';
 import MENTLoader from '@/components/SVGLoader/MENT-loader';
+import MentorList from "@/features/mentors";
+import ProfileCard from '@/features/mentors/components/MENT-profilecard';
+import testProfile from '@/assets/testprofile.jpg'
 
 export default function DerPlayground() {
     return (
         <>
-                <MENTLoader></MENTLoader>
-            <MENTInput
-                id="name"
-                labelText="Full Name"
-                hintText="Enter your full legal name"
-                required={true}
-            />
-            <MENTInput
-                id="email"
-                labelText="Email"
-                errorText="Invalid email address"
-                valid={false}
-                noIcon={false} // Shows error icon
-                required={true}
-            />
-            <MENTInput
-                id="phone"
-                labelText="Phone Number"
-                valid={true}
-                hintText="We'll only use this for important updates"
-            />
-            <MENTInput
-                id="search"
-                centered={true}
-                placeholder="Enter search term..."
-            />
-            <MENTInput
-                id="username"
-                labelText="Username"
-                aria-label="Username"
-                hintText="Choose a unique username"
-            />
-            <MENTInput
-                id="password"
-                type="password"
-                labelText="Password"
-                password={true}
-                required={true}
-                hintText="Minimum 8 characters with mix of letters and numbers"
-            />
-            <MENTInput
-                id="disabled-field"
-                labelText="Account Number"
-                defaultValue="123-456-789"
-                disabled={true}
-            />
-            <MENTInput
-                id="uncontrolled"
-                labelText="Default Value"
-                defaultValue="Initial value"
-            />
+            <MENTLoader></MENTLoader>
+            <div className="app__content">
+                <MentorList />
+                <ProfileCard
+                userName={"save_dev"}
+                fullName={" Dave Chaple"}
+                profileImage={testProfile}
+                spokenLanguage={"en"}
+                flag={"en"}
+                bio={"Ich hab meine stärken in Software Entwicklung"}
+                skills={["c++", "c#", "java", "VSCode", "Visual Studio"]}
+                onActionButtonClick={undefined}
+                >
+
+                </ProfileCard>
+            </div>
         </>
     );
 }
