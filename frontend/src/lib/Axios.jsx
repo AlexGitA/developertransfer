@@ -12,6 +12,20 @@ const AxiosInstance = axios.create({
     withCredentials: true
 });
 
+AxiosInstance.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem('access_token');
+        if (token) {
+            config.headers.Authorization = `Token ${token}`;
+
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
+
 // Authentication helper functions
 export const handleLogout = async () => {
     try {

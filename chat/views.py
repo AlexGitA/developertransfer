@@ -15,6 +15,22 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 
+# chat/views.py
+from rest_framework import generics
+from chat.models import Profile
+from chat.serializer import ProfileSerializer
+from rest_framework.permissions import IsAuthenticated
+from django.db.models import Q
+
+class AllUsersView(generics.ListAPIView):
+    serializer_class = ProfileSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        # Gebe alle Profile zurück, außer dein eigenes
+        return Profile.objects.exclude(user=self.request.user)
+
+
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
@@ -149,8 +165,13 @@ class SearchUser(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         username = self.kwargs['username']
         logged_in_user = self.request.user
-        users = Profile.objects.filter(Q(user__username__icontains=username) | Q(full_name__icontains=username) | Q(user__email__icontains=username) &
-                                       ~Q(user=logged_in_user))
+        users = Profile.objects.filter(
+            (Q(user__username__icontains=username) |
+             Q(full_name__icontains=username) |
+             Q(user__email__icontains=username))
+            & ~Q(user=logged_in_user)
+        )
+
 
         if not users.exists():
             return Response(
