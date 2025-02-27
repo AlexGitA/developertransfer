@@ -13,6 +13,7 @@ import EmailConfirmationPage from "@/pages/auth/EmailConfirmationPage.tsx";
 import PostPage from "@/pages/post/PostPage.tsx";
 import {AuthRoute} from "@/pages/auth/AuthRoute.tsx";
 import ChatPage from "@/pages/chat/ChatPage.tsx";
+import LandingPage from "@/pages/landing/LandingPage.tsx";
 
 function App() {
     return (
@@ -22,7 +23,7 @@ function App() {
                     {/* API is unreachable */}
                     <Route path="/api/" element={<Navigate to="/" replace />} />
                     {/* Main paths */}
-                    <Route index element={<Navigate to="/home" replace/>}/>
+                    {/*<Route index element={<Navigate to="/home" replace/>}/>*/}
                     <Route path="playground" element={<DerPlayground/>}/>
                     <Route path="profile/:id" element={<ProfilePage/>}/>
                     <Route path="home" element={<HomePage/>}/>
@@ -37,6 +38,10 @@ function App() {
 
                     {/* Chat */}
                     <Route path="chats" element={<ChatPage/>}/>
+
+                    {/* Landing Page */}
+                    <Route path="/landing" element={<LandingPage/>}/>
+                    <Route index element={<Navigate to="/landing" replace/>}/>
 
                     {/* Info paths */}
                     <Route path="tos" element={<TermsOfService/>}/>
