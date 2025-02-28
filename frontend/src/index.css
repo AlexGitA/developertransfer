@@ -240,16 +240,17 @@ h1 {
 /*________________________________ Card Section Start ------------------------------*/
 .MENT-mentor-list {
   display: flex;
+  align-items: center;
   flex-direction: column;
   gap: 1em;
-  height: 100vh;
+  height: calc(100vh - 85px);
   overflow-x: hidden;
   padding: 10px 20px 10px 10px;
 }
 .MENT-profile-card {
   display: flex;
   position: relative;
-  max-width: 1000px;
+  width: 1000px;
   height: 200px;
   border-radius: 15px;
   border: 1px solid #b7b7b7;
@@ -262,7 +263,7 @@ h1 {
     box-shadow: 0 4px 8px var(--shadow);
     top: -4px;
     border: 1px solid hsl(var(--border));
-    background-color: hsl(var(--card));
+    background-color: hsl(var(--accent));
   }
 
   &:before {
@@ -276,7 +277,7 @@ h1 {
     border-radius: 32px;
     transform: scale(2);
     transform-origin: 50% 50%;
-    background-color: hsl(var(--background));
+    background-color: hsl(var(--accent));
     transition: transform 0.15s ease-out;
   }
 
@@ -405,7 +406,7 @@ h1 {
     --shadow: rgba(38, 38, 38, 0.2);
   }
   .dark {
-    --background: 0 0% 3.9%;
+    --background: rgb(31 41 55);
     --foreground: 0 0% 98%;
     --card: 0 0% 3.9%;
     --card-foreground: 0 0% 98%;

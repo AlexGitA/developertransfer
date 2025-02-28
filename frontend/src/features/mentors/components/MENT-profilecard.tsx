@@ -2,6 +2,7 @@ import bem from 'bero'
 import {Button} from '@/components/ui/button.tsx'
 import CountryFlag from "@/components/ui/flag";
 import SkillBadges from "@/pages/profile/components/SkillBadges.tsx";
+import {useNavigate} from "react-router-dom";
 
 
 const bemProfileCard = bem("MENT-profile-card");
@@ -9,6 +10,12 @@ const bemProfileCard = bem("MENT-profile-card");
 // @ts-ignore
 const ProfileCard = ({fullName, userName, profileImage, spokenLanguage, bio, skills, more_skills}) => {
     more_skills = Boolean(more_skills);
+    const navigate = useNavigate();
+    const handleButtonClick = (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.stopPropagation();
+        navigate('/chats');
+    };
+
     return (
         <div className={bemProfileCard()}>
             <div className={bemProfileCard("left")}>
@@ -25,6 +32,7 @@ const ProfileCard = ({fullName, userName, profileImage, spokenLanguage, bio, ski
                     className={bemProfileCard("left-action")}
                     variant="default"
                     type="button"
+                    onClick={handleButtonClick}
                     >
                         Connect
                     </Button>
@@ -40,9 +48,15 @@ const ProfileCard = ({fullName, userName, profileImage, spokenLanguage, bio, ski
                             showText={false}
                         />
                     </div>
-                    <p className={bemProfileCard("right-info__bio")}>
-                        {bio.length > 221 ? `${bio.slice(0, 221)}...` : bio}
-                    </p>
+                    {bio ? (
+                            <p className={bemProfileCard("right-info__bio")}>
+                                {bio.length > 221 ? `${bio.slice(0, 221)}...` : bio}
+                            </p>
+                        ) :
+                        <p className={bemProfileCard("right-info__bio")}>
+                            Im new here! Let's connect!
+                        </p>
+                    }
                 </div>
                 <div className={bemProfileCard("right-info__skills")}>
                     <h3 className={bemProfileCard("right-info__skills-text")}>
