@@ -26,7 +26,7 @@ export const Post: React.FC<PostProps> = ({ post, onDelete }) => {
   const [isSubmittingComment, setIsSubmittingComment] = useState(false)
   const [likesCount, setLikesCount] = useState(post.likes_count || 0)
   const [isLiking, setIsLiking] = useState(false)
-  const [hasLiked, setHasLiked] = useState(false)
+  const [hasLiked, setHasLiked] = useState(post.has_liked || false)
   const currentUserId = getUserId()
 
   const fetchComments = async () => {
@@ -105,6 +105,27 @@ export const Post: React.FC<PostProps> = ({ post, onDelete }) => {
     }
   };
 
+  const handleUnlike = async () => {
+    if (isLiking || !hasLiked) return;
+    
+    try {
+      setIsLiking(true);
+      await AxiosInstance.post(`/api/posts/${post.id}/unlike/`, {}, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      
+      // Update likes count locally and track user's like action
+      setLikesCount(prev => Math.max(0, prev - 1)); // Ensure it doesn't go below 0
+      setHasLiked(false);
+    } catch (error) {
+      console.error('Error unliking post:', error);
+    } finally {
+      setIsLiking(false);
+    }
+  };
+
   console.log('Raw post data:', post);  // Log the entire post
   console.log('Topic data:', post.topic);  // Log just the topic data
 
@@ -143,7 +164,13 @@ export const Post: React.FC<PostProps> = ({ post, onDelete }) => {
               <i className={`fas fa-arrow-up ${hasLiked ? 'text-primary-600' : 'text-primary'}`} />
             </Button>
             <span className="text-sm font-medium">{likesCount}</span>
-            <Button variant="ghost" size="sm" className="px-2">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className={`px-2 ${hasLiked ? '' : 'opacity-50'}`}
+              onClick={handleUnlike}
+              disabled={isLiking || !hasLiked}
+            >
               <i className="fas fa-arrow-down text-muted-foreground" />
             </Button>
           </div>

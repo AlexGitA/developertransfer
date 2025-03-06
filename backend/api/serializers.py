@@ -85,9 +85,17 @@ class SkillSerializer(ModelSerializer):
 
 # todo: finish
 class PostSerializer(ModelSerializer):
+    has_liked = serializers.SerializerMethodField()
+    
     class Meta:
         model = Post
         fields = '__all__'
+        
+    def get_has_liked(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return request.user in obj.likes.all()
+        return False
 
 
 class TopicSerializer(ModelSerializer):

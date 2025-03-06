@@ -65,6 +65,10 @@ class UserDetailsUpdateView(ModelViewSet):
 class PostViewSet(ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        return context
 
     @action(detail=True, methods=['post'])
     def like(self, request, pk=None):
@@ -72,9 +76,20 @@ class PostViewSet(ModelViewSet):
         # Hier implementieren Sie die Like-Logik
         # Zum Beispiel:
         post.likes.add(request.user)
+        post.likes_count = post.likes.count()  # Update likes count
         post.save()
         
         return Response({'status': 'post liked'}, status=status.HTTP_200_OK)
+        
+    @action(detail=True, methods=['post'])
+    def unlike(self, request, pk=None):
+        post = self.get_object()
+        # Remove the user from likes
+        post.likes.remove(request.user)
+        post.likes_count = post.likes.count()  # Update likes count
+        post.save()
+        
+        return Response({'status': 'post unliked'}, status=status.HTTP_200_OK)
 
 
 class TopicViewSet(ModelViewSet):
