@@ -10,7 +10,7 @@ export interface Comment {
   post: number;
   author: CommentAuthor;
   parent?: number | null;
-  createdAt: string;
+  created: string;
   likes_count: number;
 }
 
@@ -32,8 +32,8 @@ export interface Posts {
   };
 
   topic: Topic[];
-  createdAt: Date;
-  updatedAt: Date;
+  created: Date;
+  updated: Date;
   closed: boolean;
   likes: number;
   likes_count: number;

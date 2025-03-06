@@ -16,7 +16,15 @@ interface PostProps {
   onDelete?: (postId: string) => void
 }
 
+// Erweitere den PostType für TypeScript, um has_liked zu unterstützen
+interface ExtendedPostType extends PostType {
+  has_liked?: boolean;
+}
+
 export const Post: React.FC<PostProps> = ({ post, onDelete }) => {
+  // Behandle post als ExtendedPostType
+  const extendedPost = post as ExtendedPostType;
+  
   const [isExpanded, setIsExpanded] = useState(false)
   const [showComments, setShowComments] = useState(false)
   const [loadedComments, setLoadedComments] = useState<CommentType[]>([])
@@ -25,8 +33,9 @@ export const Post: React.FC<PostProps> = ({ post, onDelete }) => {
   const [newCommentContent, setNewCommentContent] = useState('')
   const [isSubmittingComment, setIsSubmittingComment] = useState(false)
   const [likesCount, setLikesCount] = useState(post.likes_count || 0)
+  const [commentsCount, setCommentsCount] = useState(post.comments_count || 0)
   const [isLiking, setIsLiking] = useState(false)
-  const [hasLiked, setHasLiked] = useState(post.has_liked || false)
+  const [hasLiked, setHasLiked] = useState(extendedPost.has_liked || false)
   const currentUserId = getUserId()
 
   const fetchComments = async () => {
@@ -71,6 +80,9 @@ export const Post: React.FC<PostProps> = ({ post, onDelete }) => {
       // Refresh comments
       await fetchComments();
       
+      // Update comments count locally
+      setCommentsCount(prev => prev + 1);
+      
       // Reset input
       setNewCommentContent('');
       setShowCommentInput(false);
@@ -82,12 +94,31 @@ export const Post: React.FC<PostProps> = ({ post, onDelete }) => {
     }
   };
 
+  const handleDeleteComment = async (commentId: number) => {
+    try {
+      await AxiosInstance.delete(`/api/comments/${commentId}/`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      
+      // Remove comment from local state
+      setLoadedComments(prev => prev.filter(comment => comment.id !== commentId));
+      
+      // Update comments count locally
+      setCommentsCount(prev => Math.max(0, prev - 1));
+      
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+    }
+  };
+
   const handleLike = async () => {
     if (isLiking) return;
     
     try {
       setIsLiking(true);
-      await AxiosInstance.post(`/api/posts/${post.id}/like/`, {}, {
+      const response = await AxiosInstance.post(`/api/posts/${post.id}/like/`, {}, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -110,7 +141,7 @@ export const Post: React.FC<PostProps> = ({ post, onDelete }) => {
     
     try {
       setIsLiking(true);
-      await AxiosInstance.post(`/api/posts/${post.id}/unlike/`, {}, {
+      const response = await AxiosInstance.post(`/api/posts/${post.id}/unlike/`, {}, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -218,7 +249,7 @@ export const Post: React.FC<PostProps> = ({ post, onDelete }) => {
                 onClick={handleCommentsClick}
               >
                 <i className="fas fa-comment-alt mr-2" />
-                {post.comments_count} Comments
+                {commentsCount} Comments
               </Button>
               <Button variant="ghost" size="sm">
                 <i className="fas fa-share mr-2" />
@@ -275,7 +306,11 @@ export const Post: React.FC<PostProps> = ({ post, onDelete }) => {
                 ) : loadedComments.length > 0 ? (
                   <div className="space-y-4">
                     {loadedComments.map((comment) => (
-                      <Comment key={comment.id.toString()} comment={comment as any} />
+                      <Comment 
+                        key={comment.id.toString()} 
+                        comment={comment} 
+                        onDelete={handleDeleteComment}
+                      />
                     ))}
                   </div>
                 ) : (

@@ -181,11 +181,17 @@ const PostPage = () => {
     }) => {
         try {
             setLoading(true);
+            // Wenn keine Topics ausgewählt wurden, kann der Post nicht erstellt werden
+            if (selectedTopics.length === 0) {
+                setError("Bitte wählen Sie mindestens ein Thema aus");
+                return;
+            }
+            
             const response = await AxiosInstance.post('/posts/', {
                 title: data.title,
                 content: data.content,
                 author: currentUserId,
-                topics: selectedTopics.map(topic => topic.id)
+                topic: selectedTopics[0].id  // Wir senden nur das erste ausgewählte Thema
             });
             console.log('Response received:', response.data);
             setError(null);
