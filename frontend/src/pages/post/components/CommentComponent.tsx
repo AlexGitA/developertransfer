@@ -17,7 +17,7 @@ export const Comment: React.FC<CommentProps> = ({ comment }) => {
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium">{comment.author.username}</span>
           <span className="text-xs text-muted-foreground">
-            {new Date(comment.createdAt).toLocaleDateString()}
+            {new Date(comment.created).toLocaleDateString()}
           </span>
         </div>
         <p className="text-sm mt-1">{comment.content}</p>

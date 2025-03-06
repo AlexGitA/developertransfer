@@ -124,7 +124,7 @@ export const Post: React.FC<PostProps> = ({ post, onDelete }) => {
                 <AvatarFallback>{post.author.username[0].toUpperCase()}</AvatarFallback>
               </Avatar>
               <span className="text-sm font-medium">{post.author.username}</span>
-              <span className="text-xs text-muted-foreground">{new Date(post.createdAt).toLocaleDateString()}</span>
+              <span className="text-xs text-muted-foreground">{new Date(post.created).toLocaleDateString()}</span>
             </div>
 
             <h2 className="text-lg font-semibold mb-2">{post.title}</h2>
