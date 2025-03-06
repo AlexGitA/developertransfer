@@ -9,6 +9,7 @@ from .serializers import UserDetailsReadSerializer, SkillSerializer, PostSeriali
 
 from rest_framework import filters
 from .serializers import UserDetailsReadSerializer, SkillSerializer, PostSerializer, TopicSerializer
+from rest_framework.decorators import action
 
 
 # ViewSet to get the UserDetails
@@ -64,6 +65,16 @@ class UserDetailsUpdateView(ModelViewSet):
 class PostViewSet(ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+
+    @action(detail=True, methods=['post'])
+    def like(self, request, pk=None):
+        post = self.get_object()
+        # Hier implementieren Sie die Like-Logik
+        # Zum Beispiel:
+        post.likes.add(request.user)
+        post.save()
+        
+        return Response({'status': 'post liked'}, status=status.HTTP_200_OK)
 
 
 class TopicViewSet(ModelViewSet):

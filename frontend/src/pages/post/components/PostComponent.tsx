@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
-import type { Posts as PostType, CreateCommentData } from "@/types/post-types"
+import type { Posts as PostType, CreateCommentData, Comment as CommentType } from "@/types/post-types"
 import { Comment } from "./CommentComponent"
 import { getUserId } from "@/lib/Axios"
 import AxiosInstance from "@/lib/Axios"
@@ -19,17 +19,20 @@ interface PostProps {
 export const Post: React.FC<PostProps> = ({ post, onDelete }) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const [showComments, setShowComments] = useState(false)
-  const [loadedComments, setLoadedComments] = useState<Comment[]>([])
+  const [loadedComments, setLoadedComments] = useState<CommentType[]>([])
   const [isLoadingComments, setIsLoadingComments] = useState(false)
   const [showCommentInput, setShowCommentInput] = useState(false)
   const [newCommentContent, setNewCommentContent] = useState('')
   const [isSubmittingComment, setIsSubmittingComment] = useState(false)
+  const [likesCount, setLikesCount] = useState(post.likes_count || 0)
+  const [isLiking, setIsLiking] = useState(false)
+  const [hasLiked, setHasLiked] = useState(false)
   const currentUserId = getUserId()
 
   const fetchComments = async () => {
     try {
       setIsLoadingComments(true);
-      const response = await AxiosInstance.get<Comment[]>(`/api/comments/?post_id=${post.id}`, {
+      const response = await AxiosInstance.get<CommentType[]>(`/api/comments/?post_id=${post.id}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -79,6 +82,29 @@ export const Post: React.FC<PostProps> = ({ post, onDelete }) => {
     }
   };
 
+  const handleLike = async () => {
+    if (isLiking) return;
+    
+    try {
+      setIsLiking(true);
+      await AxiosInstance.post(`/api/posts/${post.id}/like/`, {}, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      
+      // Update likes count locally and track user's like action
+      if (!hasLiked) {
+        setLikesCount(prev => prev + 1);
+        setHasLiked(true);
+      }
+    } catch (error) {
+      console.error('Error liking post:', error);
+    } finally {
+      setIsLiking(false);
+    }
+  };
+
   console.log('Raw post data:', post);  // Log the entire post
   console.log('Topic data:', post.topic);  // Log just the topic data
 
@@ -107,10 +133,16 @@ export const Post: React.FC<PostProps> = ({ post, onDelete }) => {
         <div className="flex items-start gap-4">
           {/* Voting */}
           <div className="flex flex-col items-center gap-1">
-            <Button variant="ghost" size="sm" className="px-2">
-              <i className="fas fa-arrow-up text-primary" />
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className={`px-2 ${hasLiked ? 'bg-primary/10' : ''}`}
+              onClick={handleLike}
+              disabled={isLiking}
+            >
+              <i className={`fas fa-arrow-up ${hasLiked ? 'text-primary-600' : 'text-primary'}`} />
             </Button>
-            <span className="text-sm font-medium">{post.likes}</span>
+            <span className="text-sm font-medium">{likesCount}</span>
             <Button variant="ghost" size="sm" className="px-2">
               <i className="fas fa-arrow-down text-muted-foreground" />
             </Button>
@@ -216,7 +248,7 @@ export const Post: React.FC<PostProps> = ({ post, onDelete }) => {
                 ) : loadedComments.length > 0 ? (
                   <div className="space-y-4">
                     {loadedComments.map((comment) => (
-                      <Comment key={comment.id} comment={comment} />
+                      <Comment key={comment.id.toString()} comment={comment as any} />
                     ))}
                   </div>
                 ) : (
