@@ -14,8 +14,12 @@ export const mockPosts: Post[] = [
     updatedAt: new Date("2024-02-10T10:00:00"),
     closed: false,
     likes: 156,
-    commentsCount: 23,
-    tags: ["react", "ui", "frontend"],
+    comments_count: 23,
+    topic: [{
+      id: "1",
+      name: "react",
+    }
+    ],
     type: "text",
     comments: [
       {

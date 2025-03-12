@@ -31,6 +31,8 @@ interface MENTButtonProps {
     rel?: string;
     variant?: keyof typeof MENT_BUTTON_VARIANT;
     type?: 'button' | 'submit' | 'reset';
+
+    onClick?: (event: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => void;
     [key: string]: any; // for additional props (e.g., onClick)
 }
 
@@ -327,6 +329,7 @@ const MENTButtonCore = forwardRef<HTMLAnchorElement | HTMLButtonElement, MENTBut
         rel = getRel(target),
         variant,
         type = 'button',
+        onClick,
         ...restProps
     } = props;
 
@@ -390,6 +393,7 @@ const MENTButtonCore = forwardRef<HTMLAnchorElement | HTMLButtonElement, MENTBut
                         $animate={animate}
                         $hasChildren={!!children}
                         ref={ref as React.Ref<HTMLAnchorElement>}
+                        onClick={onClick}
                         {...restProps}
                     >
                         {renderContent()}
@@ -409,6 +413,7 @@ const MENTButtonCore = forwardRef<HTMLAnchorElement | HTMLButtonElement, MENTBut
                         $animate={animate}
                         $hasChildren={!!children}
                         ref={ref as React.Ref<HTMLButtonElement>}
+                        onClick={onClick}
                         onFocus={() => setFocus(true)}
                         onBlur={() => setFocus(false)}
                         {...restProps}

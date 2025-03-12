@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from ..models import UserDetails, Skill, Post
+from ..models import UserDetails, Skill, Post, Topic, Comment
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
@@ -85,6 +85,48 @@ class SkillSerializer(ModelSerializer):
 
 # todo: finish
 class PostSerializer(ModelSerializer):
+    has_liked = serializers.SerializerMethodField()
+    
     class Meta:
         model = Post
         fields = '__all__'
+        
+    def get_has_liked(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return request.user in obj.likes.all()
+        return False
+
+
+class TopicSerializer(ModelSerializer):
+    class Meta:
+        model = Topic
+        fields = '__all__'
+
+
+class CommentAuthorSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField()
+    
+    class Meta:
+        model = User
+        fields = ['id', 'username']
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    author = CommentAuthorSerializer(read_only=True)
+    author_id = serializers.IntegerField(source='author.id', read_only=True)
+    
+    class Meta:
+        model = Comment
+        fields = [
+            'id', 
+            'content', 
+            'post', 
+            'author',
+            'author_id',
+            'parent',
+            'likes_count',
+            'created', 
+            'updated'
+        ]
+        read_only_fields = ['author', 'author_id', 'likes_count', 'created', 'updated']
