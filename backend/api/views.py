@@ -29,9 +29,43 @@ class UserDetailsUpdateView(ModelViewSet):
     permission_classes = [IsAuthenticated]
     http_method_names = ['get', 'patch']
 
+    search_fields = ['current_role','user__username','user__first_name', 'skills__name']
+    filter_backends = (filters.SearchFilter,)
+    queryset = UserDetails.objects.all()
+
     def get_queryset(self):
-        """Return the current user's details."""
-        return UserDetails.objects.filter(user=self.request.user)
+        qs = super().get_queryset()
+
+        mentorship_mode = self.request.query_params.get('mentorshipMode', '')
+        field = self.request.query_params.get('field', '')
+        language = self.request.query_params.get('language', '')
+        country = self.request.query_params.get('country', '')
+        verified = self.request.query_params.get('verified', 'false').lower() == 'true'
+        top_rated = self.request.query_params.get('topRated', 'false').lower() == 'true'
+        local_only = self.request.query_params.get('localOnly', 'false').lower() == 'true'
+
+        if mentorship_mode == 'mentor':
+            qs = qs.filter(mentor=True)
+        elif mentorship_mode == 'mentee':
+            qs = qs.filter(mentor=False)
+
+        if field:
+            # "icontains" sucht Teilstrings in current_role
+            qs = qs.filter(current_role__icontains=field)
+
+        if language:
+            qs = qs.filter(preferred_language__iexact=language)
+
+        if country:
+            qs = qs.filter(country__iexact=country)
+
+        if verified:
+            qs = qs.filter(is_verified=True)
+
+        qs = qs.exclude(user=self.request.user)
+
+        return qs
+
 
     def get_object(self):
         """Get or create user details for the current user."""
