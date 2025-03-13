@@ -1,8 +1,8 @@
-import {Search, ChevronDown, ChevronUp, GraduationCap, School} from 'lucide-react'
-import {Input} from '@/components/ui/input'
-import {Button} from '@/components/ui/button'
-import {Switch} from '@/components/ui/switch'
-import countries from 'world-countries';
+import { Search, ChevronDown, ChevronUp, GraduationCap, School } from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Switch } from '@/components/ui/switch'
+import countries from 'world-countries'
 import {
     Select,
     SelectContent,
@@ -10,7 +10,9 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select'
-import React, {useState} from 'react'
+import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import AxiosInstance from '@/lib/Axios'
 
 const SearchBar = () => {
     const [searchTerm, setSearchTerm] = useState('')
@@ -22,24 +24,45 @@ const SearchBar = () => {
     const [filters, setFilters] = useState({
         verified: false,
         topRated: false,
-        localOnly: false
+        localOnly: false,
     })
+    const [searchResults, setSearchResults] = useState<any[]>([])
 
     const countryOptions = countries.map((country) => ({
-        value: country.cca2.toUpperCase(), // ISO Alpha-2 code in lowercase
+        value: country.cca2.toUpperCase(),
         label: country.name.common,
-    }));
+    }))
 
+    // Debounce: Suche wird 500ms nach der letzten Eingabe ausgelöst
+    useEffect(() => {
+        if (searchTerm.trim() === '') {
+            setSearchResults([])
+            return
+        }
+        const delayDebounceFn = setTimeout(() => {
+            handleSearch()
+        }, 500)
+        return () => clearTimeout(delayDebounceFn)
+    }, [searchTerm, mentorshipMode, field, language, country, filters])
 
-    const handleSearch = () => {
-        console.log({
-            searchTerm,
-            mentorshipMode,
-            field,
-            language,
-            country,
-            filters
-        })
+    const handleSearch = async () => {
+        try {
+            const response = await AxiosInstance.get(`/chat/search/${searchTerm}/`, {
+                params: {
+                    mentorshipMode,
+                    field,
+                    language,
+                    country,
+                    verified: filters.verified,
+                    topRated: filters.topRated,
+                    localOnly: filters.localOnly,
+                },
+            })
+            console.log('Search results:', response.data)
+            setSearchResults(response.data)
+        } catch (err: any) {
+            console.error('Error during search:', err)
+        }
     }
 
     return (
@@ -49,10 +72,7 @@ const SearchBar = () => {
                 <div className="p-3">
                     <div className="relative">
                         <div className="relative flex items-center">
-                            <Search
-                                className="absolute left-4 w-5 h-5 text-gray-400"
-                                aria-hidden="true"
-                            />
+                            <Search className="absolute left-4 w-5 h-5 text-gray-400" aria-hidden="true" />
                             <Input
                                 type="text"
                                 value={searchTerm}
@@ -73,7 +93,7 @@ const SearchBar = () => {
                                     className="h-7 w-7 p-0 text-gray-400 hover:text-gray-600 rounded-full"
                                     onClick={() => setIsExpanded(!isExpanded)}
                                 >
-                                    {isExpanded ? <ChevronUp className="h-4 w-4"/> : <ChevronDown className="h-4 w-4"/>}
+                                    {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                                 </Button>
                             </div>
                         </div>
@@ -95,7 +115,7 @@ const SearchBar = () => {
                                             : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'
                                     }`}
                                 >
-                                    <GraduationCap className="h-4 w-4"/>
+                                    <GraduationCap className="h-4 w-4" />
                                     Looking for Mentor
                                 </button>
                                 <button
@@ -106,7 +126,7 @@ const SearchBar = () => {
                                             : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'
                                     }`}
                                 >
-                                    <School className="h-4 w-4"/>
+                                    <School className="h-4 w-4" />
                                     Available as Mentor
                                 </button>
                             </div>
@@ -120,9 +140,8 @@ const SearchBar = () => {
                                 <div>
                                     <h3 className="text-base font-medium text-gray-400 mb-1.5">Field of Expertise</h3>
                                     <Select value={field} onValueChange={setField}>
-                                        <SelectTrigger
-                                            className="w-full h-9 rounded-lg border border-gray-200 dark:border-gray-700">
-                                            <SelectValue placeholder="Select your field"/>
+                                        <SelectTrigger className="w-full h-9 rounded-lg border border-gray-200 dark:border-gray-700">
+                                            <SelectValue placeholder="Select your field" />
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectItem value="frontend">Frontend</SelectItem>
@@ -138,42 +157,41 @@ const SearchBar = () => {
                                 <div>
                                     <h3 className="text-base font-medium text-gray-400 mb-1.5">Language</h3>
                                     <Select value={language} onValueChange={setLanguage}>
-                                        <SelectTrigger
-                                            className="w-full h-9 rounded-lg border border-gray-200 dark:border-gray-700">
-                                            <SelectValue placeholder="Select language"/>
+                                        <SelectTrigger className="w-full h-9 rounded-lg border border-gray-200 dark:border-gray-700">
+                                            <SelectValue placeholder="Select language" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                        <SelectItem value="en">
-                                            <span className="flex items-center gap-2">
-                                                <i className="fas fa-globe-americas"></i>
-                                                English
-                                            </span>
-                                        </SelectItem>
-                                        <SelectItem value="es">
-                                            <span className="flex items-center gap-2">
-                                                <i className="fas fa-globe-europe"></i>
-                                                Spanish
-                                            </span>
-                                        </SelectItem>
-                                        <SelectItem value="fr">
-                                            <span className="flex items-center gap-2">
-                                                <i className="fas fa-globe-europe"></i>
-                                                French
-                                            </span>
-                                        </SelectItem>
-                                        <SelectItem value="zh">
-                                            <span className="flex items-center gap-2">
-                                                <i className="fas fa-globe-europe"></i>
-                                                Chinese
-                                            </span>
-                                        </SelectItem>
-                                        <SelectItem value="de">
-                                            <span className="flex items-center gap-2">
-                                                <i className="fas fa-globe-europe"></i>
-                                                German
-                                            </span>
-                                        </SelectItem>
-                                    </SelectContent>
+                                            <SelectItem value="en">
+                        <span className="flex items-center gap-2">
+                          <i className="fas fa-globe-americas"></i>
+                          English
+                        </span>
+                                            </SelectItem>
+                                            <SelectItem value="es">
+                        <span className="flex items-center gap-2">
+                          <i className="fas fa-globe-europe"></i>
+                          Spanish
+                        </span>
+                                            </SelectItem>
+                                            <SelectItem value="fr">
+                        <span className="flex items-center gap-2">
+                          <i className="fas fa-globe-europe"></i>
+                          French
+                        </span>
+                                            </SelectItem>
+                                            <SelectItem value="zh">
+                        <span className="flex items-center gap-2">
+                          <i className="fas fa-globe-europe"></i>
+                          Chinese
+                        </span>
+                                            </SelectItem>
+                                            <SelectItem value="de">
+                        <span className="flex items-center gap-2">
+                          <i className="fas fa-globe-europe"></i>
+                          German
+                        </span>
+                                            </SelectItem>
+                                        </SelectContent>
                                     </Select>
                                 </div>
                             </div>
@@ -184,17 +202,16 @@ const SearchBar = () => {
                                 <div>
                                     <h3 className="text-base font-medium text-gray-400 mb-1.5">Country</h3>
                                     <Select value={country} onValueChange={setCountry}>
-                                        <SelectTrigger
-                                            className="w-full h-9 rounded-lg border border-gray-200 dark:border-gray-700">
-                                            <SelectValue placeholder="Select country"/>
+                                        <SelectTrigger className="w-full h-9 rounded-lg border border-gray-200 dark:border-gray-700">
+                                            <SelectValue placeholder="Select country" />
                                         </SelectTrigger>
                                         <SelectContent>
                                             {countryOptions.map((country) => (
                                                 <SelectItem key={country.value} value={country.value}>
-                            <span className="flex items-center gap-2">
-                                <i className={`fi fi-${country.value}`}></i>
-                                {country.label}
-                            </span>
+                          <span className="flex items-center gap-2">
+                            <i className={`fi fi-${country.value}`}></i>
+                              {country.label}
+                          </span>
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
@@ -205,48 +222,51 @@ const SearchBar = () => {
                                 <div>
                                     <h3 className="text-base font-medium text-gray-400 mb-1.5">Additional Filters</h3>
                                     <div className="space-y-1.5">
-                                        <div
-                                            className="flex items-center justify-between py-1.5 px-3 bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-750 rounded-lg transition-colors group">
+                                        <div className="flex items-center justify-between py-1.5 px-3 bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-750 rounded-lg transition-colors group">
                       <span className="text-sm text-gray-600 dark:text-gray-300 flex items-center gap-2">
                         <i className="fas fa-check-circle text-green-500"></i>
                         Verified Profile
                       </span>
                                             <Switch
                                                 checked={filters.verified}
-                                                onCheckedChange={(checked) => setFilters(prev => ({
-                                                    ...prev,
-                                                    verified: checked
-                                                }))}
+                                                onCheckedChange={(checked) =>
+                                                    setFilters((prev) => ({
+                                                        ...prev,
+                                                        verified: checked,
+                                                    }))
+                                                }
                                                 className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-gray-200 dark:data-[state=unchecked]:bg-gray-600"
                                             />
                                         </div>
-                                        <div
-                                            className="flex items-center justify-between py-1.5 px-3 bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-750 rounded-lg transition-colors group">
+                                        <div className="flex items-center justify-between py-1.5 px-3 bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-750 rounded-lg transition-colors group">
                       <span className="text-sm text-gray-600 dark:text-gray-300 flex items-center gap-2">
                         <i className="fas fa-star text-yellow-500"></i>
                         Top Rated
                       </span>
                                             <Switch
                                                 checked={filters.topRated}
-                                                onCheckedChange={(checked) => setFilters(prev => ({
-                                                    ...prev,
-                                                    topRated: checked
-                                                }))}
+                                                onCheckedChange={(checked) =>
+                                                    setFilters((prev) => ({
+                                                        ...prev,
+                                                        topRated: checked,
+                                                    }))
+                                                }
                                                 className="data-[state=checked]:bg-yellow-500 data-[state=unchecked]:bg-gray-200 dark:data-[state=unchecked]:bg-gray-600"
                                             />
                                         </div>
-                                        <div
-                                            className="flex items-center justify-between py-1.5 px-3 bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-750 rounded-lg transition-colors group">
+                                        <div className="flex items-center justify-between py-1.5 px-3 bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-750 rounded-lg transition-colors group">
                       <span className="text-sm text-gray-600 dark:text-gray-300 flex items-center gap-2">
                         <i className="fas fa-map-marker-alt text-red-500"></i>
                         Local Only
                       </span>
                                             <Switch
                                                 checked={filters.localOnly}
-                                                onCheckedChange={(checked) => setFilters(prev => ({
-                                                    ...prev,
-                                                    localOnly: checked
-                                                }))}
+                                                onCheckedChange={(checked) =>
+                                                    setFilters((prev) => ({
+                                                        ...prev,
+                                                        localOnly: checked,
+                                                    }))
+                                                }
                                                 className="data-[state=checked]:bg-red-500 data-[state=unchecked]:bg-gray-200 dark:data-[state=unchecked]:bg-gray-600"
                                             />
                                         </div>
@@ -257,6 +277,30 @@ const SearchBar = () => {
                     </div>
                 )}
             </div>
+
+            {/* Live Search Results */}
+            {searchResults.length > 0 && (
+                <div className="mt-4 bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-4">
+                    <h2 className="text-xl font-bold mb-4">Search Results</h2>
+                    <ul>
+                        {searchResults.map((result) => (
+                            <li key={result.id} className="py-2 border-b border-gray-200">
+                                <Link to={`/profile/${result.id}`} className="flex items-center gap-3">
+                                    <img
+                                        src={result.image}
+                                        alt={result.full_name}
+                                        className="w-10 h-10 rounded-full object-cover"
+                                    />
+                                    <div>
+                                        <p className="font-semibold">{result.full_name}</p>
+                                        <p className="text-sm text-gray-500">{result.username}</p>
+                                    </div>
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
         </div>
     )
 }
