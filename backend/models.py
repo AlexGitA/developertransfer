@@ -35,7 +35,7 @@ class UserDetails(models.Model):
         ('es', 'Spanish'),
         ('fr', 'French'),
         ('de', 'German'),
-        ('zh', 'Chinese'),
+        ('cn', 'Chinese'),
     ]
 
     user = models.OneToOneField(

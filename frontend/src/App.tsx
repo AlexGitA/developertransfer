@@ -14,6 +14,8 @@ import PostPage from "@/pages/post/PostPage.tsx";
 import {AuthRoute} from "@/pages/auth/AuthRoute.tsx";
 import ChatPage from "@/pages/chat/ChatPage.tsx";
 import LandingPage from "@/pages/landing/LandingPage.tsx";
+import VerifyPasswordReset from "@/pages/auth/VerifyPasswordReset.tsx";
+import PasswordResetPage from "@/pages/auth/PasswordResetPage.tsx";
 
 function App() {
     return (
@@ -46,6 +48,10 @@ function App() {
                     {/* Info paths */}
                     <Route path="tos" element={<TermsOfService/>}/>
                     <Route path="pp" element={<PrivacyPolicy/>}/>
+
+                    {/* Password reset paths */}
+                    <Route path="reset-confirmed" element={<VerifyPasswordReset/>}/>
+                    <Route path="reset" element={<PasswordResetPage/>}/>
 
                     {/* Post paths */}
                     <Route path="post" element={<PostPage/>}/>
