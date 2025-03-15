@@ -6,6 +6,10 @@ from django.conf import settings
 from django.http import HttpResponseRedirect
 
 
+from dj_rest_auth.registration.views import SocialLoginView
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+
 def email_confirm_redirect(request, key):
     return HttpResponseRedirect(
         f"{settings.EMAIL_CONFIRM_REDIRECT_BASE_URL}{key}/"
@@ -23,3 +27,9 @@ class CustomRegisterView(RegisterView):
         user = super().perform_create(serializer)
         create_user_details(user)
         return user
+
+
+class GoogleLogin(SocialLoginView):
+    adapter_class = GoogleOAuth2Adapter
+    callback_url = "http://localhost:3000/"
+    client_class = OAuth2Client

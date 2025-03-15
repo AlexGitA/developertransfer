@@ -61,6 +61,7 @@ INSTALLED_APPS = [
 
     # Swagger
     'drf_yasg',
+    "allauth.socialaccount.providers.google",
 ]
 
 #CHANNEL_LAYERS = {
@@ -210,3 +211,22 @@ SITE_ID = 1
 # Media Settings
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "APP": {
+            "client_id": "XX",  # replace me todo
+            "secret": "XXX",
+            "key": "" # leave empty
+        },
+        "SCOPE": [
+            "profile",
+            "email",
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        },
+        "VERIFIED_EMAIL": True,
+    },
+}
