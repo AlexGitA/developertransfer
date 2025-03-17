@@ -360,6 +360,12 @@ h1 {
   font-size: 12px;
 }
 /*________________________________ Card Section End --------------------------------*/
+/*________________________________ Chat Section Start ------------------------------*/
+.chat-wrapper {
+  width: 800px;
+  height: calc(100vh - 100px);
+}
+/*________________________________ Chat Section End --------------------------------*/
 
 @media (prefers-color-scheme: light) {
   :root {

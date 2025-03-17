@@ -22,7 +22,7 @@ const ChatPage = () => {
 
                 {/* Main content */}
                 <main className="flex-1 px-4 sm:px-6 py-4 mx-auto w-full pt-10 lg:ml-72 lg:mr-72">
-                    <div className="lg:px-0 px-0 sm:px-4 flex gap-4">
+                    <div className="lg:px-0 px-0 sm:px-4 flex gap-4 chat-wrapper">
                         <div className="w-full">
                             {selectedUser ? (
                                 <Chat recieverId={selectedUser} />
