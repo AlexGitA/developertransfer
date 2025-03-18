@@ -9,6 +9,9 @@ import {Switch} from "@/components/ui/switch";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {UserDetails} from '@/types/user';
 import AxiosInstance, {getUserId} from "@/lib/Axios";
+import SkillSelector from './SkillSelector';
+import SkillsService from "./SkillsService";
+
 
 interface EditProfileDialogProps {
     isOpen: boolean;
@@ -20,6 +23,7 @@ const EditProfileDialog = ({isOpen, onClose, userDetails}: EditProfileDialogProp
     const [error, setError] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const [id] = useState(getUserId());
+    const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
     const [formData, setFormData] = useState({
         username: userDetails.username || "",
         first_name: userDetails.first_name || "",
@@ -37,25 +41,54 @@ const EditProfileDialog = ({isOpen, onClose, userDetails}: EditProfileDialogProp
     });
 
     const countryOptions = countries.map((country) => ({
-        value: country.cca2.toUpperCase(), // ISO Alpha-2 code in lowercase
+        value: country.cca2.toUpperCase(), // ISO Alpha-2 code in uppercase
         label: country.name.common,
     }));
-
+    const [selectedSkills, setSelectedSkills] = useState(userDetails.skills_info || []);
     // Update formData when userDetails changes
     useEffect(() => {
-        setFormData(prevData => ({
-            ...prevData,
-            ...userDetails
-        }));
-    }, [userDetails]);
+    setFormData(prevData => ({
+        ...prevData,
+        ...userDetails,
+        skills: userDetails.skills || []
+    }));
+    setSelectedSkills(userDetails.skills_info || []);
+}, [userDetails]);
+
+    const handleSkillsChange = (skills: any[]) => {
+    setSelectedSkills(skills);
+    // Update the formData with just the skill IDs for the API
+    setFormData(prev => ({
+        ...prev,
+        skills: skills.map(skill => skill.id)
+    }));
+};
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const {id, value} = e.target;
         setFormData(prev => ({...prev, [id]: value}));
+
+        // Clear validation error when field is being edited
+        if (validationErrors[id]) {
+            setValidationErrors(prev => {
+                const newErrors = {...prev};
+                delete newErrors[id];
+                return newErrors;
+            });
+        }
     };
 
     const handleSelectChange = (id: string, value: string) => {
         setFormData(prev => ({...prev, [id]: value}));
+
+        // Clear validation error when field is being edited
+        if (validationErrors[id]) {
+            setValidationErrors(prev => {
+                const newErrors = {...prev};
+                delete newErrors[id];
+                return newErrors;
+            });
+        }
     };
 
     const handleSwitchChange = (id: string, checked: boolean) => {
@@ -63,37 +96,58 @@ const EditProfileDialog = ({isOpen, onClose, userDetails}: EditProfileDialogProp
     };
 
     const updateUser = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setError("");
-        setLoading(true);
-        const token = localStorage.getItem("access_token")
-        try {
-            const updateResponse = await AxiosInstance.patch(
-                `/api/user-update/${id}/`,
-                formData, {
-                    headers: {
-                        'Authorization': `Token ${token}`
-                    }
-                });
+    e.preventDefault();
 
-            if (updateResponse.data?.message) {
-                console.log("Updated successfully");
+    // Reset errors
+    setError("");
+    setValidationErrors({});
 
-                onClose();
-                window.location.reload();
+    // Validate required fields
+    const newValidationErrors: {[key: string]: string} = {};
+    if (!formData.first_name) newValidationErrors.first_name = "First name is required";
+    if (!formData.last_name) newValidationErrors.last_name = "Last name is required";
+    if (!formData.country) newValidationErrors.country = "Country is required";
+
+    // If validation errors exist, show them and don't submit
+    if (Object.keys(newValidationErrors).length > 0) {
+        setValidationErrors(newValidationErrors);
+        return;
+    }
+
+    setLoading(true);
+    const token = localStorage.getItem("access_token");
+
+    try {
+        // Log skills data for debugging
+        console.log("Sending skills:", formData.skills);
+
+        const updateResponse = await AxiosInstance.patch(
+            `/api/user-update/${id}/`,
+            formData,
+            {
+                headers: {
+                    'Authorization': `Token ${token}`
+                }
             }
-        } catch (err: any) {
-            console.error("Update error:", err.response?.data || err.message);
-            setError(
-                err.response?.data?.non_field_errors?.[0] ||
-                err.response?.data?.detail ||
-                "Failed to update. Please try again."
-            );
-        } finally {
-            setLoading(false);
-        }
-    };
+        );
 
+        if (updateResponse.data?.message) {
+            console.log("Updated successfully");
+            onClose();
+            window.location.reload();
+        }
+    } catch (err: any) {
+        console.error("Update error:", err.response?.data || err.message);
+        console.log("Form data passed:", formData);
+        setError(
+            err.response?.data?.non_field_errors?.[0] ||
+            err.response?.data?.detail ||
+            "Failed to update. Please try again."
+        );
+    } finally {
+        setLoading(false);
+    }
+};
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -105,7 +159,6 @@ const EditProfileDialog = ({isOpen, onClose, userDetails}: EditProfileDialogProp
                 </DialogHeader>
 
                 <form onSubmit={updateUser} className="space-y-8 py-6">
-                    {/* todo finish picture upload method */}
                     {/* Profile Picture Section */}
                     <div className="space-y-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
                         <Label htmlFor="profile_picture" className="text-lg font-semibold flex items-center gap-2">
@@ -149,28 +202,40 @@ const EditProfileDialog = ({isOpen, onClose, userDetails}: EditProfileDialogProp
                             <div className="space-y-2">
                                 <Label htmlFor="first_name" className="flex items-center gap-2">
                                     <i className="fas fa-signature text-gray-400"></i>
-                                    First Name
+                                    First Name <span className="text-red-500">*</span>
                                 </Label>
                                 <Input
                                     id="first_name"
                                     value={formData.first_name}
                                     onChange={handleInputChange}
                                     placeholder="Enter your first name"
-                                    className="border-gray-300"
+                                    className={`border-gray-300 ${validationErrors.first_name ? 'border-red-500 ring-red-500' : ''}`}
                                 />
+                                {validationErrors.first_name && (
+                                    <p className="text-sm text-red-500">
+                                        <i className="fas fa-exclamation-circle mr-1"></i>
+                                        {validationErrors.first_name}
+                                    </p>
+                                )}
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="last_name" className="flex items-center gap-2">
                                     <i className="fas fa-signature text-gray-400"></i>
-                                    Last Name
+                                    Last Name <span className="text-red-500">*</span>
                                 </Label>
                                 <Input
                                     id="last_name"
                                     value={formData.last_name}
                                     onChange={handleInputChange}
                                     placeholder="Enter your last name"
-                                    className="border-gray-300"
+                                    className={`border-gray-300 ${validationErrors.last_name ? 'border-red-500 ring-red-500' : ''}`}
                                 />
+                                {validationErrors.last_name && (
+                                    <p className="text-sm text-red-500">
+                                        <i className="fas fa-exclamation-circle mr-1"></i>
+                                        {validationErrors.last_name}
+                                    </p>
+                                )}
                             </div>
 
                             <div className="space-y-2">
@@ -212,27 +277,35 @@ const EditProfileDialog = ({isOpen, onClose, userDetails}: EditProfileDialogProp
                             <div className="space-y-2">
                                 <Label htmlFor="country" className="flex items-center gap-2">
                                     <i className="fas fa-map-marker-alt text-gray-400"></i>
-                                    Country
+                                    Country <span className="text-red-500">*</span>
                                 </Label>
 
                                 <Select
                                     value={formData.country}
                                     onValueChange={(value) => handleSelectChange('country', value)}
                                 >
-                                    <SelectTrigger className="w-full">
+                                    <SelectTrigger
+                                        className={`w-full ${validationErrors.country ? 'border-red-500 ring-red-500' : ''}`}>
                                         <SelectValue placeholder="Select your country"/>
                                     </SelectTrigger>
                                     <SelectContent>
                                         {countryOptions.map((country) => (
                                             <SelectItem key={country.value} value={country.value}>
-                            <span className="flex items-center gap-2">
-                                <i className={`fi fi-${country.value}`}></i>
-                                {country.label}
-                            </span>
+                                                <span className="flex items-center gap-2">
+                                                    <i className={`fi fi-${country.value.toLowerCase()}`}></i>
+                                                    {country.label}
+                                                </span>
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
                                 </Select>
+
+                                {validationErrors.country && (
+                                    <p className="text-sm text-red-500">
+                                        <i className="fas fa-exclamation-circle mr-1"></i>
+                                        {validationErrors.country}
+                                    </p>
+                                )}
                             </div>
 
                             <div className="space-y-2">
@@ -403,44 +476,67 @@ const EditProfileDialog = ({isOpen, onClose, userDetails}: EditProfileDialogProp
                             </div>
                         </div>
                     </div>
+
+                    {/* Skills Section */}
+                    <div className="space-y-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+                        <h3 className="text-lg font-semibold flex items-center gap-2 text-primary dark:text-blue-400">
+                            <i className="fas fa-code"></i>
+                            Skills
+                        </h3>
+                        <div className="space-y-4">
+                            <SkillSelector
+                                selectedSkills={selectedSkills}
+                                onChange={handleSkillsChange}
+                            />
+                        </div>
+                    </div>
+
                 </form>
 
                 <DialogFooter className="border-t pt-4 mt-6">
-                    {error && (
-                        <p className="text-sm text-red-500 mb-2">
-                            <i className="fas fa-exclamation-circle mr-1"></i>
-                            {error}
+                    <div className="w-full">
+                        <p className="text-sm text-gray-500 mb-3">
+                            <i className="fas fa-info-circle mr-1"></i>
+                            Fields marked with <span className="text-red-500">*</span> are required.
                         </p>
-                    )}
-                    <div className="flex gap-3">
-                        <Button
-                            type="button"
-                            variant="outline"
-                            onClick={onClose}
-                            className="flex items-center gap-2"
-                            disabled={loading}
-                        >
-                            <i className="fas fa-times"></i>
-                            Cancel
-                        </Button>
-                        <Button
-                            type="submit"
-                            onClick={updateUser}
-                            className="flex items-center gap-2 bg-primary text-white hover:bg-primary/90"
-                            disabled={loading}
-                        >
-                            {loading ? (
-                                <>
-                                    <i className="fas fa-spinner fa-spin"></i>
-                                    Saving...
-                                </>
-                            ) : (
-                                <>
-                                    <i className="fas fa-save"></i>
-                                    Save Changes
-                                </>
-                            )}
-                        </Button>
+
+                        {error && (
+                            <p className="text-sm text-red-500 mb-2">
+                                <i className="fas fa-exclamation-circle mr-1"></i>
+                                {error}
+                            </p>
+                        )}
+
+                        <div className="flex gap-3 justify-end">
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={onClose}
+                                className="flex items-center gap-2"
+                                disabled={loading}
+                            >
+                                <i className="fas fa-times"></i>
+                                Cancel
+                            </Button>
+                            <Button
+                                type="submit"
+                                onClick={updateUser}
+                                className="flex items-center gap-2 bg-primary text-white hover:bg-primary/90"
+                                disabled={loading}
+                            >
+                                {loading ? (
+                                    <>
+                                        <i className="fas fa-spinner fa-spin"></i>
+                                        Saving...
+                                    </>
+                                ) : (
+                                    <>
+                                        <i className="fas fa-save"></i>
+                                        Save Changes
+                                    </>
+                                )}
+                            </Button>
+                        </div>
                     </div>
                 </DialogFooter>
             </DialogContent>

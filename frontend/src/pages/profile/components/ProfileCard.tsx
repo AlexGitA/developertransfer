@@ -13,7 +13,7 @@ interface ProfileCardProps {
     onEdit?: () => void;
 }
 
-const ProfileCard: React.FC<ProfileCardProps> = ({userDetails, currentUserId, onEdit}) => {
+const ProfileCard: React.FC<ProfileCardProps> = ({userDetails, currentUserId}) => {
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const navigate = useNavigate();
 
