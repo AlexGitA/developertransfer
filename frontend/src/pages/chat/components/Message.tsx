@@ -17,7 +17,7 @@ export const Message: React.FC<MessageProps> = ({ content, isUser, timestamp }) 
                         : "bg-secondary text-secondary-foreground"
                 } shadow-md`}
             >
-                <p className="text-sm">{content}</p>
+                <p className="text-sm break-all">{content}</p>
                 <p className={`text-xs mt-1 ${isUser ? "text-primary-foreground/70" : "text-secondary-foreground/70"}`}>
                     {timestamp}
                 </p>

@@ -1,32 +1,53 @@
 // post-types.ts --> Represents Django Model Post + Comment
-export interface Comment {
-  id: string;
-  content: string;
-  author: {
-    id: string;
-    username: string;
-    avatar?: string;
-  };
-  createdAt: Date;
-  likes: number;
-  replies?: Comment[];
+export interface CommentAuthor {
+  id: number;
+  username: string;
 }
 
-export interface Post {
+export interface Comment {
+  id: number;
+  content: string;
+  post: number;
+  author: CommentAuthor;
+  parent?: number | null;
+  created: string;
+  likes_count: number;
+}
+
+export interface CreateCommentData {
+  content: string;
+  post: number;
+  parent?: number;
+}
+
+export interface Posts {
   id: string;
   title: string;
   content: string;
+  url: string;
   author: {
     id: string;
     username: string;
     avatar?: string;
   };
-  createdAt: Date;
-  updatedAt: Date;
+
+  topic: Topic[];
+  created: Date;
+  updated: Date;
   closed: boolean;
   likes: number;
-  commentsCount: number;
+  likes_count: number;
+  comments_count: number;
+  is_pinned: boolean;
+  is_archived: boolean;
   comments: Comment[];
-  tags: string[];
   type: 'text' | 'image' | 'link';
+}
+
+export interface Topic {
+    id: string;
+    name: string;
+    description: string | null;
+    created: string;
+    followers: string[];
 }

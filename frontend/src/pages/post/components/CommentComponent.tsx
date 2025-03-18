@@ -1,47 +1,43 @@
-import type React from "react"
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
+import React from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import type { Comment as CommentType } from "@/types/post-types"
+import { Button } from "@/components/ui/button"
+import { getUserId } from "@/lib/Axios"
 
 interface CommentProps {
   comment: CommentType
-  level?: number
+  onDelete?: (commentId: number) => void
 }
 
-export const Comment: React.FC<CommentProps> = ({ comment, level = 0 }) => {
-  const [isExpanded, setIsExpanded] = useState(true)
+export const Comment: React.FC<CommentProps> = ({ comment, onDelete }) => {
+  const currentUserId = getUserId();
+  const isAuthor = currentUserId && comment.author.id.toString() === currentUserId.toString();
 
   return (
-    <div className={`ml-${level > 0 ? "4" : "0"} mt-2`}>
-      <div className="flex items-start gap-2">
-        <div className="flex-shrink-0">
-          <Avatar className="h-8 w-8">
-            <AvatarImage src={comment.author.avatar} />
-            <AvatarFallback>{comment.author.username[0].toUpperCase()}</AvatarFallback>
-          </Avatar>
-        </div>
-        <div className="flex-grow">
-          <div className="flex items-center gap-2">
-            <span className="font-medium text-sm">{comment.author.username}</span>
-            <span className="text-xs text-muted-foreground">{new Date(comment.createdAt).toLocaleDateString()}</span>
-          </div>
-          <p className="text-sm mt-1">{comment.content}</p>
-          <div className="flex items-center gap-4 mt-2">
-            <Button variant="ghost" size="sm" className="text-xs">
-              <i className="fas fa-arrow-up mr-1" />
-              {comment.likes}
+    <div className="flex gap-3">
+      <Avatar className="h-6 w-6">
+        <AvatarFallback>{comment.author.username[0].toUpperCase()}</AvatarFallback>
+      </Avatar>
+      <div className="flex-1">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium">{comment.author.username}</span>
+          <span className="text-xs text-muted-foreground">
+            {new Date(comment.created).toLocaleDateString()}
+          </span>
+          
+          {isAuthor && onDelete && (
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="ml-auto text-red-500 hover:text-red-700 hover:bg-red-100 p-1 h-auto"
+              onClick={() => onDelete(comment.id)}
+            >
+              <i className="fas fa-trash text-xs" />
             </Button>
-            <Button variant="ghost" size="sm" className="text-xs">
-              <i className="fas fa-reply mr-1" />
-              Reply
-            </Button>
-          </div>
+          )}
         </div>
+        <p className="text-sm mt-1 break-all whitespace-normal overflow-hidden">{comment.content}</p>
       </div>
-      {comment.replies?.map((reply) => (
-        <Comment key={reply.id} comment={reply} level={level + 1} />
-      ))}
     </div>
   )
 }

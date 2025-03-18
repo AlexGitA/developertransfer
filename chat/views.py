@@ -159,25 +159,45 @@ class ProfileDetail(generics.RetrieveUpdateAPIView):
 
 class SearchUser(generics.ListAPIView):
     serializer_class = ProfileSerializer
-    queryset = Profile.objects.all()
     permission_classes = [IsAuthenticated]
 
-    def list(self, request, *args, **kwargs):
-        username = self.kwargs['username']
-        logged_in_user = self.request.user
-        users = Profile.objects.filter(
-            (Q(user__username__icontains=username) |
-             Q(full_name__icontains=username) |
-             Q(user__email__icontains=username))
-            & ~Q(user=logged_in_user)
+    def get_queryset(self):
+        username = self.kwargs.get('username', '')
+        mentorship_mode = self.request.query_params.get('mentorshipMode', '')
+        field = self.request.query_params.get('field', '')
+        language = self.request.query_params.get('language', '')
+        country = self.request.query_params.get('country', '')
+        verified = self.request.query_params.get('verified', 'false').lower() == 'true'
+        top_rated = self.request.query_params.get('topRated', 'false').lower() == 'true'
+        local_only = self.request.query_params.get('localOnly', 'false').lower() == 'true'
+
+        qs = Profile.objects.all()
+
+        qs = qs.filter(
+            Q(user__username__icontains=username) |
+            Q(full_name__icontains=username) |
+            Q(user__email__icontains=username)
         )
 
+        if mentorship_mode:
+            if mentorship_mode == 'mentor':
+                qs = qs.filter(user__details__mentor=True)
+            elif mentorship_mode == 'mentee':
+                qs = qs.filter(user__details__mentor=False)
+        if field:
+            qs = qs.filter(user__details__current_role__icontains=field)
+        if language:
+            qs = qs.filter(user__details__preferred_language__iexact=language)
+        if country:
+            qs = qs.filter(user__details__country__iexact=country)
+        if verified:
+            qs = qs.filter(user__details__is_verified=True)
 
-        if not users.exists():
-            return Response(
-                {"detail": "No users found."},
-                status=status.HTTP_404_NOT_FOUND
-            )
+        return qs.exclude(user=self.request.user)
 
-        serializer = self.get_serializer(users, many=True)
+    def list(self, request, *args, **kwargs):
+        qs = self.get_queryset()
+        if not qs.exists():
+            return Response({"detail": "No users found."}, status=404)
+        serializer = self.get_serializer(qs, many=True)
         return Response(serializer.data)
