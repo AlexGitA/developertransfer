@@ -6,6 +6,7 @@ import Header from './../../layout/Header/Header'
 import LeftSidebar from "@/pages/post/components/LeftSidebar.tsx";
 import RightSidebar from "@/pages/profile/components/RightSidebar.tsx";
 import {TopicsSidebar} from "@/pages/post/components/TopicsSidebar.tsx";
+import {RecentPostsSidebar} from "@/pages/profile/components/RecentPosts.tsx";
 
 import AxiosInstance, {getUserId} from "@/lib/Axios";
 import {Posts, Comment, Topic} from '@/types/post-types';
@@ -13,6 +14,7 @@ import {Posts, Comment, Topic} from '@/types/post-types';
 import {MENTInput} from "@/components/input/MENT-input";
 import {UserDetails} from "@/types/user";
 import axios from 'axios';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 
 const PostPage = () => {
@@ -385,7 +387,7 @@ const PostPage = () => {
 
                 {/* Right Sidebar */}
                 <aside className="w-72 hidden lg:block fixed right-0 top-[3.5rem] bottom-0 overflow-y-auto px-6 py-6">
-                    <RightSidebar/>
+                    <RecentPostsSidebar refreshTrigger={refreshTrigger} />
                 </aside>
             </div>
             {isPopupOpenMissing && (
