@@ -31,7 +31,7 @@ export interface Posts {
     avatar?: string;
   };
 
-  topic: Topic[];
+  topic: Topic;
   created: Date;
   updated: Date;
   closed: boolean;

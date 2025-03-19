@@ -46,7 +46,7 @@ export function LoginForm({className, ...props}: React.ComponentProps<"div">) {
 
                 if (userResponse.data) {
                     localStorage.setItem('user', JSON.stringify(userResponse.data));
-                    navigate("/");
+                    navigate("/home");
                 }
             }
         } catch (err: any) {
