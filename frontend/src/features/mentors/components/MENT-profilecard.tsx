@@ -44,7 +44,7 @@ const ProfileCard = ({fullName, userName, profileImage, spokenLanguage, bio, ski
                         <CountryFlag
                             code={spokenLanguage}
                             text={spokenLanguage}
-                            label="Language"
+                            label="Country"
                             showText={false}
                         />
                     </div>
