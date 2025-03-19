@@ -23,68 +23,82 @@ interface Post {
   topic: number  // Topic ID directly
 }
 
-export const TopicsSidebar = () => {
+interface TopicsSidebarProps {
+  onTopicClick?: (topicId: number | null) => void
+  selectedTopicId?: number | null
+  refreshTrigger?: number  // Neuer Prop zum Auslösen der Aktualisierung
+}
+
+export const TopicsSidebar = ({ onTopicClick, selectedTopicId, refreshTrigger }: TopicsSidebarProps) => {
   const [expanded, setExpanded] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [topics, setTopics] = useState<TopicCount[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    const fetchTopicsAndPosts = async () => {
-      try {
-        setIsLoading(true)
-        
-        // Fetch topics and posts in parallel
-        const [topicsResponse, postsResponse] = await Promise.all([
-          AxiosInstance.get<Topic[]>('/topic/'),
-          AxiosInstance.get<Post[]>('/posts/')
-        ])
+  const fetchTopicsAndPosts = async () => {
+    try {
+      setIsLoading(true)
+      
+      // Fetch topics and posts in parallel
+      const [topicsResponse, postsResponse] = await Promise.all([
+        AxiosInstance.get<Topic[]>('/topic/'),
+        AxiosInstance.get<Post[]>('/posts/')
+      ])
 
-        console.log('Topics response:', topicsResponse.data)
-        console.log('Posts response:', postsResponse.data)
+      console.log('Topics response:', topicsResponse.data)
+      console.log('Posts response:', postsResponse.data)
 
-        // Create a map to store post counts for each topic
-        const topicCounts = new Map<number, number>()
+      // Create a map to store post counts for each topic
+      const topicCounts = new Map<number, number>()
 
-        // Initialize counts for all topics to 0
-        topicsResponse.data.forEach(topic => {
-          topicCounts.set(topic.id, 0)
-        })
+      // Initialize counts for all topics to 0
+      topicsResponse.data.forEach(topic => {
+        topicCounts.set(topic.id, 0)
+      })
 
-        // Count posts for each topic
-        postsResponse.data.forEach(post => {
-          // Since topic is now just an ID, we can increment directly
-          if (post.topic) {
-            topicCounts.set(post.topic, (topicCounts.get(post.topic) || 0) + 1)
-          }
-        })
+      // Count posts for each topic
+      postsResponse.data.forEach(post => {
+        // Since topic is now just an ID, we can increment directly
+        if (post.topic) {
+          topicCounts.set(post.topic, (topicCounts.get(post.topic) || 0) + 1)
+        }
+      })
 
-        console.log('Topic counts:', Object.fromEntries(topicCounts))
+      console.log('Topic counts:', Object.fromEntries(topicCounts))
 
-        // Create TopicCount objects with counts
-        const topicsWithCounts: TopicCount[] = topicsResponse.data.map(topic => ({
-          id: topic.id,
-          name: topic.name,
-          posts_count: topicCounts.get(topic.id) || 0
-        }))
+      // Create TopicCount objects with counts
+      const topicsWithCounts: TopicCount[] = topicsResponse.data.map(topic => ({
+        id: topic.id,
+        name: topic.name,
+        posts_count: topicCounts.get(topic.id) || 0
+      }))
 
-        // Sort topics by name and by post count (most posts first)
-        const sortedTopics = topicsWithCounts
-          .sort((a, b) => b.posts_count - a.posts_count)
-          .sort((a, b) => a.name.localeCompare(b.name))
-        
-        setTopics(sortedTopics)
-      } catch (err) {
-        console.error('Error fetching data:', err)
-        setError('Failed to load topics')
-      } finally {
-        setIsLoading(false)
-      }
+      // Sort topics by name and by post count (most posts first)
+      const sortedTopics = topicsWithCounts
+        .sort((a, b) => b.posts_count - a.posts_count)
+        .sort((a, b) => a.name.localeCompare(b.name))
+      
+      setTopics(sortedTopics)
+      setError(null)
+    } catch (err) {
+      console.error('Error fetching data:', err)
+      setError('Failed to load topics')
+    } finally {
+      setIsLoading(false)
     }
+  }
 
+  useEffect(() => {
     fetchTopicsAndPosts()
-  }, [])
+  }, [refreshTrigger]) // Abhängigkeit von refreshTrigger hinzugefügt
+
+  const handleTopicClick = (topicId: number) => {
+    if (onTopicClick) {
+      // Wenn das Topic bereits ausgewählt ist, deselektieren (null übergeben)
+      onTopicClick(selectedTopicId === topicId ? null : topicId)
+    }
+  }
 
   const displayedTopics = expanded ? topics : topics.slice(0, 6)
 
@@ -133,7 +147,10 @@ export const TopicsSidebar = () => {
           {displayedTopics.map((topic) => (
             <div
               key={topic.id}
-              className="flex items-center justify-between px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors rounded-lg cursor-pointer"
+              onClick={() => handleTopicClick(topic.id)}
+              className={`flex items-center justify-between px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors rounded-lg cursor-pointer ${
+                selectedTopicId === topic.id ? 'bg-gray-100 dark:bg-gray-700/50' : ''
+              }`}
             >
               <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
                 {topic.name}

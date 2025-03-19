@@ -5,6 +5,7 @@ import {Post} from "@/pages/post/components/PostComponent.tsx";
 import Header from './../../layout/Header/Header'
 import LeftSidebar from "@/pages/post/components/LeftSidebar.tsx";
 import RightSidebar from "@/pages/profile/components/RightSidebar.tsx";
+import {TopicsSidebar} from "@/pages/post/components/TopicsSidebar.tsx";
 
 import AxiosInstance, {getUserId} from "@/lib/Axios";
 import {Posts, Comment, Topic} from '@/types/post-types';
@@ -15,8 +16,10 @@ import axios from 'axios';
 
 
 const PostPage = () => {
+    const [selectedTopicId, setSelectedTopicId] = useState<number | null>(null);
     const [isPopupOpen, setPopupOpen] = useState(false);
     const currentUserId = getUserId();
+    const [refreshTrigger, setRefreshTrigger] = useState(0);  // Neuer State für die Aktualisierung
 
     const [isPopupOpenMissing, setPopupOpenMissing] = useState(false);
     const [PopupMessageMissing, setPopupMessageMissing] = useState("");
@@ -30,7 +33,8 @@ const PostPage = () => {
     const [selectedTopics, setSelectedTopics] = useState<Topic[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [posts, setPosts] = useState<Posts[]>([]);
+    const [allPosts, setAllPosts] = useState<Posts[]>([]);
+    const [filteredPosts, setFilteredPosts] = useState<Posts[]>([]);
 
     useEffect(() => {
         console.log("ProfilePage mounted, ID:", currentUserId);
@@ -38,6 +42,21 @@ const PostPage = () => {
         fetchTopics();
         fetchPosts();
     }, [currentUserId]);
+
+    useEffect(() => {
+        if (selectedTopicId === null) {
+            setFilteredPosts(allPosts);
+        } else {
+            const filtered = allPosts.filter(post => {
+                const postTopics = Array.isArray(post.topic) ? post.topic : [post.topic];
+                return postTopics.some(topic => {
+                    const topicId = typeof topic === 'number' ? topic : topic.id;
+                    return Number(topicId) === selectedTopicId;
+                });
+            });
+            setFilteredPosts(filtered);
+        }
+    }, [selectedTopicId, allPosts]);
 
     
 
@@ -159,7 +178,8 @@ const PostPage = () => {
             );
             
             console.log('Posts with authors and topics:', postsWithAuthors);
-            setPosts(postsWithAuthors);
+            setAllPosts(postsWithAuthors);
+            setFilteredPosts(postsWithAuthors);
             setError(null);
         } catch (err) {
             if (axios.isAxiosError(err)) {
@@ -196,7 +216,10 @@ const PostPage = () => {
             console.log('Response received:', response.data);
             setError(null);
             
+            // Aktualisiere die Posts
             await fetchPosts();
+            // Trigger die Aktualisierung der TopicsSidebar
+            setRefreshTrigger(prev => prev + 1);
             
             return response.data;
         } catch (err) {
@@ -290,6 +313,9 @@ const PostPage = () => {
             // Refresh posts after deletion
             await fetchPosts();
             
+            // Trigger die Aktualisierung der TopicsSidebar
+            setRefreshTrigger(prev => prev + 1);
+            
             // Optional: Show success message
             setError(null);
         } catch (err) {
@@ -313,24 +339,28 @@ const PostPage = () => {
 
             <div className="flex-1 flex pt-3 gap-6">
                 {/* Left Sidebar */}
-                <aside
-                    className="w-72 hidden lg:block fixed left-0 top-[3.5rem] bottom-0 overflow-y-auto px-6 py-6">
-                    <LeftSidebar/>
+                <aside className="w-72 hidden lg:block fixed left-0 top-[3.5rem] bottom-0 overflow-y-auto px-6 py-6">
+                    <TopicsSidebar 
+                        onTopicClick={setSelectedTopicId}
+                        selectedTopicId={selectedTopicId}
+                        refreshTrigger={refreshTrigger}
+                    />
                 </aside>
 
                 {/* Main content */}
                 <main className={`
-          flex-1 
-          px-4 sm:px-6 py-4
-          mx-auto
-          w-full
-          pt-10
-          lg:ml-72 lg:mr-72 
-          ${window.innerWidth >= 1024 ? 'max-w-5xl' : 'max-w-2xl'}
-        `}>
+                    flex-1 
+                    px-4 sm:px-6 py-4
+                    mx-auto
+                    w-full
+                    pt-10
+                    lg:ml-72 lg:mr-72 
+                    ${window.innerWidth >= 1024 ? 'max-w-5xl' : 'max-w-2xl'}
+                `}>
                     <div className="lg:px-0 px-0 sm:px-4">
                         <button
-                            className="px-4 py-1.5 rounded-[50px] bg-gradient-to-r from-blue-400 to-blue-500 dark:from-blue-500 dark:to-blue-600 text-white text-xs sm:text-sm font-medium shadow-sm dark:shadow-gray-900/20 hover:from-blue-500 hover:to-blue-600 transition-all duration-200" onClick={handleAddClick}>
+                            className="px-4 py-1.5 rounded-[50px] bg-gradient-to-r from-blue-400 to-blue-500 dark:from-blue-500 dark:to-blue-600 text-white text-xs sm:text-sm font-medium shadow-sm dark:shadow-gray-900/20 hover:from-blue-500 hover:to-blue-600 transition-all duration-200" 
+                            onClick={handleAddClick}>
                             Add
                         </button>
                     </div>
@@ -339,10 +369,10 @@ const PostPage = () => {
                             <div className="text-center py-4">Loading posts...</div>
                         ) : error ? (
                             <div className="text-center text-red-500 py-4">{error}</div>
-                        ) : posts.length === 0 ? (
+                        ) : filteredPosts.length === 0 ? (
                             <div className="text-center py-4">No posts available</div>
                         ) : (
-                            posts.map((post) => (
+                            filteredPosts.map((post) => (
                                 <Post 
                                     key={post.id} 
                                     post={post}
@@ -351,12 +381,10 @@ const PostPage = () => {
                             ))
                         )}
                     </div>
-
                 </main>
 
                 {/* Right Sidebar */}
-                <aside
-                    className="w-72 hidden lg:block fixed right-0 top-[3.5rem] bottom-0 overflow-y-auto px-6 py-6">
+                <aside className="w-72 hidden lg:block fixed right-0 top-[3.5rem] bottom-0 overflow-y-auto px-6 py-6">
                     <RightSidebar/>
                 </aside>
             </div>
