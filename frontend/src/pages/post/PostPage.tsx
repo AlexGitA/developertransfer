@@ -280,7 +280,12 @@ const PostPage = () => {
     const handleDeletePost = async (postId: string) => {
         try {
             setLoading(true);
-            await AxiosInstance.delete(`/posts/${postId}`);
+            await AxiosInstance.delete(`/posts/${postId}/`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    'Content-Type': 'application/json'
+                }
+            });
             
             // Refresh posts after deletion
             await fetchPosts();

@@ -176,7 +176,7 @@ export const Post: React.FC<PostProps> = ({ post, onDelete }) => {
             variant="ghost"
             size="sm"
             className="absolute top-2 right-2 text-red-500 hover:text-red-700 hover:bg-red-100"
-            onClick={() => onDelete && onDelete(post.id)}
+            onClick={() => onDelete?.(post.id)}
           >
             <i className="fas fa-trash" />
           </Button>
