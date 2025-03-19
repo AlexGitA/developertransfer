@@ -14,6 +14,7 @@ import AxiosInstance from "@/lib/Axios"
 interface PostProps {
   post: PostType
   onDelete?: (postId: string) => void
+  className?: string
 }
 
 // Erweitere den PostType für TypeScript, um has_liked zu unterstützen
@@ -21,7 +22,7 @@ interface ExtendedPostType extends PostType {
   has_liked?: boolean;
 }
 
-export const Post: React.FC<PostProps> = ({ post, onDelete }) => {
+export const Post: React.FC<PostProps> = ({ post, onDelete, className = '' }) => {
   // Behandle post als ExtendedPostType
   const extendedPost = post as ExtendedPostType;
   
@@ -169,7 +170,7 @@ export const Post: React.FC<PostProps> = ({ post, onDelete }) => {
   const postComments = post.comments || []
 
   return (
-    <Card className="mb-4 hover:shadow-md transition-shadow relative">
+    <Card className={`mb-4 hover:shadow-md transition-shadow relative w-full ${className}`}>
       <CardContent className="p-4">
         {post.author.id === currentUserId && (
           <Button
@@ -182,9 +183,9 @@ export const Post: React.FC<PostProps> = ({ post, onDelete }) => {
           </Button>
         )}
 
-        <div className="flex items-start gap-4">
+        <div className="flex items-start gap-4 w-full">
           {/* Voting */}
-          <div className="flex flex-col items-center gap-1">
+          <div className="flex flex-col items-center gap-1 flex-shrink-0">
             <Button 
               variant="ghost" 
               size="sm" 
@@ -207,14 +208,14 @@ export const Post: React.FC<PostProps> = ({ post, onDelete }) => {
           </div>
 
           {/* Post content */}
-          <div className="flex-grow">
+          <div className="flex-grow min-w-0">
             <div className="flex items-center gap-2 mb-2">
-              <Avatar className="h-6 w-6">
+              <Avatar className="h-6 w-6 flex-shrink-0">
                 <AvatarImage src={post.author.avatar} />
                 <AvatarFallback>{post.author.username[0].toUpperCase()}</AvatarFallback>
               </Avatar>
-              <span className="text-sm font-medium">{post.author.username}</span>
-              <span className="text-xs text-muted-foreground">{new Date(post.created).toLocaleDateString()}</span>
+              <span className="text-sm font-medium truncate">{post.author.username}</span>
+              <span className="text-xs text-muted-foreground flex-shrink-0">{new Date(post.created).toLocaleDateString()}</span>
             </div>
 
             <h2 className="text-lg font-semibold mb-2">{post.title}</h2>

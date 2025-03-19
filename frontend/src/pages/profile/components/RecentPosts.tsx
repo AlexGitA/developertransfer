@@ -8,12 +8,19 @@ import { Posts } from "@/types/post-types"
 
 interface RecentPostsSidebarProps {
   refreshTrigger?: number
+  onPostClick?: (postId: string | null) => void
+  selectedPostId?: string | null
 }
 
-export const RecentPostsSidebar = ({ refreshTrigger = 0 }: RecentPostsSidebarProps) => {
+export const RecentPostsSidebar = ({ 
+  refreshTrigger = 0, 
+  onPostClick,
+  selectedPostId 
+}: RecentPostsSidebarProps) => {
   const [recentPosts, setRecentPosts] = useState<Posts[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+
 
   useEffect(() => {
     const fetchRecentPosts = async () => {
@@ -69,6 +76,13 @@ export const RecentPostsSidebar = ({ refreshTrigger = 0 }: RecentPostsSidebarPro
     return () => clearInterval(interval)
   }, [refreshTrigger])
 
+  const handlePostClick = (postId: string) => {
+    if (onPostClick) {
+      // Wenn der Post bereits ausgewählt ist, deselektieren (null übergeben)
+      onPostClick(selectedPostId === postId ? null : postId);
+    }
+  };
+
   if (loading) {
     return (
       <Card className="bg-gray-50 dark:bg-gray-800/95 border-0 shadow-none">
@@ -117,7 +131,10 @@ export const RecentPostsSidebar = ({ refreshTrigger = 0 }: RecentPostsSidebarPro
         {recentPosts.map((post) => (
           <div
             key={post.id}
-            className="flex items-start gap-3 p-3 hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors rounded-lg cursor-pointer border-b border-gray-200/10 last:border-0"
+            onClick={() => handlePostClick(post.id)}
+            className={`flex items-start gap-3 p-3 hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors rounded-lg cursor-pointer border-b border-gray-200/10 last:border-0 ${
+              selectedPostId === post.id ? 'bg-gray-100 dark:bg-gray-700/50' : ''
+            }`}
           >
             <Avatar className="w-10 h-10 border-2 border-primary/20 dark:border-blue-500/20">
               <AvatarImage src={post.author.avatar || '/placeholder.svg'} alt={post.author.username} />
@@ -143,17 +160,7 @@ export const RecentPostsSidebar = ({ refreshTrigger = 0 }: RecentPostsSidebarPro
 
               <div className="flex items-center gap-4 mt-2">
                 <span className="px-2 py-0.5 text-xs rounded-full bg-primary/10 dark:bg-blue-500/10 text-primary dark:text-blue-400">
-                  {(() => {
-                    if (Array.isArray(post.topic) && post.topic.length > 0) {
-                      const topic = post.topic[0];
-                      return typeof topic === 'object' && topic !== null && 'name' in topic
-                        ? String(topic.name)
-                        : 'General';
-                    }
-                    return typeof post.topic === 'object' && post.topic !== null && 'name' in post.topic
-                      ? String(post.topic.name)
-                      : 'General';
-                  })()}
+                  {post.topic.name}	
                 </span>
 
                 <div className="flex items-center gap-3 text-gray-500 dark:text-gray-400">
