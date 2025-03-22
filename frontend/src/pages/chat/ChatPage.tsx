@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Header from "@/layout/Header/Header";
 import RightSidebar from "@/pages/profile/components/RightSidebar";
 import { Chat } from "@/pages/chat/components/Chat";
-import { ChatSidebar } from "@/pages/chat/components/ChatSidebar"; // importiere direkt ChatSidebar
+import { ChatSidebar } from "@/pages/chat/components/ChatSidebar";
 
 const ChatPage = () => {
     const [selectedUser, setSelectedUser] = useState<number | null>(null);
@@ -28,7 +28,7 @@ const ChatPage = () => {
                                 <Chat recieverId={selectedUser} />
                             ) : (
                                 <div className="text-center text-gray-500">
-                                    Bitte wähle einen Chat-Partner aus.
+                                    Please choose your Chat Buddy
                                 </div>
                             )}
                         </div>

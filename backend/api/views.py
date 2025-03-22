@@ -5,10 +5,8 @@ from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ReadOnlyModelViewSet
 from django.core.exceptions import PermissionDenied
-from .serializers import UserDetailsReadSerializer, SkillSerializer, PostSerializer, UserDetailsUpdateSerializer, CommentSerializer
-
 from rest_framework import filters
-from .serializers import UserDetailsReadSerializer, SkillSerializer, PostSerializer, TopicSerializer
+from .serializers import UserDetailsReadSerializer,  UserDetailsUpdateSerializer, CommentSerializer, SkillSerializer, PostSerializer, TopicSerializer
 from rest_framework.decorators import action
 
 
@@ -29,11 +27,12 @@ class UserDetailsUpdateView(ModelViewSet):
     permission_classes = [IsAuthenticated]
     http_method_names = ['get', 'patch']
 
-    search_fields = ['current_role','user__username','user__first_name', 'skills__name']
+    search_fields = ['current_role', 'user__username', 'user__first_name', 'skills__name']
     filter_backends = (filters.SearchFilter,)
     queryset = UserDetails.objects.all()
 
     def get_queryset(self):
+        # Your existing queryset method remains unchanged
         qs = super().get_queryset()
 
         mentorship_mode = self.request.query_params.get('mentorshipMode', '')
@@ -50,7 +49,6 @@ class UserDetailsUpdateView(ModelViewSet):
             qs = qs.filter(mentor=False)
 
         if field:
-            # "icontains" sucht Teilstrings in current_role
             qs = qs.filter(current_role__icontains=field)
 
         if language:
@@ -66,11 +64,16 @@ class UserDetailsUpdateView(ModelViewSet):
 
         return qs
 
-
     def get_object(self):
         """Get or create user details for the current user."""
         obj, created = UserDetails.objects.get_or_create(user=self.request.user)
         return obj
+
+    def retrieve(self, request, *args, **kwargs):
+        """Override retrieve to use ReadSerializer for GET requests"""
+        instance = self.get_object()
+        serializer = UserDetailsReadSerializer(instance)
+        return Response(serializer.data)
 
     def update(self, request, *args, **kwargs):
         """Handle PATCH requests."""
@@ -84,10 +87,14 @@ class UserDetailsUpdateView(ModelViewSet):
         serializer = self.get_serializer(instance, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
+
+            # Use UserDetailsReadSerializer to return complete skill information
+            read_serializer = UserDetailsReadSerializer(instance)
+
             return Response(
                 {
                     "message": "Update successful!",
-                    "data": serializer.data
+                    "data": read_serializer.data
                 },
                 status=status.HTTP_200_OK
             )
@@ -134,6 +141,8 @@ class TopicViewSet(ModelViewSet):
 # ViewSet to get the Skills
 class SkillViewSet(ModelViewSet):
     queryset = Skill.objects.all()
+    search_fields = ['name']
+    filter_backends = (filters.SearchFilter,)
     serializer_class = SkillSerializer
 
 

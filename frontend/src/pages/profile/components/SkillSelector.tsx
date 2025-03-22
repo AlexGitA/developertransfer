@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import AxiosInstance from "@/lib/Axios";
-import SkillBadges from "@/pages/profile/components/SkillBadges";
 
 interface Skill {
   id: number;
@@ -35,7 +34,7 @@ const SkillSelector: React.FC<SkillSelectorProps> = ({ selectedSkills, onChange 
       try {
         // Using the endpoint shown in your API documentation
         const token = localStorage.getItem("access_token");
-        const response = await AxiosInstance.get(`/api/skills/?search=${searchTerm}`, {
+        const response = await AxiosInstance.get(`/skills/?search=${searchTerm}`, {
           headers: {
             'Authorization': `Token ${token}`
           }
@@ -171,7 +170,6 @@ const SkillSelector: React.FC<SkillSelectorProps> = ({ selectedSkills, onChange 
   );
 };
 
-// Reusing the badge color function you provided
 const getBadgeColor = (skillType: string) => {
   switch (skillType) {
     case "MOBILE":
