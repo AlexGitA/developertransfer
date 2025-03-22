@@ -42,6 +42,7 @@ class UserDetailsUpdateSerializer(ModelSerializer):
     id = serializers.IntegerField(source='user.id', read_only=True)
     first_name = serializers.CharField(source='user.first_name')
     last_name = serializers.CharField(source='user.last_name')
+    skills = serializers.PrimaryKeyRelatedField(many=True, queryset=Skill.objects.all(), required=False)
 
     class Meta:
         model = UserDetails
@@ -57,12 +58,16 @@ class UserDetailsUpdateSerializer(ModelSerializer):
             'github_profile',
             'instagram_profile',
             'looking_for_mentor',
-            'mentor'
+            'mentor',
+            'skills'
         ]
 
     def update(self, instance, validated_data):
         # Get the user data from validated_data
         user_data = validated_data.pop('user', {})
+
+        # Handle skills separately if present
+        skills = validated_data.pop('skills', None)
 
         # Update the associated user's first and last name
         if user_data:
@@ -72,6 +77,10 @@ class UserDetailsUpdateSerializer(ModelSerializer):
             if 'last_name' in user_data:
                 user.last_name = user_data['last_name']
             user.save()
+
+        # Update skills if provided
+        if skills is not None:
+            instance.skills.set(skills)
 
         # Update the UserDetails fields
         return super().update(instance, validated_data)
