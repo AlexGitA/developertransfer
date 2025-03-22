@@ -77,12 +77,13 @@ const ProfileCard: React.FC<ProfileCardProps> = ({userDetails, currentUserId}) =
                                 </span>
                             )}
                             {/* Message Button */}
+                            {userDetails.id && currentUserId !== userDetails.id && (
                             <button
                                 onClick={() => navigate('/chats')}
                                 className="px-4 py-1.5 rounded-[50px] bg-gradient-to-r from-blue-400 to-blue-500 dark:from-blue-500 dark:to-blue-600 text-white text-xs sm:text-sm font-medium shadow-sm dark:shadow-gray-900/20 hover:from-blue-500 hover:to-blue-600 transition-all duration-200">
                                 <i className="fas fa-paper-plane mr-1.5"></i>
                                 Message
-                            </button>
+                            </button>)}
                         </div>
 
                         {/* Location, Language and Social Links Card */}

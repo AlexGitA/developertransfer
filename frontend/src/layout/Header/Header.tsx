@@ -5,7 +5,7 @@ import {useState} from "react";
 import {handleLogout, isAuthenticated} from '@/lib/axios';
 import DarkModeToggle from "@/components/button/DarkModeToggle.tsx";
 import '@fortawesome/fontawesome-free/css/all.css';
-import {Search} from "lucide-react";
+
 
 const Header = () => {
     const navigate = useNavigate();
@@ -58,17 +58,6 @@ const Header = () => {
                 </nav>
             </div>
 
-            <div className="main-header__mid flex justify-center">
-                {location.pathname !== '/home' && (
-                    <button
-                        onClick={() => navigate('/home')}
-                        className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm hover:shadow-md transition-shadow"
-                    >
-                        <span className="font-bold text-primary">Search for your Mentor</span>
-                        <Search size={18} className="text-primary font-bold"/>
-                    </button>
-                )}
-            </div>
 
             <div className="main-header__right flex items-center gap-2">
                 <DarkModeToggle/>

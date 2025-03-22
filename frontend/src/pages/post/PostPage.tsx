@@ -68,7 +68,7 @@ const PostPage = () => {
         }
     }, [selectedTopicId, selectedPostId, allPosts]);
 
-    
+
 
 
     const fetchUserData = async () => {
@@ -132,22 +132,22 @@ const PostPage = () => {
             setLoading(true);
             const response = await AxiosInstance.get('/posts/?include=author');
             console.log('Raw post data from server:', JSON.stringify(response.data, null, 2));
-            
+
             const postsWithAuthors = await Promise.all(
                 response.data.map(async (post: Posts) => {
                     try {
                         const authorResponse = await AxiosInstance.get(`/api/user-details/${post.author}`);
-                        
+
                         // Log the topic data before processing
                         console.log('Topic data for post', post.id, ':', post.topic);
-                        
+
                         // Fetch topic details if we only have IDs
                         let topicData = post.topic;
                         if (!Array.isArray(post.topic)) {
                             // Wenn es ein einzelnes Topic ist, machen wir es zu einem Array
                             topicData = [post.topic];
                         }
-                        
+
                         // Hole die Details für jedes Topic
                         const topicsWithDetails = await Promise.all(
                             topicData.map(async (topic: string | Topic) => {
@@ -186,7 +186,7 @@ const PostPage = () => {
                     }
                 })
             );
-            
+
             console.log('Posts with authors and topics:', postsWithAuthors);
             setAllPosts(postsWithAuthors);
             setFilteredPosts(postsWithAuthors);
@@ -216,7 +216,7 @@ const PostPage = () => {
                 setError("Bitte wählen Sie mindestens ein Thema aus");
                 return;
             }
-            
+
             const response = await AxiosInstance.post('/posts/', {
                 title: data.title,
                 content: data.content,
@@ -225,12 +225,12 @@ const PostPage = () => {
             });
             console.log('Response received:', response.data);
             setError(null);
-            
+
             // Aktualisiere die Posts
             await fetchPosts();
             // Trigger die Aktualisierung der TopicsSidebar
             setRefreshTrigger(prev => prev + 1);
-            
+
             return response.data;
         } catch (err) {
             if (axios.isAxiosError(err)) {
@@ -292,14 +292,14 @@ const PostPage = () => {
             setPopupMessageMissing('Bitte alle Felder ausfüllen: Titel, Inhalt und Thema.');
             return;
         }
-        
+
         // Send only the necessary data
         postPost({
             title: title,
             content: content,
             topic: selectedTopics
         });
-        
+
         setPopupOpen(false);
         // Optionally reset form
         setTitle('');
@@ -319,13 +319,13 @@ const PostPage = () => {
                     'Content-Type': 'application/json'
                 }
             });
-            
+
             // Refresh posts after deletion
             await fetchPosts();
-            
+
             // Trigger die Aktualisierung der TopicsSidebar
             setRefreshTrigger(prev => prev + 1);
-            
+
             // Optional: Show success message
             setError(null);
         } catch (err) {
@@ -350,7 +350,7 @@ const PostPage = () => {
             <div className="flex-1 flex pt-3 gap-6">
                 {/* Left Sidebar */}
                 <aside className="w-72 hidden lg:block fixed left-0 top-[3.5rem] bottom-0 overflow-y-auto px-6 py-6">
-                    <TopicsSidebar 
+                    <TopicsSidebar
                         onTopicClick={setSelectedTopicId}
                         selectedTopicId={selectedTopicId}
                         refreshTrigger={refreshTrigger}
@@ -361,7 +361,7 @@ const PostPage = () => {
                 <main className="flex-1 px-4 sm:px-6 py-4 mx-auto w-full pt-10 lg:ml-72 lg:mr-72 max-w-5xl">
                     <div className="lg:px-0 px-0 sm:px-4">
                         <button
-                            className="px-4 py-1.5 rounded-[50px] bg-gradient-to-r from-blue-400 to-blue-500 dark:from-blue-500 dark:to-blue-600 text-white text-xs sm:text-sm font-medium shadow-sm dark:shadow-gray-900/20 hover:from-blue-500 hover:to-blue-600 transition-all duration-200" 
+                            className="px-4 mb-3 py-1.5 rounded-[50px] bg-gradient-to-r from-blue-400 to-blue-500 dark:from-blue-500 dark:to-blue-600 text-white text-xs sm:text-sm font-medium shadow-sm dark:shadow-gray-900/20 hover:from-blue-500 hover:to-blue-600 transition-all duration-200"
                             onClick={handleAddClick}>
                             Add
                         </button>
@@ -376,8 +376,8 @@ const PostPage = () => {
                         ) : (
                             <div className="space-y-4 w-full">
                                 {filteredPosts.map((post) => (
-                                    <Post 
-                                        key={post.id} 
+                                    <Post
+                                        key={post.id}
                                         post={post}
                                         onDelete={handleDeletePost}
                                     />
@@ -389,7 +389,7 @@ const PostPage = () => {
 
                 {/* Right Sidebar */}
                 <aside className="w-72 hidden lg:block fixed right-0 top-[3.5rem] bottom-0 overflow-y-auto px-6 py-6">
-                    <RecentPostsSidebar 
+                    <RecentPostsSidebar
                         refreshTrigger={refreshTrigger}
                         onPostClick={setSelectedPostId}
                         selectedPostId={selectedPostId}
@@ -400,15 +400,18 @@ const PostPage = () => {
                 <div className="popup">
                     <div className="popup-content">
                         <p>{PopupMessageMissing}</p>
-                        <button onClick={closePopup}>Schließen</button>
+                        <button onClick={closePopup}>Close</button>
                     </div>
                  </div>
             )}
             {/* Popup Form */}
-            {isPopupOpen && (
-                <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
-                    <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-                        <h3 className="text-xl font-bold mb-4">Create a New Post</h3>
+           {isPopupOpen && (
+            <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
+                <div className="bg-white dark:bg-gray-800/95 rounded-[12px] shadow-lg dark:shadow-gray-900/20 p-6 w-96 transition-colors">
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
+                        <i className="fas fa-plus-circle text-primary dark:text-blue-400"></i>
+                        Create a New Post
+                    </h3>
                         <form>
                             {/* Title Field */}
                             <MENTInput
@@ -430,34 +433,39 @@ const PostPage = () => {
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChangeContent(e)}
                             />
 
-                            <h3>Select Topics</h3>
+                            <h3 className="text-primary dark:text-blue-400 font-medium mb-2 flex items-center gap-2 text-sm sm:text-base mt-4">
+                                <i className="fas fa-tags"></i>
+                                Select Topics
+                            </h3>
                             {/* Das Input-Feld, das als Tagging-System fungiert */}
                             <div
                                 className="relative"
                                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                             >
-                                <div className="flex flex-wrap gap-2 p-2 border border-gray-300 rounded-md cursor-pointer">
-                                    {/* Angezeigte Tags */}
+                                <div
+                                    className="flex flex-wrap gap-2 p-2 border border-gray-300 dark:border-gray-700 rounded-md cursor-pointer bg-gray-50 dark:bg-gray-800">
+
+                                    {/* Display selected tags */}
                                     {selectedTopics.map((topic) => (
                                         <span
                                             key={topic.id}
-                                            className="bg-blue-200 text-blue-800 px-2 py-1 rounded-full flex items-center space-x-1"
+                                            className="bg-gradient-to-r from-blue-400 to-blue-500 dark:from-blue-500 dark:to-blue-600 text-white px-3 py-1 rounded-full flex items-center space-x-1 text-xs font-medium shadow-sm dark:shadow-gray-900/20"
                                         >
-                                            <span>{topic.name}</span>
-                                            <button
-                                                className="text-sm text-red-600"
-                                                onClick={(e) => {
-                                                    e.stopPropagation(); // Verhindert das Schließen des Dropdowns
-                                                    handleRemoveTag(topic.id);
-                                                }}
-                                            >
-                                                &times;
-                                            </button>
-                                        </span>
+                                        <span>{topic.name}</span>
+                                        <button
+                                            className="ml-2 hover:text-red-200 focus:outline-none transition-colors duration-200"
+                                            onClick={(e) => {
+                                                e.stopPropagation(); // Prevents dropdown closure
+                                                handleRemoveTag(topic.id);
+                                            }}
+                                        >
+                                            <i className="fas fa-times"></i>
+                                        </button>
+                                    </span>
                                     ))}
                                     <input
                                         type="text"
-                                        className="flex-1 border-none outline-none"
+                                        className="flex-1 border-none outline-none bg-transparent text-gray-700 dark:text-gray-300"
                                         placeholder="Search or select topics..."
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
@@ -466,33 +474,40 @@ const PostPage = () => {
 
                                 {/* Dropdown, das bei Klick angezeigt wird */}
                                 {isDropdownOpen && (
-                                    <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-md max-h-60 overflow-y-auto">
+                                    <div
+                                        className="absolute z-10 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md max-h-60 overflow-y-auto shadow-lg">
                                         {filteredTopics.length > 0 ? (
                                             filteredTopics.map((topic) => (
                                                 <div
                                                     key={topic.id}
-                                                    className="p-2 hover:bg-gray-100 cursor-pointer"
+                                                    className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-gray-700 dark:text-gray-300 transition-colors duration-200"
                                                     onClick={() => handleTagClick(topic)}
                                                 >
                                                     {topic.name}
                                                 </div>
                                             ))
                                         ) : (
-                                            <div className="p-2 text-gray-500">No topics found</div>
+                                            <div className="p-2 text-gray-500 dark:text-gray-400">No topics found</div>
                                         )}
                                     </div>
                                 )}
                             </div>
 
                             {/* Submit Button */}
-                            <div className="mt-4 flex justify-between">
+                            <div className="mt-6 flex justify-between gap-3">
                                 <button
-                                className="px-4 py-1.5 rounded-[50px] bg-gradient-to-r from-blue-400 to-blue-500 dark:from-blue-500 dark:to-blue-600 text-white text-xs sm:text-sm font-medium shadow-sm dark:shadow-gray-900/20 hover:from-blue-500 hover:to-blue-600 transition-all duration-200" onClick={handleClosePopup}>
-                                Cancel
+                                    type="button"
+                                    className="px-4 py-1.5 rounded-[50px] bg-gradient-to-r from-blue-400 to-blue-500 dark:from-blue-500 dark:to-blue-600 text-white text-xs sm:text-sm font-medium shadow-sm dark:shadow-gray-900/20 hover:from-blue-500 hover:to-blue-600 transition-all duration-200 flex-1"
+                                    onClick={handleSubmit}>
+                                    <i className="fas fa-paper-plane mr-1.5"></i>
+                                    Submit
                                 </button>
                                 <button
-                                className="px-4 py-1.5 rounded-[50px] bg-gradient-to-r from-blue-400 to-blue-500 dark:from-blue-500 dark:to-blue-600 text-white text-xs sm:text-sm font-medium shadow-sm dark:shadow-gray-900/20 hover:from-blue-500 hover:to-blue-600 transition-all duration-200" onClick={handleSubmit}>
-                                Submit
+                                    type="button"
+                                    className="px-4 py-1.5 rounded-[50px] bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs sm:text-sm font-medium shadow-sm dark:shadow-gray-900/20 hover:bg-gray-300 dark:hover:bg-gray-600 transition-all duration-200 flex-1"
+                                    onClick={handleClosePopup}>
+                                    <i className="fas fa-times mr-1.5"></i>
+                                    Cancel
                                 </button>
                             </div>
                         </form>
