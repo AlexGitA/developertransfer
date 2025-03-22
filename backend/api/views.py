@@ -134,6 +134,8 @@ class TopicViewSet(ModelViewSet):
 # ViewSet to get the Skills
 class SkillViewSet(ModelViewSet):
     queryset = Skill.objects.all()
+    search_fields = ['name']
+    filter_backends = (filters.SearchFilter,)
     serializer_class = SkillSerializer
 
 

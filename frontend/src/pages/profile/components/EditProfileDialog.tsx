@@ -10,7 +10,7 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/c
 import {UserDetails} from '@/types/user';
 import AxiosInstance, {getUserId} from "@/lib/Axios";
 import SkillSelector from './SkillSelector';
-import SkillsService from "./SkillsService";
+
 
 
 interface EditProfileDialogProps {
@@ -339,7 +339,7 @@ const EditProfileDialog = ({isOpen, onClose, userDetails}: EditProfileDialogProp
                                                 French
                                             </span>
                                         </SelectItem>
-                                        <SelectItem value="zh">
+                                        <SelectItem value="cn">
                                             <span className="flex items-center gap-2">
                                                 <i className="fas fa-globe-europe"></i>
                                                 Chinese

@@ -11,7 +11,7 @@ export const Message: React.FC<MessageProps> = ({ content, isUser, timestamp }) 
     return (
         <div className={`flex ${isUser ? "justify-end" : "justify-start"} mb-4`}>
             <div
-                className={`max-w-[70%] rounded-lg p-3 ${
+                className={`max-w-[70%] rounded-lg p-3 text-white ${
                     isUser
                         ? "bg-primary text-primary-foreground"
                         : "bg-secondary text-secondary-foreground"
