@@ -43,6 +43,7 @@ class UserDetailsUpdateSerializer(ModelSerializer):
     first_name = serializers.CharField(source='user.first_name')
     last_name = serializers.CharField(source='user.last_name')
     skills = serializers.PrimaryKeyRelatedField(many=True, queryset=Skill.objects.all(), required=False)
+    profile_picture = serializers.ImageField(required=False)
 
     class Meta:
         model = UserDetails
@@ -59,7 +60,8 @@ class UserDetailsUpdateSerializer(ModelSerializer):
             'instagram_profile',
             'looking_for_mentor',
             'mentor',
-            'skills'
+            'skills',
+            'profile_picture'
         ]
 
     def update(self, instance, validated_data):
@@ -77,6 +79,9 @@ class UserDetailsUpdateSerializer(ModelSerializer):
             if 'last_name' in user_data:
                 user.last_name = user_data['last_name']
             user.save()
+
+        if 'profile_picture' in validated_data:
+            instance.profile_picture = validated_data.pop('profile_picture')
 
         # Update skills if provided
         if skills is not None:
