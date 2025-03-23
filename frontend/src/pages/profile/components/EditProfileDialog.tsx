@@ -63,6 +63,12 @@ const EditProfileDialog = ({isOpen, onClose, userDetails}: EditProfileDialogProp
         skills: skills.map(skill => skill.id)
     }));
 };
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            setFormData(prev => ({ ...prev, profile_picture: e.target.files[0] }))
+        }
+    }
+
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const {id, value} = e.target;
@@ -119,11 +125,27 @@ const EditProfileDialog = ({isOpen, onClose, userDetails}: EditProfileDialogProp
 
     try {
         // Log skills data for debugging
-        console.log("Sending skills:", formData.skills);
+        console.log("updateUser: formData =>", formData);
+        if (!formData || typeof formData !== "object") {
+            throw new Error("formData is null or not an object.");
+        }
+
+        const patchData = new FormData();
+
+        for (const key in formData) {
+            if (Object.prototype.hasOwnProperty.call(formData, key)) {
+                patchData.append(key, formData[key]);
+            }
+        }
+
+        console.log("Sending patchData fields:");
+        for (const pair of patchData.entries()) {
+            console.log(pair[0], ":", pair[1]);
+        }
 
         const updateResponse = await AxiosInstance.patch(
             `/api/user-update/${id}/`,
-            formData,
+            patchData,
             {
                 headers: {
                     'Authorization': `Token ${token}`
@@ -182,6 +204,7 @@ const EditProfileDialog = ({isOpen, onClose, userDetails}: EditProfileDialogProp
                                     id="profile_picture"
                                     type="file"
                                     accept="image/*"
+                                    onChange={handleFileChange}
                                     className="w-full"
                                 />
                                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">

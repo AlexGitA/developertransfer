@@ -1,3 +1,4 @@
+from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.viewsets import ModelViewSet
 from ..models import UserDetails, Skill, Post, Topic, Comment
 from rest_framework.response import Response
@@ -26,6 +27,7 @@ class UserDetailsUpdateView(ModelViewSet):
     serializer_class = UserDetailsUpdateSerializer
     permission_classes = [IsAuthenticated]
     http_method_names = ['get', 'patch']
+    parser_classes = [MultiPartParser, FormParser]
 
     search_fields = ['current_role', 'user__username', 'user__first_name', 'skills__name']
     filter_backends = (filters.SearchFilter,)
