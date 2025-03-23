@@ -66,6 +66,34 @@ class UserDetailsUpdateView(ModelViewSet):
 
         return qs
 
+    @action(detail=True, methods=['post'])
+    def like(self, request, pk=None):
+        user_details = self.get_object()
+
+        # Prevent self-likes
+        if user_details.user == request.user:
+            return Response({'error': 'You cannot like yourself'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Only like mentors
+        if not user_details.mentor:
+            return Response({'error': 'You can only like mentors'}, status=status.HTTP_400_BAD_REQUEST)
+
+        user_details.likes.add(request.user)
+        user_details.likes_count = user_details.likes.count()  # Update likes count
+        user_details.save()
+
+        return Response({'status': 'user liked'}, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['post'])
+    def unlike(self, request, pk=None):
+        user_details = self.get_object()
+
+        # Remove the user from likes
+        user_details.likes.remove(request.user)
+        user_details.likes_count = user_details.likes.count()  # Update likes count
+        user_details.save()
+
+        return Response({'status': 'user unliked'}, status=status.HTTP_200_OK)
     def get_object(self):
         """Get or create user details for the current user."""
         obj, created = UserDetails.objects.get_or_create(user=self.request.user)
@@ -116,8 +144,7 @@ class PostViewSet(ModelViewSet):
     @action(detail=True, methods=['post'])
     def like(self, request, pk=None):
         post = self.get_object()
-        # Hier implementieren Sie die Like-Logik
-        # Zum Beispiel:
+
         post.likes.add(request.user)
         post.likes_count = post.likes.count()  # Update likes count
         post.save()

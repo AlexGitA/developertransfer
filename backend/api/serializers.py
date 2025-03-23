@@ -44,6 +44,7 @@ class UserDetailsUpdateSerializer(ModelSerializer):
     last_name = serializers.CharField(source='user.last_name')
     skills = serializers.PrimaryKeyRelatedField(many=True, queryset=Skill.objects.all(), required=False)
     profile_picture = serializers.ImageField(required=False)
+    has_liked = serializers.SerializerMethodField()
 
     class Meta:
         model = UserDetails
@@ -60,6 +61,8 @@ class UserDetailsUpdateSerializer(ModelSerializer):
             'instagram_profile',
             'looking_for_mentor',
             'mentor',
+            'likes_count',
+            'has_liked'
             'skills',
             'profile_picture'
         ]
@@ -89,7 +92,11 @@ class UserDetailsUpdateSerializer(ModelSerializer):
 
         # Update the UserDetails fields
         return super().update(instance, validated_data)
-
+    def get_has_liked(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return request.user in obj.likes.all()
+        return False
 
 class SkillSerializer(ModelSerializer):
     class Meta:
@@ -97,7 +104,6 @@ class SkillSerializer(ModelSerializer):
         fields = '__all__'
 
 
-# todo: finish
 class PostSerializer(ModelSerializer):
     has_liked = serializers.SerializerMethodField()
     
