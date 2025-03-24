@@ -164,6 +164,8 @@ class PostViewSet(ModelViewSet):
 
 class TopicViewSet(ModelViewSet):
     queryset = Topic.objects.all()
+    search_fields = ['name']
+    filter_backends = (filters.SearchFilter,)
     serializer_class = TopicSerializer
 
 

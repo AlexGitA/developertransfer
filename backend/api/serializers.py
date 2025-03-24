@@ -62,7 +62,7 @@ class UserDetailsUpdateSerializer(ModelSerializer):
             'looking_for_mentor',
             'mentor',
             'likes_count',
-            'has_liked'
+            'has_liked',
             'skills',
             'profile_picture'
         ]
