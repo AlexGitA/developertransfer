@@ -20,11 +20,13 @@ const TermsOfService = () => {
 
     return (
         <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg">
-            <div className="prose prose-blue max-w-none">
-                <ReactMarkdown>{terms}</ReactMarkdown>
-            </div>
+            
+            <div className="prose text-primary prose-blue max-w-none">
+            <ReactMarkdown>{terms}</ReactMarkdown>
         </div>
-    );
+</div>
+)
+    ;
 };
 
 export default TermsOfService;
