@@ -45,7 +45,7 @@ const SearchResultCard: React.FC<SearchResultCardProps> = ({ result }) => {
                         <p className="text-sm text-gray-500">{result.first_name}</p>
                         {result.preferred_language && (
                             <div className="flex items-center gap-1 mt-1">
-                                <CountryFlag code={result.preferred_language} showText={false} />
+                                <CountryFlag code={result.preferred_language} text={result.preferred_language} showText={false} />
                             </div>
                         )}
                     </div>

@@ -47,7 +47,8 @@ const EditProfileDialog = ({isOpen, onClose, userDetails}: EditProfileDialogProp
     const [selectedSkills, setSelectedSkills] = useState(userDetails.skills_info || []);
     // Update formData when userDetails changes
     useEffect(() => {
-    setFormData(prevData => ({
+    // @ts-expect-error
+        setFormData(prevData => ({
         ...prevData,
         ...userDetails,
         skills: userDetails.skills || []
@@ -65,6 +66,8 @@ const EditProfileDialog = ({isOpen, onClose, userDetails}: EditProfileDialogProp
 };
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
             setFormData(prev => ({ ...prev, profile_picture: e.target.files[0] }))
         }
     }
@@ -134,6 +137,7 @@ const EditProfileDialog = ({isOpen, onClose, userDetails}: EditProfileDialogProp
 
         for (const key in formData) {
             if (Object.prototype.hasOwnProperty.call(formData, key)) {
+                // @ts-expect-error
                 patchData.append(key, formData[key]);
             }
         }

@@ -1,7 +1,7 @@
 // components/legal/TermsOfService.tsx
-import React, { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import policyMd from '@/pages/legal/privacy-policy.md'
+import {useEffect, useState} from 'react';
 
 const PrivacyPolicy = () => {
     const [terms, setTerms] = useState('');
