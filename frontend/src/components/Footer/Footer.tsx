@@ -70,9 +70,6 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
                     <div>
                         <h3 className="font-bold text-lg mb-4 text-gray-900 dark:text-white">Contact</h3>
                         <p className="text-gray-600 dark:text-gray-300">Have questions? Reach out to our support team.</p>
-                        <Button variant="outline" className="mt-4 border-blue-600 text-blue-600 hover:bg-blue-50 rounded-full">
-                            Contact Us
-                        </Button>
                     </div>
                 </div>
                 <div className="border-t border-gray-200 dark:border-gray-700 mt-12 pt-8 text-center text-gray-600 dark:text-gray-300">

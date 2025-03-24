@@ -15,6 +15,7 @@ import {MENTInput} from "@/components/input/MENT-input";
 import {UserDetails} from "@/types/user";
 import axios from 'axios';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import Footer from "@/components/Footer/Footer";
 
 
 const PostPage = () => {
@@ -142,15 +143,11 @@ const PostPage = () => {
                         console.log('Topic data for post', post.id, ':', post.topic);
 
                         // Fetch topic details if we only have IDs
-                        let topicData = post.topic;
-                        if (!Array.isArray(post.topic)) {
-                            // Wenn es ein einzelnes Topic ist, machen wir es zu einem Array
-                            topicData = [post.topic];
-                        }
-
+                        let topicData: (string | Topic | number)[] = Array.isArray(post.topic) ? post.topic : [post.topic];
+                        
                         // Hole die Details für jedes Topic
                         const topicsWithDetails = await Promise.all(
-                            topicData.map(async (topic: string | Topic) => {
+                            topicData.map(async (topic: string | Topic | number) => {
                                 if (typeof topic === 'string' || typeof topic === 'number') {
                                     try {
                                         const topicResponse = await AxiosInstance.get(`/topic/${topic}`);
@@ -343,9 +340,7 @@ const PostPage = () => {
 
     return (
         <div className="min-h-screen flex bg-white transition-colors dark:bg-gray-900 flex-col">
-            <div className="pb-5">
-                <Header/>
-            </div>
+            <Header/>
 
             <div className="flex-1 flex pt-3 gap-6">
                 {/* Left Sidebar */}
@@ -358,15 +353,15 @@ const PostPage = () => {
                 </aside>
 
                 {/* Main content */}
-                <main className="flex-1 px-4 sm:px-6 py-4 mx-auto w-full pt-10 lg:ml-72 lg:mr-72 max-w-5xl">
-                    <div className="lg:px-0 px-0 sm:px-4">
+                <main className="flex-1 px-4 sm:px-6 mx-auto w-full pt-10 lg:ml-72 lg:mr-72 max-w-5xl flex gap-3 flex-col">
+                    <div className="lg:px-0 px-0 sm:px-4 sticky top-14 bg-white dark:bg-gray-900 py-3 z-10">
                         <button
-                            className="px-4 mb-3 py-1.5 rounded-[50px] bg-gradient-to-r from-blue-400 to-blue-500 dark:from-blue-500 dark:to-blue-600 text-white text-xs sm:text-sm font-medium shadow-sm dark:shadow-gray-900/20 hover:from-blue-500 hover:to-blue-600 transition-all duration-200"
+                            className="px-4 py-1.5 rounded-[50px] bg-gradient-to-r from-blue-400 to-blue-500 dark:from-blue-500 dark:to-blue-600 text-white text-xs sm:text-sm font-medium shadow-sm dark:shadow-gray-900/20 hover:from-blue-500 hover:to-blue-600 transition-all duration-200"
                             onClick={handleAddClick}>
                             Add
                         </button>
                     </div>
-                    <div className="lg:px-0 px-0 sm:px-4 space-y-4">
+                    <div className="lg:px-0 px-0 sm:px-4 space-y-4 overflow-y-auto flex-1">
                         {loading ? (
                             <div className="text-center py-4">Loading posts...</div>
                         ) : error ? (
@@ -514,6 +509,7 @@ const PostPage = () => {
                     </div>
                 </div>
             )}
+            <Footer/>
         </div>
     )
 }
