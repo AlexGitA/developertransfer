@@ -27,7 +27,6 @@ function App() {
                     <Route path="/api/" element={<Navigate to="/" replace />} />
                     {/* Main paths */}
                     {/*<Route index element={<Navigate to="/home" replace/>}/>*/}
-                    <Route path="playground" element={<DerPlayground/>}/>
                     <Route path="profile/:id" element={<ProfilePage/>}/>
                     <Route path="home" element={<HomePage/>}/>
 

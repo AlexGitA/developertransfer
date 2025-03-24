@@ -28,14 +28,7 @@ const ProfileCard = ({fullName, userName, profileImage, spokenLanguage, bio, ski
                 <div className={bemProfileCard("left-username")}>
                     <span className={bemProfileCard("left-username-text")}>@{userName}</span>
 
-                    <Button
-                    className={bemProfileCard("left-action")}
-                    variant="default"
-                    type="button"
-                    onClick={handleButtonClick}
-                    >
-                        Connect
-                    </Button>
+
                 </div>
             </div>
             <div className={bemProfileCard("right")}>

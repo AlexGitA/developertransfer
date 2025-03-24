@@ -16,7 +16,7 @@ const LandingPage = () => {
             </div>
 
             {/* Hero Section */}
-            <section className="bg-amber-50 dark:bg-gray-900 py-16 md:py-24">
+            <section className="bg-gray-50 dark:bg-gray-900 py-16 md:py-24">
                 <div className="container mx-auto px-4 md:px-6">
                     <div className="flex flex-col md:flex-row items-center gap-12">
                         <div className="flex-1 space-y-6">
@@ -79,7 +79,7 @@ const LandingPage = () => {
                     </div>
 
                     <div className="grid md:grid-cols-3 gap-8">
-                        <div className="bg-amber-50 dark:bg-gray-700 p-8 rounded-xl shadow-sm">
+                        <div className="bg-gray-50 dark:bg-gray-700 p-8 rounded-xl shadow-sm">
                             <div className="h-12 w-12 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mb-6">
                                 <Users className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                             </div>
@@ -89,7 +89,7 @@ const LandingPage = () => {
                             </p>
                         </div>
 
-                        <div className="bg-amber-50 dark:bg-gray-700 p-8 rounded-xl shadow-sm">
+                        <div className="bg-gray-50 dark:bg-gray-700 p-8 rounded-xl shadow-sm">
                             <div className="h-12 w-12 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mb-6">
                                 <MessageSquare className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                             </div>
@@ -99,7 +99,7 @@ const LandingPage = () => {
                             </p>
                         </div>
 
-                        <div className="bg-amber-50 dark:bg-gray-700 p-8 rounded-xl shadow-sm">
+                        <div className="bg-gray-50 dark:bg-gray-700 p-8 rounded-xl shadow-sm">
                             <div className="h-12 w-12 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mb-6">
                                 <BookOpen className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                             </div>
@@ -141,7 +141,7 @@ const LandingPage = () => {
                         <Button
                             variant="outline"
                             size="lg"
-                            className="border-white text-white hover:bg-blue-700 rounded-full px-8"
+                            className="border-white bg-primary text-white hover:bg-blue-700 rounded-full px-8"
                             asChild
                         >
                             <Link to="/login">Log In</Link>
@@ -149,7 +149,6 @@ const LandingPage = () => {
                     </div>
                 </div>
             </section>
-
             {/* Footer */}
             <Footer />
         </div>
