@@ -8,6 +8,7 @@ import AxiosInstance, {getUserId} from "@/lib/Axios";
 import axios from 'axios';
 import {UserDetails} from '@/types/user';
 import Header from './../../layout/Header/Header'
+import Footer from "@/components/Footer/Footer.tsx";
 
 const ProfilePage = () => {
     const {id} = useParams();

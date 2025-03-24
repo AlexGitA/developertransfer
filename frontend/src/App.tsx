@@ -16,6 +16,7 @@ import ChatPage from "@/pages/chat/ChatPage.tsx";
 import LandingPage from "@/pages/landing/LandingPage.tsx";
 import VerifyPasswordReset from "@/pages/auth/VerifyPasswordReset.tsx";
 import PasswordResetPage from "@/pages/auth/PasswordResetPage.tsx";
+import {AuthRoute2} from "@/pages/auth/AuthRoute2.tsx";
 
 function App() {
     return (
@@ -26,7 +27,6 @@ function App() {
                     <Route path="/api/" element={<Navigate to="/" replace />} />
                     {/* Main paths */}
                     {/*<Route index element={<Navigate to="/home" replace/>}/>*/}
-                    <Route path="playground" element={<DerPlayground/>}/>
                     <Route path="profile/:id" element={<ProfilePage/>}/>
                     <Route path="home" element={<HomePage/>}/>
 
@@ -37,9 +37,12 @@ function App() {
                         <Route path="verify-email" element={<VerifyEmailPage/>}/>
                         <Route path="confirm-email/:key" element={<EmailConfirmationPage/>}/>
                     </Route>
-
+                    <Route element={<AuthRoute2/>}>
+                        <Route path="chats" element={<ChatPage/>}/>
+                         <Route path="post" element={<PostPage/>}/>
+                    </Route>
                     {/* Chat */}
-                    <Route path="chats" element={<ChatPage/>}/>
+
 
                     {/* Landing Page */}
                     <Route path="/landing" element={<LandingPage/>}/>
@@ -54,7 +57,7 @@ function App() {
                     <Route path="reset" element={<PasswordResetPage/>}/>
 
                     {/* Post paths */}
-                    <Route path="post" element={<PostPage/>}/>
+
 
                 </Route>
             </Routes>

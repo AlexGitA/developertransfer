@@ -5,6 +5,7 @@ import '@fortawesome/fontawesome-free/css/all.css';
 import SkillBadges from "@/pages/profile/components/SkillBadges.tsx";
 import EditProfileDialog from './EditProfileDialog';
 import { useNavigate } from 'react-router-dom';
+import { ThumbsUp } from 'lucide-react';
 
 
 interface ProfileCardProps {
@@ -76,6 +77,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({userDetails, currentUserId}) =
                                     Looking for Mentor
                                 </span>
                             )}
+
                             {/* Message Button */}
                             {userDetails.id && currentUserId !== userDetails.id && (
                             <button
@@ -146,6 +148,17 @@ const ProfileCard: React.FC<ProfileCardProps> = ({userDetails, currentUserId}) =
                                 )}
                             </div>
                         </div>
+
+                        {/* Like Button - Separate section for mentor likes */}
+                        {userDetails.id && currentUserId !== userDetails.id && (
+                            <div className="bg-gray-50 dark:bg-gray-800 dark:border dark:border-gray-700/50 rounded-xl py-2 px-4 flex justify-center items-center">
+                                <button
+                                    className="px-4 py-1.5 rounded-[50px] bg-gradient-to-r from-blue-400/80 to-blue-500/80 dark:from-blue-600/80 dark:to-blue-700/80 text-white text-xs sm:text-sm font-medium shadow-sm dark:shadow-gray-900/20 hover:from-blue-500 hover:to-blue-600 transition-all duration-200 flex items-center gap-2">
+                                    <ThumbsUp size={14} />
+                                    <span>{userDetails.likes_count || 0}</span>
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
 

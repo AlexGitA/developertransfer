@@ -96,23 +96,6 @@ class UserDetails(models.Model):
         null=True,
         help_text="Profile completion percentage"
     )
-
-    skill_level = models.PositiveSmallIntegerField(
-        blank=True,
-        null=True,
-        help_text="General skill level"
-    )
-    analytical_level = models.PositiveSmallIntegerField(
-        blank=True,
-        null=True,
-        help_text="Analytical skill level"
-    )
-    startup_corporate_level = models.PositiveSmallIntegerField(
-        blank=True,
-        null=True,
-        help_text="Startup vs corporate experience level"
-    )
-
     profile_picture = models.ImageField(
         upload_to='profile_pictures/',
         blank=True,
@@ -162,12 +145,27 @@ class UserDetails(models.Model):
         blank=True,
         help_text="User's technical skills")
 
+    likes = models.ManyToManyField(
+        User,
+        related_name='liked_profile',
+        blank=True,
+        help_text="Users who liked this post"
+    )
+    likes_count = models.PositiveIntegerField(
+        default=0,
+        help_text="Number of profile likes"
+    )
+
     class Meta:
         verbose_name = "User detail"
         verbose_name_plural = "User details"
 
     def __str__(self):
         return f"Details of {self.user.username}"
+
+    def update_likes_count(self):
+        self.likes_count = self.likes.count()
+        self.save()
 
 
 ### Post Classes
