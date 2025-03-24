@@ -1,14 +1,16 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal} from 'react'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Search, Hash } from "lucide-react"
+import {Input} from "@/components/ui/input"
+import {Search, Hash} from "lucide-react"
 
-export const TopicsSearchDialog = ({ open, onOpenChange, topics }) => {
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+export const TopicsSearchDialog = ({open, onOpenChange, topics}) => {
   const [searchQuery, setSearchQuery] = useState('')
   const [filteredTopics, setFilteredTopics] = useState(topics)
 
@@ -22,38 +24,38 @@ export const TopicsSearchDialog = ({ open, onOpenChange, topics }) => {
 
   // Filter topics based on search query
   useEffect(() => {
-    const filtered = topics.filter(topic =>
-      topic.name.toLowerCase().includes(searchQuery.toLowerCase())
+    const filtered = topics.filter((topic: { name: string }) =>
+        topic.name.toLowerCase().includes(searchQuery.toLowerCase())
     )
     setFilteredTopics(filtered)
   }, [searchQuery, topics])
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>Search Topics</DialogTitle>
-        </DialogHeader>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Search Topics</DialogTitle>
+          </DialogHeader>
 
-        <div className="relative mt-2">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500 dark:text-gray-400" />
-          <Input
-            placeholder="Search for topics..."
-            className="pl-8"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            autoFocus
-          />
-        </div>
+          <div className="relative mt-2">
+            <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500 dark:text-gray-400"/>
+            <Input
+                placeholder="Search for topics..."
+                className="pl-8"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                autoFocus
+            />
+          </div>
 
-        <div className="mt-4 max-h-[300px] overflow-y-auto">
-          {filteredTopics.length === 0 ? (
-            <p className="text-center text-sm text-gray-500 dark:text-gray-400 py-4">
-              No topics found
-            </p>
-          ) : (
-            <div className="space-y-1">
-              {filteredTopics.map((topic) => (
+          <div className="mt-4 max-h-[300px] overflow-y-auto">
+            {filteredTopics.length === 0 ? (
+                <p className="text-center text-sm text-gray-500 dark:text-gray-400 py-4">
+                  No topics found
+                </p>
+            ) : (
+                <div className="space-y-1">
+                  {filteredTopics.map((topic: { id: Key | null | undefined; name: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; postCount: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined }) => (
                 <div
                   key={topic.id}
                   className="flex items-center justify-between p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg cursor-pointer"

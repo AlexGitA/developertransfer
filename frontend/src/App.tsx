@@ -2,7 +2,6 @@ import './App.css'
 import LoginPage from './pages/auth/LoginPage'
 import Layout from "@/layout/Layout.tsx";
 import {BrowserRouter, Routes, Route, Navigate} from 'react-router-dom'
-import DerPlayground from "@/playground/DerPlayground.tsx";
 import ProfilePage from "@/pages/profile/ProfilePage.tsx";
 import HomePage from "@/pages/home/HomePage.tsx";
 import RegisterPage from "@/pages/auth/RegisterPage.tsx";
@@ -26,7 +25,6 @@ function App() {
                     <Route path="/api/" element={<Navigate to="/" replace />} />
                     {/* Main paths */}
                     {/*<Route index element={<Navigate to="/home" replace/>}/>*/}
-                    <Route path="playground" element={<DerPlayground/>}/>
                     <Route path="profile/:id" element={<ProfilePage/>}/>
                     <Route path="home" element={<HomePage/>}/>
 

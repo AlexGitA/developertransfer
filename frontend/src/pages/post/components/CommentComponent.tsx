@@ -1,5 +1,5 @@
 import React from 'react'
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import type { Comment as CommentType } from "@/types/post-types"
 import { Button } from "@/components/ui/button"
 import { getUserId } from "@/lib/Axios"

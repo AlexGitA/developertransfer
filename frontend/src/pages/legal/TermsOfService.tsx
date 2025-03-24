@@ -1,7 +1,7 @@
 // components/legal/TermsOfService.tsx
-import React, { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import termsMd from '@/pages/legal/terms-of-service.md'
+import {useEffect, useState} from "react";
 
 const TermsOfService = () => {
     const [terms, setTerms] = useState('');
