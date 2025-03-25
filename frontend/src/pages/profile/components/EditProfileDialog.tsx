@@ -40,37 +40,58 @@ const EditProfileDialog = ({isOpen, onClose, userDetails}: EditProfileDialogProp
         looking_for_mentor: userDetails.looking_for_mentor || false
     });
 
+    const [selectedSkills, setSelectedSkills] = useState(userDetails.skills_info || []);
+
     const countryOptions = countries.map((country) => ({
         value: country.cca2.toUpperCase(), // ISO Alpha-2 code in uppercase
         label: country.name.common,
     }));
-    const [selectedSkills, setSelectedSkills] = useState(userDetails.skills_info || []);
+
     // Update formData when userDetails changes
     useEffect(() => {
-    // @ts-expect-error
-        setFormData(prevData => ({
-        ...prevData,
-        ...userDetails,
-        skills: userDetails.skills || []
-    }));
-    setSelectedSkills(userDetails.skills_info || []);
-}, [userDetails]);
+        // Destructure userDetails, excluding profile_picture
+        const { profile_picture, ...rest } = userDetails;
+        setFormData((prevData) => ({
+            ...prevData,
+            ...rest,
+            skills: userDetails.skills || []
+        }));
+        setSelectedSkills(userDetails.skills_info || []);
+    }, [userDetails]);
 
     const handleSkillsChange = (skills: any[]) => {
-    setSelectedSkills(skills);
-    // Update the formData with just the skill IDs for the API
-    setFormData(prev => ({
-        ...prev,
-        skills: skills.map(skill => skill.id)
-    }));
-};
+        setSelectedSkills(skills);
+        // We'll only store them in formData if the user actually has some
+        if (skills.length > 0) {
+            setFormData((prev: any) => ({
+                ...prev,
+                skills: skills.map((skill) => skill.id),
+            }));
+        } else {
+            // if no skills, remove it from formData
+            setFormData((prev: any) => {
+                const updated = { ...prev };
+                delete updated.skills;
+                return updated;
+            });
+        }
+    };
+
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-expect-error
-            setFormData(prev => ({ ...prev, profile_picture: e.target.files[0] }))
+            setFormData((prev: any) => ({
+                ...prev,
+                profile_picture: e.target.files![0],
+            }));
+        } else {
+            // If user cleared the file input, remove from formData
+            setFormData((prev: any) => {
+                const updated = { ...prev };
+                delete updated.profile_picture;
+                return updated;
+            });
         }
-    }
+    };
 
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -127,18 +148,27 @@ const EditProfileDialog = ({isOpen, onClose, userDetails}: EditProfileDialogProp
     const token = localStorage.getItem("access_token");
 
     try {
-        // Log skills data for debugging
         console.log("updateUser: formData =>", formData);
-        if (!formData || typeof formData !== "object") {
-            throw new Error("formData is null or not an object.");
-        }
 
         const patchData = new FormData();
 
         for (const key in formData) {
             if (Object.prototype.hasOwnProperty.call(formData, key)) {
-                // @ts-expect-error
-                patchData.append(key, formData[key]);
+                const value = formData[key];
+                // if key is profile_picture, ensure it's not empty
+                if (key === "profile_picture" && !value) {
+                    continue;
+                }
+                // if key is skills and it's empty, skip
+                if (key === "skills") {
+                    if (Array.isArray(value) && value.length > 0) {
+                        for (const skillId of value) {
+                            patchData.append("skills", skillId.toString());
+                        }
+                    }
+                    continue;
+                }
+                patchData.append(key, value);
             }
         }
 
