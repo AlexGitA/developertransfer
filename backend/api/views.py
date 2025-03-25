@@ -26,7 +26,7 @@ class UserDetailsReadView(ReadOnlyModelViewSet):
 class UserDetailsUpdateView(ModelViewSet):
     serializer_class = UserDetailsUpdateSerializer
     permission_classes = [IsAuthenticated]
-    http_method_names = ['get','post', 'patch']
+    http_method_names = ['get', 'patch', 'post']
     parser_classes = [MultiPartParser, FormParser]
 
     search_fields = ['current_role', 'user__username', 'user__first_name', 'skills__name']
@@ -69,28 +69,24 @@ class UserDetailsUpdateView(ModelViewSet):
     @action(detail=True, methods=['post'])
     def like(self, request, pk=None):
         user_details = self.get_object()
-
-        # Prevent self-likes
         if user_details.user == request.user:
             return Response({'error': 'You cannot like yourself'}, status=status.HTTP_400_BAD_REQUEST)
-
-
+        if not user_details.mentor:
+            return Response({'error': 'You can only like mentors'}, status=status.HTTP_400_BAD_REQUEST)
+        
         user_details.likes.add(request.user)
-        user_details.likes_count = user_details.likes.count()  # Update likes count
+        user_details.likes_count = user_details.likes.count()
         user_details.save()
-
         return Response({'status': 'user liked'}, status=status.HTTP_200_OK)
 
     @action(detail=True, methods=['post'])
     def unlike(self, request, pk=None):
         user_details = self.get_object()
-
-        # Remove the user from likes
         user_details.likes.remove(request.user)
-        user_details.likes_count = user_details.likes.count()  # Update likes count
+        user_details.likes_count = user_details.likes.count()
         user_details.save()
-
         return Response({'status': 'user unliked'}, status=status.HTTP_200_OK)
+
 
     def get_object(self):
         """Get object based on the action being performed."""

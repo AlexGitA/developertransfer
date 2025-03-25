@@ -103,6 +103,7 @@ const ProfilePage = () => {
                     <RightSidebar/>
                 </aside>
             </div>
+            <Footer z-1000 ></Footer>
         </div>
     )
 }

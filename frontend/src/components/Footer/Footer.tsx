@@ -1,5 +1,5 @@
 import type React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 interface FooterProps {
@@ -7,6 +7,7 @@ interface FooterProps {
 }
 
 const Footer: React.FC<FooterProps> = ({ className = "" }) => {
+    const navigate = useNavigate();
     return (
         <footer className={`bg-gray-50 dark:bg-gray-900 py-6 ${className}`}>
             <div className="container mx-auto px-4 flex flex-wrap justify-between items-center">
@@ -30,8 +31,8 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
                         Privacy
                     </Link>
                 </nav>
-                <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50 rounded-full px-4 py-1 text-sm">
-                    Contact Us
+                <Button onClick={() => navigate('/home')} variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50 rounded-full px-4 py-1 text-sm">
+                    Home
                 </Button>
             </div>
             <div className="border-t border-gray-200 dark:border-gray-700 mt-4 pt-4 text-center text-gray-600 dark:text-gray-300 text-sm">
