@@ -32,7 +32,7 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
                     </Link>
                 </nav>
                 <Button onClick={() => navigate('/home')} variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50 rounded-full px-4 py-1 text-sm">
-                    Home
+                    Contact Us
                 </Button>
             </div>
             <div className="border-t border-gray-200 dark:border-gray-700 mt-4 pt-4 text-center text-gray-600 dark:text-gray-300 text-sm">
