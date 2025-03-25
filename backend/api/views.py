@@ -26,7 +26,7 @@ class UserDetailsReadView(ReadOnlyModelViewSet):
 class UserDetailsUpdateView(ModelViewSet):
     serializer_class = UserDetailsUpdateSerializer
     permission_classes = [IsAuthenticated]
-    http_method_names = ['get', 'patch']
+    http_method_names = ['get','post', 'patch']
     parser_classes = [MultiPartParser, FormParser]
 
     search_fields = ['current_role', 'user__username', 'user__first_name', 'skills__name']
@@ -74,9 +74,6 @@ class UserDetailsUpdateView(ModelViewSet):
         if user_details.user == request.user:
             return Response({'error': 'You cannot like yourself'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Only like mentors
-        if not user_details.mentor:
-            return Response({'error': 'You can only like mentors'}, status=status.HTTP_400_BAD_REQUEST)
 
         user_details.likes.add(request.user)
         user_details.likes_count = user_details.likes.count()  # Update likes count
@@ -94,11 +91,16 @@ class UserDetailsUpdateView(ModelViewSet):
         user_details.save()
 
         return Response({'status': 'user unliked'}, status=status.HTTP_200_OK)
-    def get_object(self):
-        """Get or create user details for the current user."""
-        obj, created = UserDetails.objects.get_or_create(user=self.request.user)
-        return obj
 
+    def get_object(self):
+        """Get object based on the action being performed."""
+        if self.action in ['like', 'unlike']:
+            # For like/unlike actions, use the pk from the URL
+            return super().get_object()
+        else:
+            # For other actions, get the current user's details
+            obj, created = UserDetails.objects.get_or_create(user=self.request.user)
+            return obj
     def retrieve(self, request, *args, **kwargs):
         """Override retrieve to use ReadSerializer for GET requests"""
         instance = self.get_object()
