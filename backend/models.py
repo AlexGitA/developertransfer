@@ -145,17 +145,6 @@ class UserDetails(models.Model):
         blank=True,
         help_text="User's technical skills")
 
-    likes = models.ManyToManyField(
-        User,
-        related_name='liked_profile',
-        blank=True,
-        help_text="Users who liked this post"
-    )
-    likes_count = models.PositiveIntegerField(
-        default=0,
-        help_text="Number of profile likes"
-    )
-
     class Meta:
         verbose_name = "User detail"
         verbose_name_plural = "User details"
@@ -245,6 +234,12 @@ class Post(models.Model):
         default=0,
         help_text="Number of likes"
     )
+    dislikes = models.ManyToManyField(
+        User,
+        through='PostDislike',
+        related_name='disliked_posts',
+        blank=True
+    )
     comments_count = models.PositiveIntegerField(
         default=0,
         help_text="Number of comments"
@@ -286,6 +281,13 @@ class Post(models.Model):
         self.likes_count = self.likes.count()
         self.save()
 
+class PostDislike(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'post')
 
 class Comment(models.Model):
     content = models.TextField(
