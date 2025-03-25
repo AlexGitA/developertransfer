@@ -34,6 +34,18 @@ AxiosInstance.interceptors.request.use(
     }
 );
 
+AxiosInstance.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response && error.response.status === 401) {
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('user');
+            window.location.href = '/login';
+        }
+        return Promise.reject(error);
+    }
+);
+
 // Authentication helper functions
 export const handleLogout = async () => {
     try {
