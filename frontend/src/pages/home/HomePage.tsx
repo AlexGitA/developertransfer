@@ -3,6 +3,7 @@ import LeftSidebar from "@/pages/home/components/LeftSidebar.tsx";
 import RightSidebar from "@/pages/home/components/RightSidebar.tsx";
 import MentorList from "@/features/mentors";
 import SearchBar from "@/pages/home/components/SearchBar.tsx";
+import Footer from "@/components/Footer/Footer";
 
 const HomePage = () => {
 
@@ -36,6 +37,7 @@ const HomePage = () => {
                 <RightSidebar/>
             </aside>
         </div>
+        <Footer/>
         </div>
     );
 };
