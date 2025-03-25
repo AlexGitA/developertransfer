@@ -115,18 +115,6 @@ export const Chat: React.FC<ChatProps> = ({recieverId}) => {
             // Nachricht per REST speichern
             await AxiosInstance.post("/chat/send-messages/", payload);
 
-            // Setze die Nachricht lokal sofort als "gesendet" (isUser: true)
-            const newChatMessage: ChatMessage = {
-                id: Date.now(),
-                content: newMessage,
-                isUser: true,
-                timestamp: new Date().toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                }),
-            };
-            setMessages((prev) => [...prev, newChatMessage]);
-
             // Sende Nachricht via WebSocket mit sender-Feld
             if (socket) {
                 socket.send(JSON.stringify({message: newMessage, sender: currentUserId}));
