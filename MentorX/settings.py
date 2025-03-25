@@ -72,7 +72,7 @@ CHANNEL_LAYERS = {
 
 ASGI_APPLICATION = 'MentorX.asgi.application'
 
-CORS_ALLOWED_ORIGINS = ['http://localhost:5173', 'http://localhost:5175', 'http://localhost:4173']
+CORS_ALLOWED_ORIGINS = ['http://localhost:5173', 'http://localhost:5175', 'http://localhost:4173', 'localhost:4173', '164.30.74.135']
 CORS_ALLOW_CREDENTIALS = True
 
 MIDDLEWARE = [
