@@ -4,8 +4,9 @@ import CountryFlag from "@/components/ui/flag";
 import '@fortawesome/fontawesome-free/css/all.css';
 import SkillBadges from "@/pages/profile/components/SkillBadges.tsx";
 import EditProfileDialog from './EditProfileDialog';
-import { useNavigate } from 'react-router-dom';
-import { ThumbsUp } from 'lucide-react';
+import {useNavigate} from 'react-router-dom';
+import {ThumbsUp, ThumbsDown} from 'lucide-react';
+import AxiosInstance from "@/lib/Axios";
 
 
 interface ProfileCardProps {
@@ -17,6 +18,43 @@ interface ProfileCardProps {
 const ProfileCard: React.FC<ProfileCardProps> = ({userDetails, currentUserId}) => {
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const navigate = useNavigate();
+    const [hasLiked, setHasLiked] = useState(userDetails.has_liked || false)
+    const [likesCount, setLikesCount] = useState(userDetails.likes_count || 0)
+    const [isLiking, setIsLiking] = useState(false)
+
+    const toggleLike = async () => {
+        if (isLiking) return;
+
+        try {
+            setIsLiking(true);
+
+            if (hasLiked) {
+                // Unlike action
+                await AxiosInstance.post(`/api/user-update/${userDetails.id}/unlike/`, {}, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                setLikesCount(prev => Math.max(0, prev - 1));
+                setHasLiked(false);
+            } else {
+                // Like action
+                await AxiosInstance.post(`/api/user-update/${userDetails.id}/like/`, {}, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                setLikesCount(prev => prev + 1);
+                setHasLiked(true);
+            }
+        } catch (error) {
+            console.error('Error toggling like:', error);
+        } finally {
+            setIsLiking(false);
+        }
+    };
 
     return (
         <div
@@ -80,12 +118,12 @@ const ProfileCard: React.FC<ProfileCardProps> = ({userDetails, currentUserId}) =
 
                             {/* Message Button */}
                             {userDetails.id && currentUserId !== userDetails.id && (
-                            <button
-                                onClick={() => navigate('/chats')}
-                                className="px-4 py-1.5 rounded-[50px] bg-gradient-to-r from-blue-400 to-blue-500 dark:from-blue-500 dark:to-blue-600 text-white text-xs sm:text-sm font-medium shadow-sm dark:shadow-gray-900/20 hover:from-blue-500 hover:to-blue-600 transition-all duration-200">
-                                <i className="fas fa-paper-plane mr-1.5"></i>
-                                Message
-                            </button>)}
+                                <button
+                                    onClick={() => navigate('/chats')}
+                                    className="px-4 py-1.5 rounded-[50px] bg-gradient-to-r from-blue-400 to-blue-500 dark:from-blue-500 dark:to-blue-600 text-white text-xs sm:text-sm font-medium shadow-sm dark:shadow-gray-900/20 hover:from-blue-500 hover:to-blue-600 transition-all duration-200">
+                                    <i className="fas fa-paper-plane mr-1.5"></i>
+                                    Message
+                                </button>)}
                         </div>
 
                         {/* Location, Language and Social Links Card */}
@@ -149,13 +187,20 @@ const ProfileCard: React.FC<ProfileCardProps> = ({userDetails, currentUserId}) =
                             </div>
                         </div>
 
-                        {/* Like Button - Separate section for mentor likes */}
+                         {/* Like Button - Separate section for mentor likes */}
                         {userDetails.id && currentUserId !== userDetails.id && (
-                            <div className="bg-gray-50 dark:bg-gray-800 dark:border dark:border-gray-700/50 rounded-xl py-2 px-4 flex justify-center items-center">
+                            <div
+                                className="bg-gray-50 dark:bg-gray-800 dark:border dark:border-gray-700/50 rounded-xl py-2 px-4 flex justify-center items-center">
                                 <button
-                                    className="px-4 py-1.5 rounded-[50px] bg-gradient-to-r from-blue-400/80 to-blue-500/80 dark:from-blue-600/80 dark:to-blue-700/80 text-white text-xs sm:text-sm font-medium shadow-sm dark:shadow-gray-900/20 hover:from-blue-500 hover:to-blue-600 transition-all duration-200 flex items-center gap-2">
-                                    <ThumbsUp size={14} />
-                                    <span>{userDetails.likes_count || 0}</span>
+                                    onClick={toggleLike}
+                                    disabled={isLiking}
+                                    className={`px-4 py-1.5 rounded-[50px] ${
+                                        hasLiked 
+                                            ? 'bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-700 dark:to-blue-800' 
+                                            : 'bg-gradient-to-r from-blue-400/80 to-blue-500/80 dark:from-blue-600/80 dark:to-blue-700/80'
+                                    } text-white text-xs sm:text-sm font-medium shadow-sm dark:shadow-gray-900/20 hover:from-blue-500 hover:to-blue-600 transition-all duration-200 flex items-center gap-2`}>
+                                    {hasLiked ? <ThumbsUp size={14} fill="white" /> : <ThumbsUp size={14} />}
+                                    <span>{likesCount}</span>
                                 </button>
                             </div>
                         )}

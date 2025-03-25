@@ -45,7 +45,9 @@ export interface UserDetails {
 
   // Additional information
   goals: string | null;
-
+  likes: number;
+  has_liked?: boolean;
+  likes_count: number;
   // Skills of the user
   skills: number[];         // Array of IDs for write operations
   skills_info: {

@@ -149,7 +149,7 @@ class UserDetails(models.Model):
         User,
         related_name='liked_profile',
         blank=True,
-        help_text="Users who liked this post"
+        help_text="Users who liked this profile"
     )
     likes_count = models.PositiveIntegerField(
         default=0,
@@ -214,7 +214,7 @@ class Post(models.Model):
         null=True,
         help_text="URL for link posts"
     )
-    # todo: create post media upload
+
     media = models.FileField(
         upload_to='post_media/',
         blank=True,
@@ -259,7 +259,7 @@ class Post(models.Model):
         help_text="Whether the post is archived"
     )
 
-    # todo adjust the model
+
     created = models.DateTimeField(
         auto_now_add=True,
         help_text="When the post was created"
