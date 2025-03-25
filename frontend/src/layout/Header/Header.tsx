@@ -28,9 +28,9 @@ const Header = () => {
                     onClick={handleLogoClick}
                     style={{cursor: 'pointer'}}
                 >
-                    <text className="main-header__left-text dark:text-white">
+                    <span className="main-header__left-text dark:text-white">
                         Mentor<span className="main-header__left-text-space">X</span>
-                    </text>
+                    </span>
                 </h1>
 
                 {/* Navigation Links */}
