@@ -5,6 +5,7 @@ import {Post} from "@/pages/post/components/PostComponent.tsx";
 import Header from './../../layout/Header/Header'
 import {TopicsSidebar} from "@/pages/post/components/TopicsSidebar.tsx";
 import {RecentPostsSidebar} from "@/pages/profile/components/RecentPosts.tsx";
+import Footer from "@/components/Footer/Footer.tsx"
 
 import AxiosInstance, {getUserId} from "@/lib/Axios";
 import {Posts, Topic} from '@/types/post-types';
@@ -365,10 +366,10 @@ const PostPage = () => {
                 </aside>
 
                 {/* Main content */}
-                <main className="flex-1 px-4 sm:px-6 py-4 mx-auto w-full pt-10 lg:ml-72 lg:mr-72 max-w-5xl">
-                    <div className="lg:px-0 px-0 sm:px-4">
+                <main className="flex-1 px-4 sm:px-6 mx-auto w-full pt-10 lg:ml-72 lg:mr-72 max-w-5xl flex flex-col">
+                    <div className="lg:px-0 px-0 sm:px-2 sticky top-14 bg-white dark:bg-gray-900 py-2 z-10">
                         <button
-                            className="px-4 mb-3 py-1.5 rounded-[50px] bg-gradient-to-r from-blue-400 to-blue-500 dark:from-blue-500 dark:to-blue-600 text-white text-xs sm:text-sm font-medium shadow-sm dark:shadow-gray-900/20 hover:from-blue-500 hover:to-blue-600 transition-all duration-200"
+                            className="px-4 py-1.5 rounded-[50px] bg-gradient-to-r from-blue-400 to-blue-500 dark:from-blue-500 dark:to-blue-600 text-white text-xs sm:text-sm font-medium shadow-sm dark:shadow-gray-900/20 hover:from-blue-500 hover:to-blue-600 transition-all duration-200"
                             onClick={handleAddClick}>
                             Add
                         </button>
@@ -521,6 +522,7 @@ const PostPage = () => {
                     </div>
                 </div>
             )}
+            <Footer></Footer>
         </div>
     )
 }
