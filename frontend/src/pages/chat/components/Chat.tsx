@@ -1,12 +1,13 @@
 // src/pages/chat/components/Chat.tsx
-"use client";
+{
+    "useClient";
+}
 
-import React, {useState, useEffect} from "react";
 import AxiosInstance, {getUserId} from "@/lib/Axios";
 import {Message} from "./Message";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
-import {Send} from "lucide-react";
+import React, {useEffect, useState} from "react";
 
 interface ChatMessage {
     id: number;

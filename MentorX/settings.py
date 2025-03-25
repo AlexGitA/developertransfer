@@ -64,15 +64,15 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.google",
 ]
 
-#CHANNEL_LAYERS = {
-#    "default": {
-#        "BACKEND": "channels.layers.InMemoryChannelLayer",
-#    },
-#}
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
 
-#ASGI_APPLICATION = 'MentorX.asgi.application'
+ASGI_APPLICATION = 'MentorX.asgi.application'
 
-CORS_ALLOWED_ORIGINS = ['http://localhost:5173', 'http://localhost:5175']
+CORS_ALLOWED_ORIGINS = ['http://localhost:5173', 'http://localhost:5175', 'http://localhost:4173', 'http://164.30.74.135', 'http://164.30.74.135', 'http://164.30.74.135:5173']
 CORS_ALLOW_CREDENTIALS = True
 
 MIDDLEWARE = [

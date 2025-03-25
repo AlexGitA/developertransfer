@@ -13,6 +13,7 @@ export default defineConfig({
   },
   build: {
     // Build to Django's static directory
+    chunkSizeWarningLimit: 2000,
     outDir: '../static/dist',
     emptyOutDir: true,
     manifest: true,

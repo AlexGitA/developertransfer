@@ -1,9 +1,10 @@
 // src/pages/chat/ChatPage.tsx
-import React, { useState } from "react";
+
 import Header from "@/layout/Header/Header";
 import RightSidebar from "@/pages/profile/components/RightSidebar";
 import { Chat } from "@/pages/chat/components/Chat";
 import { ChatSidebar } from "@/pages/chat/components/ChatSidebar";
+import {useState} from "react";
 
 const ChatPage = () => {
     const [selectedUser, setSelectedUser] = useState<number | null>(null);

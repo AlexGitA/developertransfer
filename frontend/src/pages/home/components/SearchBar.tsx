@@ -11,9 +11,9 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select'
-import React, { useState, useEffect } from 'react'
 import AxiosInstance from '@/lib/Axios'
 import SearchResultCard from './SearchResultCard'
+import {useEffect, useState} from 'react'
 
 const SearchBar = () => {
     // Filter & Suchzustände

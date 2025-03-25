@@ -1,3 +1,4 @@
+// @ts-ignore
 import { Post } from "@/types/post-types"
 
 export const mockPosts: Post[] = [

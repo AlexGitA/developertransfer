@@ -2,7 +2,7 @@ import "../../index.css";
 import ProfileButton from "@/layout/Header/profileButton.tsx";
 import {useNavigate, useLocation} from 'react-router-dom';
 import {useState} from "react";
-import {handleLogout, isAuthenticated} from '@/lib/axios';
+import {handleLogout, isAuthenticated} from '@/lib/Axios';
 import DarkModeToggle from "@/components/button/DarkModeToggle.tsx";
 import '@fortawesome/fontawesome-free/css/all.css';
 
@@ -28,9 +28,9 @@ const Header = () => {
                     onClick={handleLogoClick}
                     style={{cursor: 'pointer'}}
                 >
-                    <text className="main-header__left-text dark:text-white">
+                    <span className="main-header__left-text dark:text-white">
                         Mentor<span className="main-header__left-text-space">X</span>
-                    </text>
+                    </span>
                 </h1>
 
                 {/* Navigation Links */}
