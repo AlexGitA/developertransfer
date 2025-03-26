@@ -13,7 +13,6 @@ from friendship.models import Friend, FriendshipRequest
 from django.contrib.auth import get_user_model
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import serializers
-from friendship.models import Friend
 from django.db.models import Case, When, Value, CharField, Q
 from django.db.models.functions import Concat
 
