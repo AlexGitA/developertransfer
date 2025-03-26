@@ -3,7 +3,7 @@
 import Header from "@/layout/Header/Header";
 import RightSidebar from "@/pages/profile/components/RightSidebar";
 import { Chat } from "@/pages/chat/components/Chat";
-import { ChatSidebar } from "@/pages/chat/components/ChatSidebar";
+import ChatSidebar from "@/pages/chat/components/ChatSidebar";
 import {useState} from "react";
 
 const ChatPage = () => {
@@ -17,7 +17,7 @@ const ChatPage = () => {
 
             <div className="flex-1 flex pt-3 gap-6">
                 {/* Left Sidebar: Hier wird jetzt die ChatSidebar verwendet */}
-                <aside className="w-72 hidden lg:block fixed left-0 top-[3.5rem] bottom-0 overflow-y-auto px-6 py-6">
+                <aside className="w-90 hidden lg:block fixed left-0 top-[3.5rem] bottom-0 overflow-y-auto px-6 py-6">
                     <ChatSidebar onSelectUser={(userId) => setSelectedUser(userId)} />
                 </aside>
 

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "authentication.apps.AuthenticationConfig",
     'backend.apps.BackendApiConfig',
     'chat.apps.ChatConfig',
+    'friendship',
 
     # Auth
     "allauth",
@@ -230,3 +231,5 @@ SOCIALACCOUNT_PROVIDERS = {
         "VERIFIED_EMAIL": True,
     },
 }
+
+CSRF_TRUSTED_ORIGINS = ['http://localhost:5173', 'http://localhost:8000']

@@ -9,7 +9,12 @@ from django.core.exceptions import PermissionDenied
 from rest_framework import filters
 from .serializers import UserDetailsReadSerializer,  UserDetailsUpdateSerializer, CommentSerializer, SkillSerializer, PostSerializer, TopicSerializer
 from rest_framework.decorators import action
-
+from friendship.models import Friend, FriendshipRequest
+from django.contrib.auth import get_user_model
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework import serializers
+from django.db.models import Case, When, Value, CharField, Q
+from django.db.models.functions import Concat
 
 # ViewSet to get the UserDetails
 # todo add search for multiple skills
@@ -116,7 +121,6 @@ class UserDetailsUpdateView(ModelViewSet):
         if serializer.is_valid():
             serializer.save()
 
-            # Use UserDetailsReadSerializer to return complete skill information
             read_serializer = UserDetailsReadSerializer(instance)
 
             return Response(
@@ -129,6 +133,289 @@ class UserDetailsUpdateView(ModelViewSet):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+# Friend Request
+User = get_user_model()
+
+class UserSerializer(serializers.ModelSerializer):
+    details = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'details']
+
+    def get_details(self, obj):
+        try:
+            details = obj.details
+            return {
+                'profile_picture': self._get_profile_picture(details),
+                'current_role': details.current_role or 'No role specified',
+                'is_online': details.is_online
+            }
+        except User.details.RelatedObjectDoesNotExist:
+            return self._default_profile_details()
+
+    def _get_profile_picture(self, details):
+        if details.profile_picture:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(details.profile_picture.url)
+            return details.profile_picture.url
+        return None
+
+    def _default_profile_details(self):
+        return {
+            'profile_picture': None,
+            'current_role': 'No role specified',
+            'is_online': False
+        }
+
+class FriendRequestSerializer(serializers.ModelSerializer):
+    from_user = serializers.SerializerMethodField()
+    created = serializers.DateTimeField(format="%b %d, %Y %I:%M %p")
+
+    class Meta:
+        model = FriendshipRequest
+        fields = ['id', 'from_user', 'created', 'message']  # message is automatically included
+
+    def get_from_user(self, obj):
+        return UserSerializer(
+            obj.from_user,
+            context=self.context
+        ).data
+
+class FriendSerializer(serializers.ModelSerializer):
+    friend = serializers.SerializerMethodField()
+    friendship_id = serializers.IntegerField(source='id')
+
+    class Meta:
+        model = Friend
+        fields = ['friendship_id', 'friend', 'created']
+
+    def get_friend(self, obj):
+        if self.context['request'].user == obj.from_user:
+            return UserSerializer(obj.to_user, context=self.context).data
+        return UserSerializer(obj.from_user, context=self.context).data
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_friend_status(request, user_id):
+    try:
+        other_user = User.objects.get(pk=user_id)
+
+        # State machine resolution
+        if Friend.objects.are_friends(request.user, other_user):
+            return Response({"status": "friends"})
+
+        request_sent = FriendshipRequest.objects.filter(
+            from_user=request.user,
+            to_user=other_user,
+            rejected__isnull=True
+        ).exists()
+
+        request_received = FriendshipRequest.objects.filter(
+            from_user=other_user,
+            to_user=request.user,
+            rejected__isnull=True
+        ).exists()
+
+        if request_sent:
+            return Response({"status": "request_sent"})
+        if request_received:
+            req = FriendshipRequest.objects.get(
+                from_user=other_user,
+                to_user=request.user
+            )
+            return Response({
+                "status": "request_received",
+                "request_id": req.id
+            })
+
+        return Response({"status": "not_friends"})
+
+    except User.DoesNotExist:
+        return Response(
+            {"status": "error"},
+            status=status.HTTP_404_NOT_FOUND
+        )
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def friend_list(request):
+    try:
+        # Get base queryset without database-specific features
+        friendships = Friend.objects.filter(
+            Q(from_user=request.user) | Q(to_user=request.user)
+        )
+
+        # Database-agnostic duplicate prevention
+        unique_pairs = set()
+        processed_friendships = []
+
+        for friendship in friendships:
+            # Create normalized pair identifier
+            pair = tuple(sorted([friendship.from_user_id, friendship.to_user_id]))
+
+            if pair not in unique_pairs:
+                unique_pairs.add(pair)
+                processed_friendships.append(friendship)
+
+        serializer = FriendSerializer(
+            processed_friendships,
+            many=True,
+            context={'request': request}
+        )
+
+        return Response(serializer.data)
+
+    except Exception as e:
+        return Response(
+            {"error": str(e)},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+import logging
+logger = logging.getLogger(__name__)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def friend_requests(request):
+    try:
+        requests = FriendshipRequest.objects.filter(
+            to_user=request.user,
+            rejected__isnull=True
+        ).select_related('from_user__details').order_by('-created')
+
+        serializer = FriendRequestSerializer(
+            requests,
+            many=True,
+            context={'request': request}
+        )
+        return Response(serializer.data)
+
+    except Exception as e:
+        logger.error(f"Request fetch error: {str(e)}")
+        return Response(
+            {"error": "Error fetching friend requests"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def remove_friend(request, friendship_id):
+    try:
+        friend = Friend.objects.get(id=friendship_id)
+        if request.user not in [friend.from_user, friend.to_user]:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+        Friend.objects.remove_friend(request.user, friend.to_user)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    except Friend.DoesNotExist:
+        return Response({'error': 'Friend relationship not found'},
+                      status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def send_friend_request(request, user_id):
+    try:
+        to_user = User.objects.get(pk=user_id)
+
+        if request.user == to_user:
+            return Response(
+                {"error": "Cannot send request to yourself"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if Friend.objects.are_friends(request.user, to_user):
+            return Response(
+                {"error": "Already friends"},
+                status=status.HTTP_409_CONFLICT
+            )
+
+        pending_from_me = FriendshipRequest.objects.filter(
+            from_user=request.user,
+            to_user=to_user,
+            rejected__isnull=True
+        ).exists()
+
+        pending_from_them = FriendshipRequest.objects.filter(
+            from_user=to_user,
+            to_user=request.user,
+            rejected__isnull=True
+        ).exists()
+
+        if pending_from_me or pending_from_them:
+            return Response(
+                {"error": "Existing pending request"},
+                status=status.HTTP_409_CONFLICT
+            )
+
+        FriendshipRequest.objects.filter(
+            Q(from_user=request.user, to_user=to_user) |
+            Q(from_user=to_user, to_user=request.user),
+            rejected__isnull=False
+        ).delete()
+
+        friendship_request = Friend.objects.add_friend(
+            request.user,
+            to_user,
+            message=f"{request.user.username} wants to connect!"
+        )
+
+        return Response(
+            {"id": friendship_request.id, "message": "Request sent"},
+            status=status.HTTP_201_CREATED
+        )
+
+    except User.DoesNotExist:
+        return Response(
+            {"error": "User not found"},
+            status=status.HTTP_404_NOT_FOUND
+        )
+    except Exception as e:
+        return Response(
+            {"error": str(e)},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+    except User.DoesNotExist:
+        return Response(
+            {"error": "User not found"},
+            status=status.HTTP_404_NOT_FOUND
+        )
+    except Exception as e:
+        return Response(  # Add this generic exception handler
+            {"error": str(e)},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def handle_friend_request(request, request_id, action):
+    try:
+        friendship_request = FriendshipRequest.objects.get(
+            pk=request_id,
+            to_user=request.user
+        )
+
+        if action == 'accept':
+            friendship_request.accept()
+            return Response({"status": "accepted"})
+
+        elif action == 'reject':
+            friendship_request.reject()
+            return Response({"status": "rejected"})
+
+        return Response(
+            {"error": "Invalid action"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    except FriendshipRequest.DoesNotExist:
+        return Response(
+            {"error": "Request not found"},
+            status=status.HTTP_404_NOT_FOUND
+        )
 
 # ViewSet to get the Posts
 class PostViewSet(ModelViewSet):

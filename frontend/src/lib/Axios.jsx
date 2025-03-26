@@ -17,7 +17,6 @@ AxiosInstance.interceptors.request.use(
         const token = localStorage.getItem('access_token');
         if (token) {
             config.headers.Authorization = `Token ${token}`;
-
         }
 
         if (config.data instanceof FormData) {
@@ -33,6 +32,8 @@ AxiosInstance.interceptors.request.use(
         return Promise.reject(error);
     }
 );
+
+
 
 AxiosInstance.interceptors.response.use(
     (response) => response,
