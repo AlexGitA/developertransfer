@@ -51,6 +51,11 @@ const ProfileCard = ({
         checkFriendStatus();
     }, [userId, currentUserId]);
 
+    const handleProfileClick = () => {
+        navigate(`/profile/${userId}`);
+    };
+
+
     const handleFriendAction = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation();
         if (!currentUserId) return navigate('/login');
@@ -75,7 +80,11 @@ const ProfileCard = ({
     }[friendStatus];
 
     return (
-        <div className={bemProfileCard()}>
+        <div className={bemProfileCard()}
+             onClick={handleProfileClick}
+             role="button"
+             tabIndex={0}
+             style={{ cursor: 'pointer' }}>
             <div className={bemProfileCard("left")}>
                 <img className={bemProfileCard("left-image")} src={profileImage} alt={fullName} />
                 <div className={bemProfileCard("left-fullname")}>
